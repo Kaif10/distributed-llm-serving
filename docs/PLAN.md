@@ -37,6 +37,20 @@ capacity. Use network tests against separate HTTP servers.
 
 Learning: HTTP, TCP connections, streaming, contexts, backpressure, transport failures.
 
+Build this milestone in three small increments:
+
+1. Run a controllable worker directly. It emits delayed, labelled test chunks over HTTP;
+   observe the first chunk before the last one is generated. These are synthetic chunks,
+   not model tokens or evidence of inference performance.
+2. Forward that same stream through the gateway. Compare the direct and forwarded responses
+   and verify that the gateway does not buffer the whole response before sending it.
+3. Disconnect the client during a long response. Verify that the gateway cancels its upstream
+   request and the worker observes cancellation and stops producing chunks. Also test a worker
+   failure mid-stream, deadlines, and slow-reader behavior before closing the milestone.
+
+The next implementation session starts with increment 1. Explain its request flow and run
+the worker directly before adding gateway forwarding.
+
 ## 2. Connect real inference and establish a baseline
 
 Use an existing model engine rather than write a new inference runtime. vLLM is the initial
@@ -124,6 +138,45 @@ anything outside local development.
 
 Identify a user-confirmed improvement or document that existing systems are sufficient and
 select a concrete upstream issue. Publish only measured claims, including limitations.
+
+## 8. Durable batch scheduling — later extension
+
+Gate: the serving path works and a concrete offline workload needs restartable jobs, such as
+summarizing a collection of documents. Record why ordinary client-side request submission is
+insufficient before implementing a scheduler. Reuse the worker fleet with explicit capacity
+isolation so batch traffic cannot silently consume all interactive capacity.
+
+Start with submit, claim, and completion states in one durable queue. Then introduce worker
+leases, retry policy, idempotent submissions, and monotonically increasing fencing tokens.
+Specify cancellation, terminal failures, retention, and admission limits. Reuse the durable
+state-machine and replication work where its guarantees fit.
+
+Evidence: restart after accepting a job without losing it; retry a timed-out submission without
+creating another job; pause a worker beyond its lease and reject its stale completion after
+reassignment. Distinguish repeated execution from one accepted result: fencing the completion
+record does not make arbitrary external side effects exactly-once.
+
+Learning: durable scheduling, leases, fencing, retry backoff, idempotency, fairness, and the
+difference between at-least-once execution and deduplicated result publication.
+
+## 9. Shard the job queue — conditional on a measured bottleneck
+
+Gate: benchmark the durable scheduler and identify queue storage or scheduling coordination
+as a capacity limit. First consider simpler indexing, batching, and independent queues. Record
+why partitioning is justified. If no bottleneck appears, keep sharding as an isolated learning
+experiment and label it accordingly.
+
+Partition job ownership across a fixed number of shards before adding live rebalancing.
+Define assignment revisions, ownership epochs, routing, and transfer of deduplication state.
+A queue partition on one replicated group does not by itself distribute storage or consensus
+work; explain the boundary before adding independent replicated shard groups.
+
+Evidence: ownership changes under concurrent submissions and claims do not lose accepted jobs;
+stale owners cannot publish completions; retried submissions remain deduplicated across moves;
+recovery resumes an interrupted transfer. Measure skew and rebalancing cost alongside throughput.
+
+Learning: partitioning, ownership, hot shards, migration protocols, and consistency during
+reconfiguration. Model tensor/pipeline parallelism remains the inference engine's responsibility.
 
 ## Experiment contract
 
