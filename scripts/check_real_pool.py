@@ -8,6 +8,7 @@ from pathlib import Path
 import socket
 import subprocess
 import time
+import urllib.request
 
 from check_real_inference import ROOT, events, get_json, measure, open_stream
 
@@ -22,7 +23,10 @@ def service(command, health, log_path):
                 if process.poll() is not None:
                     raise RuntimeError("Service exited; inspect " + str(log_path))
                 try:
-                    get_json(health, "")
+                    # Readiness is an HTTP status contract; its body may be empty.
+                    with urllib.request.urlopen(health, timeout=5) as response:
+                        if response.status != 200:
+                            raise OSError("Service is not ready")
                     break
                 except (OSError, ValueError):
                     time.sleep(.1)
