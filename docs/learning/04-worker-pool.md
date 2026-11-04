@@ -65,9 +65,10 @@ Inference may continue briefly after transport cancellation before the engine no
 releasing a gateway reservation does not prove the GPU or CPU is already idle; our separate
 real-engine observations check eventual slot release.
 
-Active health probes and worker draining are the next increment. Currently an unreachable
-worker remains configured: a request selected for it fails with 502, releases its reservation,
-and is not replayed on another worker. Existing partial streams cannot be resumed transparently.
+The [next walkthrough](05-health-and-draining.md) now covers implemented health probes and
+draining. Workers become ineligible after a failed probe. A request can still encounter a
+failure between probe and dispatch; it is not replayed on another worker. Existing partial
+streams cannot be resumed transparently.
 
 ## Verification and exercises
 

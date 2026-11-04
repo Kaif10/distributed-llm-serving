@@ -3,7 +3,8 @@
 This describes the target. The current implementation forwards streaming requests from one
 gateway to a statically configured worker pool, with per-worker local admission limits.
 Both policies have been checked against two pinned llama.cpp CPU inference servers running
-SmolLM2-135M. Health probes, draining, and replicated configuration are planned.
+SmolLM2-135M. Active health probes and local in-memory draining are implemented; replicated
+configuration is planned. The drain discussion below describes that eventual fleet-wide target.
 
 ```mermaid
 flowchart LR

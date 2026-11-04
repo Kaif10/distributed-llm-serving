@@ -29,7 +29,7 @@ func NewHandler(backend string, timeout time.Duration, logger *slog.Logger) (htt
 }
 
 // NewPoolHandler routes each request once and holds capacity until forwarding ends.
-func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Logger) (http.Handler, error) {
+func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Logger) (*Handler, error) {
 	if err := validateOptions(options); err != nil {
 		return nil, err
 	}
@@ -67,11 +67,23 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		}
 		pool.proxies = append(pool.proxies, proxy)
 		pool.inflight = append(pool.inflight, 0)
+		pool.states = append(pool.states, WorkerState{ID: len(pool.states), Origin: target.String(), Healthy: true})
 	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = io.WriteString(w, "{\"status\":\"ok\"}\n")
+	})
+	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
+		pool.mu.Lock()
+		defer pool.mu.Unlock()
+		for _, state := range pool.states {
+			if state.Healthy && !state.Draining {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+		}
+		http.Error(w, "no eligible workers", http.StatusServiceUnavailable)
 	})
 	mux.HandleFunc("POST /v1/chat/completions", func(w http.ResponseWriter, r *http.Request) {
 		if len(pool.proxies) == 0 {
@@ -81,7 +93,7 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		index, available := pool.acquire()
 		if !available {
 			w.Header().Set("Retry-After", "1")
-			http.Error(w, "all workers at capacity", http.StatusServiceUnavailable)
+			http.Error(w, "no healthy undrained worker with capacity", http.StatusServiceUnavailable)
 			return
 		}
 		defer pool.release(index)
@@ -121,5 +133,5 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		r.TransferEncoding = nil
 		pool.proxies[index].ServeHTTP(w, r)
 	})
-	return mux, nil
+	return &Handler{Handler: mux, pool: pool}, nil
 }

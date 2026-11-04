@@ -66,7 +66,8 @@ Network buffering means one proxy read is not guaranteed to equal one SSE event.
 | Worker fails or deadline expires after streaming starts | Stream is aborted; no replacement status or fabricated `[DONE]` |
 
 Try stopping the worker and submitting another request through the still-running gateway.
-You should receive 502. A green `/healthz` describes the gateway process, not worker readiness.
+Before failure detection you may receive 502; after the health probe excludes the worker,
+you receive 503. A green `/healthz` describes the gateway process, not worker readiness.
 
 `-request-timeout` defaults to 30s and starts after the bounded request body is read. The
 server separately limits request reading to 10s. Downstream writes have a fixed deadline of

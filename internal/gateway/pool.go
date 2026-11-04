@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http/httputil"
 	"sync"
+	"time"
 )
 
 // PoolOptions describes replicas of the same model. Limits apply to this gateway.
@@ -20,6 +21,18 @@ type workerPool struct {
 	next     int
 	limit    int
 	policy   string
+	states   []WorkerState
+}
+
+// WorkerState is a local observation, not a fleet-wide guarantee.
+type WorkerState struct {
+	ID        int       `json:"id"`
+	Origin    string    `json:"origin"`
+	Healthy   bool      `json:"healthy"`
+	CheckedAt time.Time `json:"checked_at"`
+	Draining  bool      `json:"draining"`
+	Inflight  int       `json:"inflight"`
+	Drained   bool      `json:"drained"`
 }
 
 func validateOptions(options PoolOptions) error {
@@ -40,6 +53,9 @@ func (p *workerPool) acquire() (int, bool) {
 	selected := -1
 	for offset := 0; offset < len(p.proxies); offset++ {
 		i := (p.next + offset) % len(p.proxies)
+		if len(p.states) > 0 && (!p.states[i].Healthy || p.states[i].Draining) {
+			continue
+		}
 		if p.inflight[i] >= p.limit {
 			continue
 		}

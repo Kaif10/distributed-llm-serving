@@ -28,7 +28,7 @@ def service(command, health, log_path):
                     time.sleep(.1)
             else:
                 raise RuntimeError("Service startup timed out")
-            yield
+            yield process
         finally:
             if process.poll() is None:
                 process.terminate()
@@ -124,7 +124,7 @@ def main():
                            "http://127.0.0.1:18081,http://127.0.0.1:18082", "-policy", policy,
                            "-max-inflight", "1", "-request-timeout", "60s"]
                 result["commands"].append(command)
-                with service(command, "http://127.0.0.1:18080/healthz", output / f"gateway-{policy}.log"):
+                with service(command, "http://127.0.0.1:18080/readyz", output / f"gateway-{policy}.log"):
                     result["runs"].append(exercise(policy, payload))
         result["passed"] = True
     except Exception as err:

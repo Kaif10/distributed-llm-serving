@@ -24,6 +24,10 @@ func main() {
 	backends := flag.String("backends", "", "comma-separated worker origins serving the same model")
 	policy := flag.String("policy", "least-inflight", "least-inflight or round-robin")
 	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
+	admin := flag.String("admin-listen", "", "optional loopback-only administration address")
+	healthPath := flag.String("health-path", "/health", "worker readiness probe path")
+	healthInterval := flag.Duration("health-interval", time.Second, "delay between worker probes")
+	healthTimeout := flag.Duration("health-timeout", 500*time.Millisecond, "per-probe timeout")
 	timeout := flag.Duration("request-timeout", 30*time.Second, "forwarding deadline; downstream writes bounded by this plus 1s")
 	flag.Parse()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -42,17 +46,28 @@ func main() {
 		}
 	}
 	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit}
-	if err := run(ctx, *address, options, *timeout); err != nil {
+	if err := run(ctx, *address, *admin, options, *timeout, *healthInterval, *healthTimeout, *healthPath); err != nil {
 		slog.Error("gateway stopped", "error", err)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, address string, options gateway.PoolOptions, timeout time.Duration) error {
+func run(ctx context.Context, address, admin string, options gateway.PoolOptions, timeout, healthInterval, healthTimeout time.Duration, healthPath string) error {
+	if admin != "" {
+		host, _, err := net.SplitHostPort(admin)
+		if err != nil || !net.ParseIP(host).IsLoopback() {
+			return fmt.Errorf("admin listener must use a loopback IP address")
+		}
+	}
 	handler, err := gateway.NewPoolHandler(options, timeout, slog.Default())
 	if err != nil {
 		return err
 	}
+	stopHealth, err := handler.StartHealthChecks(ctx, healthInterval, healthTimeout, healthPath)
+	if err != nil {
+		return err
+	}
+	defer stopHealth()
 	server := &http.Server{
 		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
@@ -67,9 +82,28 @@ func run(ctx context.Context, address string, options gateway.PoolOptions, timeo
 	if err != nil {
 		return fmt.Errorf("listen: %w", err)
 	}
+	servers := []*http.Server{server}
+	listeners := []net.Listener{listener}
+	if admin != "" {
+		adminListener, err := net.Listen("tcp", admin)
+		if err != nil {
+			listener.Close()
+			return fmt.Errorf("admin listen: %w", err)
+		}
+		servers = append(servers, &http.Server{Handler: handler.AdminHandler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10})
+		listeners = append(listeners, adminListener)
+		slog.Info("gateway admin listening", "address", adminListener.Addr().String())
+	}
+	defer func() {
+		for _, s := range servers {
+			s.Close()
+		}
+	}()
 	slog.Info("gateway listening", "address", listener.Addr().String())
-	served := make(chan error, 1)
-	go func() { served <- server.Serve(listener) }()
+	served := make(chan error, len(servers))
+	for i, s := range servers {
+		go func() { served <- s.Serve(listeners[i]) }()
+	}
 	select {
 	case err := <-served:
 		return fmt.Errorf("serve: %w", err)
@@ -79,12 +113,15 @@ func run(ctx context.Context, address string, options gateway.PoolOptions, timeo
 	// The signal context is already cancelled. Give existing requests a new grace period.
 	drainCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := server.Shutdown(drainCtx); err != nil {
-		_ = server.Close()
-		return fmt.Errorf("shutdown: %w", err)
+	for _, s := range servers {
+		if err := s.Shutdown(drainCtx); err != nil {
+			return fmt.Errorf("shutdown: %w", err)
+		}
 	}
-	if err := <-served; !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("serve during shutdown: %w", err)
+	for range servers {
+		if err := <-served; !errors.Is(err, http.ErrServerClosed) {
+			return fmt.Errorf("serve during shutdown: %w", err)
+		}
 	}
 	return nil
 }

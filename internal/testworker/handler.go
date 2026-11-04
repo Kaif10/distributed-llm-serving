@@ -27,10 +27,12 @@ func NewHandler(interval time.Duration, logger *slog.Logger) http.Handler {
 		panic("test worker interval must be positive")
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+	health := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = io.WriteString(w, "{\"status\":\"ok\"}\n")
-	})
+	}
+	mux.HandleFunc("GET /healthz", health)
+	mux.HandleFunc("GET /health", health)
 	mux.HandleFunc("POST /v1/chat/completions", func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
 		decoder := json.NewDecoder(r.Body)

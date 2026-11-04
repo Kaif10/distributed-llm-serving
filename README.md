@@ -11,8 +11,10 @@ round-robin or least-inflight selection and per-worker admission limits, validat
 both the synthetic worker and real SmolLM2-135M generation through llama.cpp on CPU. Network
 tests cover cancellation, deadlines, and worker failures; a separate local-engine check observes
 slot release on disconnect and records a small sequential latency baseline. A two-engine CPU
-experiment checks routing and overload against real models. Health probes, draining,
-and consensus remain planned. No production usage is claimed. The operational problem still
+experiment checks routing and overload against real models. Active health probes exclude
+unavailable workers, and a separate local admin API drains assignments while streams finish.
+Real-model experiments cover drain, worker process loss, and recovery. Consensus remains
+planned. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
 
 ## Start here
@@ -24,6 +26,7 @@ needs validation with a real application workload.
 - [Gateway forwarding walkthrough](docs/learning/02-gateway-streaming.md): stream across two connections and trace failures.
 - [Real inference walkthrough](docs/learning/03-real-inference.md): run pinned CPU inference and observe engine cancellation.
 - [Worker pool walkthrough](docs/learning/04-worker-pool.md): run two real engines and reject excess work.
+- [Health and draining walkthrough](docs/learning/05-health-and-draining.md): remove workers safely from new assignments.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
