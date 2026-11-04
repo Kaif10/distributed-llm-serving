@@ -1,7 +1,8 @@
 # Milestones
 
 Progress is based on demonstrated behavior and understanding, with no calendar estimates.
-Only the initial foundation is implemented. Every later milestone below is planned.
+The foundation and milestone 1's directly callable synthetic worker are implemented.
+Gateway forwarding and the remaining milestones are planned.
 
 ## Problem and first user
 
@@ -48,8 +49,9 @@ Build this milestone in three small increments:
    request and the worker observes cancellation and stops producing chunks. Also test a worker
    failure mid-stream, deadlines, and slow-reader behavior before closing the milestone.
 
-The next implementation session starts with increment 1. Explain its request flow and run
-the worker directly before adding gateway forwarding.
+Increment 1 is implemented; see [the worker walkthrough](learning/01-streaming-worker.md).
+The next increment is gateway forwarding. Run the worker directly and explain its request
+flow before adding that extra connection.
 
 ## 2. Connect real inference and establish a baseline
 

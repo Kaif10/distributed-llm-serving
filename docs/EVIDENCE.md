@@ -1,7 +1,26 @@
 # Evidence ledger
 
-The foundation is a local HTTP process with a liveness endpoint. It is not yet an inference
-gateway or a distributed system. Milestones 1 through 7 are unimplemented.
+The gateway foundation is a local HTTP process with a liveness endpoint. A separate synthetic
+worker now streams test chunks directly to clients. Milestone 1 is partially implemented;
+gateway forwarding, real inference, routing, and milestones 2 through 9 remain unimplemented.
+
+## Direct streaming worker validation
+
+Environment: Windows amd64, Go 1.27.3, Python 3.12. No external Go dependencies.
+
+- `go test ./...`: passed. Worker tests use real HTTP connections to check incremental
+  delivery, prompt cancellation during a long inter-chunk wait, complete SSE framing, and
+  rejection of malformed, oversized, unsupported, and out-of-range requests.
+- `go vet ./...`: passed.
+- `go build -o bin/testworker.exe ./cmd/testworker`: passed.
+- A local Python HTTP client against the compiled executable received a complete three-chunk
+  response, then disconnected a second request after its first chunk. The worker log recorded
+  `outcome=cancelled chunks=1`. This was a manual executable smoke check, not a committed test runner.
+
+The committed network tests reproduce the streaming and cancellation assertions with
+`go test ./internal/testworker -v`. Local race detection was not run; Linux CI requests it.
+No slow-reader saturation, gateway propagation, inference-engine cancellation, or performance
+claim is established by these checks.
 
 ## Foundation validation
 

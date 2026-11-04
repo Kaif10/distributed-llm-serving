@@ -1,0 +1,6 @@
+{
+  "model": "test-worker",
+  "messages": [{"role": "user", "content": "Hello from the streaming experiment"}],
+  "stream": true,
+  "max_tokens": 8
+}

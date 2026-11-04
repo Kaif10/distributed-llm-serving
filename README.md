@@ -6,7 +6,8 @@ The intended user operates several replicas of the same model. Requests differ i
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The
 goal is to keep useful work flowing while bounding queues and handling failures explicitly.
 
-**Current status:** planning and a minimal Go HTTP service. Inference forwarding, routing,
+**Current status:** a minimal Go gateway foundation and a directly callable synthetic streaming
+worker, with cancellation tests. Gateway forwarding, real inference, routing,
 model integration, and consensus are planned, not implemented. No performance results or
 production usage are claimed. The operational problem still needs validation with a real workload.
 
@@ -15,6 +16,7 @@ production usage are claimed. The operational problem still needs validation wit
 - [Milestones](docs/PLAN.md): what to build, why, and what evidence completes each step.
 - [Architecture](docs/ARCHITECTURE.md): request flow, control-plane responsibilities, and failure contracts.
 - [First walkthrough](docs/learning/00-service.md): run the service and understand its lifecycle.
+- [Streaming worker walkthrough](docs/learning/01-streaming-worker.md): watch chunks arrive and disconnect the client.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
@@ -43,8 +45,8 @@ python scripts/smoke.py bin/gateway
 ```
 
 On Linux with a C compiler, also run `go test -race ./...`.
-On Windows, use `bin/gateway.exe` for the build output and smoke-test argument. There are no
-Go unit tests in this initial increment; `scripts/smoke.py` checks the actual process over HTTP.
+On Windows, use `bin/gateway.exe` for the build output and smoke-test argument.
+`scripts/smoke.py` checks the gateway process over HTTP; Go network tests check the synthetic worker.
 
 ## Planned system
 
