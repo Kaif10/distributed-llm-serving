@@ -1,8 +1,8 @@
 # Milestones
 
 Progress is based on demonstrated behavior and understanding, with no calendar estimates.
-The foundation and milestone 1's directly callable synthetic worker are implemented.
-Gateway forwarding and the remaining milestones are planned.
+The foundation and milestone 1's single-worker streaming path are implemented and tested
+with the synthetic worker. Real inference and milestones 2 through 9 remain planned.
 
 ## Problem and first user
 
@@ -49,9 +49,10 @@ Build this milestone in three small increments:
    request and the worker observes cancellation and stops producing chunks. Also test a worker
    failure mid-stream, deadlines, and slow-reader behavior before closing the milestone.
 
-Increment 1 is implemented; see [the worker walkthrough](learning/01-streaming-worker.md).
-The next increment is gateway forwarding. Run the worker directly and explain its request
-flow before adding that extra connection.
+All three increments are implemented for the synthetic worker; see the
+[worker walkthrough](learning/01-streaming-worker.md) and
+[gateway walkthrough](learning/02-gateway-streaming.md). The next milestone is real inference
+integration on available hardware. Tests of the fixture do not establish model-engine behavior.
 
 ## 2. Connect real inference and establish a baseline
 

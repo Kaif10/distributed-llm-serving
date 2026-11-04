@@ -1,4 +1,4 @@
-// Command gateway starts the service foundation. Inference forwarding is a later milestone.
+// Command gateway forwards streaming requests to one configured inference worker.
 package main
 
 import (
@@ -13,32 +13,36 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Kaif10/inference-fleet/internal/gateway"
 )
 
 func main() {
 	address := flag.String("listen", "127.0.0.1:8080", "HTTP listen address")
+	backend := flag.String("backend", "", "worker origin, e.g. http://127.0.0.1:8081")
+	timeout := flag.Duration("request-timeout", 30*time.Second, "forwarding deadline; downstream writes bounded by this plus 1s")
 	flag.Parse()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	if err := run(ctx, *address); err != nil {
+	if err := run(ctx, *address, *backend, *timeout); err != nil {
 		slog.Error("gateway stopped", "error", err)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, address string) error {
-	mux := http.NewServeMux()
-	// Liveness only: no backend readiness is implied by this response.
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte("{\"status\":\"ok\"}\n"))
-	})
+func run(ctx context.Context, address, backend string, timeout time.Duration) error {
+	handler, err := gateway.NewHandler(backend, timeout, slog.Default())
+	if err != nil {
+		return err
+	}
 	server := &http.Server{
-		Handler:           mux,
+		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
-		IdleTimeout:       60 * time.Second,
-		MaxHeaderBytes:    16 << 10,
+		// The generation handler replaces the short default with its stream deadline.
+		IdleTimeout:    60 * time.Second,
+		MaxHeaderBytes: 16 << 10,
 	}
 	// Bind before logging so an occupied port fails visibly at startup.
 	listener, err := net.Listen("tcp", address)

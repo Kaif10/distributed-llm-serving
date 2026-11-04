@@ -6,8 +6,8 @@ The intended user operates several replicas of the same model. Requests differ i
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The
 goal is to keep useful work flowing while bounding queues and handling failures explicitly.
 
-**Current status:** a minimal Go gateway foundation and a directly callable synthetic streaming
-worker, with cancellation tests. Gateway forwarding, real inference, routing,
+**Current status:** a Go gateway forwarding streams to one configured synthetic worker,
+with network tests for cancellation, deadlines, and worker failures. Real inference, routing,
 model integration, and consensus are planned, not implemented. No performance results or
 production usage are claimed. The operational problem still needs validation with a real workload.
 
@@ -17,6 +17,7 @@ production usage are claimed. The operational problem still needs validation wit
 - [Architecture](docs/ARCHITECTURE.md): request flow, control-plane responsibilities, and failure contracts.
 - [First walkthrough](docs/learning/00-service.md): run the service and understand its lifecycle.
 - [Streaming worker walkthrough](docs/learning/01-streaming-worker.md): watch chunks arrive and disconnect the client.
+- [Gateway forwarding walkthrough](docs/learning/02-gateway-streaming.md): stream across two connections and trace failures.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
@@ -35,7 +36,9 @@ curl http://127.0.0.1:8080/healthz
 ```
 
 This returns `{"status":"ok"}`. It means the HTTP process responds; it does not mean a
-model is loaded. Generation endpoints do not exist yet and return 404. Stop with Ctrl+C.
+model is loaded. Without `-backend`, generation returns 503. Stop with Ctrl+C.
+To stream through the gateway, start the test worker and run
+`go run ./cmd/gateway -backend http://127.0.0.1:8081`; follow the forwarding walkthrough above.
 
 ```sh
 go test ./...

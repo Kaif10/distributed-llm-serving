@@ -1,6 +1,7 @@
 # Intended architecture
 
-This describes the target. The current implementation is only the HTTP service foundation.
+This describes the target. The current implementation forwards streaming requests from one
+gateway to one statically configured synthetic worker. Replicated configuration is planned.
 
 ```mermaid
 flowchart LR

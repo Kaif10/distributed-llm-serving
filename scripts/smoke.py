@@ -39,7 +39,7 @@ def check(binary: Path) -> None:
                 assert response.headers["Content-Type"] == "application/json"
                 assert json.load(response) == {"status": "ok"}
             for path, method, expected in [
-                ("/v1/chat/completions", "POST", 404),
+                ("/v1/chat/completions", "POST", 503),
                 ("/healthz", "POST", 405),
             ]:
                 request = urllib.request.Request(url + path, method=method)
@@ -55,7 +55,7 @@ def check(binary: Path) -> None:
             )
             assert other.returncode != 0, "Occupied port must fail startup"
             assert "gateway listening" not in other.stderr
-            print("PASS: health JSON, generation 404, method 405, occupied-port failure")
+            print("PASS: health JSON, no-backend 503, method 405, occupied-port failure")
             if os.name != "nt":
                 process.terminate()  # SIGTERM invokes the service's graceful shutdown.
                 assert process.wait(timeout=7) == 0, "Graceful shutdown must succeed"

@@ -14,7 +14,7 @@ $fleetGo = "$env:LOCALAPPDATA\inference-fleet\toolchains\go1.27.3\go\bin\go.exe"
 ```
 
 In another terminal, run `curl.exe -i http://127.0.0.1:8080/healthz`. You should receive HTTP
-200 and a short JSON response. A generation request currently receives 404.
+200 and a short JSON response. With no backend configured, generation now receives 503.
 
 ## Follow the request
 
@@ -37,9 +37,8 @@ period expires, connections are closed and the process reports failure.
 consider whether it can accept inference traffic. A responding process can still have no
 available model servers.
 
-The current write timeout fits a short health response. Streaming inference will require
-an explicit deadline and timeout design; do not carry this value over without considering
-long-running streams.
+The default write timeout fits a short health response. The streaming increment now sets
+a separate deadline for generation; see the gateway forwarding walkthrough for that design.
 
 ## Try these experiments
 

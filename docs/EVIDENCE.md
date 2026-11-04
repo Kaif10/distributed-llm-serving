@@ -1,8 +1,33 @@
 # Evidence ledger
 
-The gateway foundation is a local HTTP process with a liveness endpoint. A separate synthetic
-worker now streams test chunks directly to clients. Milestone 1 is partially implemented;
-gateway forwarding, real inference, routing, and milestones 2 through 9 remain unimplemented.
+The gateway now forwards streaming requests to one configured synthetic worker. Milestone 1
+is implemented for that fixture; real inference, routing, and milestones 2 through 9 remain
+unimplemented. Historical entries below describe the checks at their original increments.
+
+## Single-worker gateway validation
+
+Environment: Windows amd64, Go 1.27.3; Python 3.12 for executable smoke checks.
+
+- `go test ./...` and `go vet ./...`: passed.
+- `go test ./internal/gateway -v` reproduces the committed network checks: first-chunk
+  delivery before worker completion, disconnect propagation through two HTTP connections,
+  direct-versus-forwarded complete content, preserved worker rejection without application
+  retry, no-backend 503, unreachable-worker 502, and pre-stream timeout 504.
+- The same suite checks a worker aborting mid-stream: the client receives a read error and
+  no fabricated completion marker. Invalid JSON and oversized requests never reach a worker.
+- A non-reading-client test floods the stream until socket buffers fill, then verifies that
+  the gateway handler and worker return within bounded waits. This is a cleanup assertion,
+  not an application-level memory or fleet admission benchmark.
+- `go build -o bin/gateway.exe ./cmd/gateway` and
+  `python scripts/smoke.py bin/gateway.exe`: passed. The updated smoke check expects 503
+  for generation without a configured worker; liveness and occupied-port checks still pass.
+- A manual Python HTTP client against separate gateway and worker executables received a
+  full stream, then disconnected a second stream after its first chunk. The worker logged
+  `outcome=cancelled chunks=1`. Stopping the worker made a subsequent gateway request return
+  502. The committed tests above reproduce these behavior checks using separate HTTP servers.
+
+Local race detection was not run; Linux CI requests it. Active-stream gateway shutdown,
+real model cancellation, and performance under load have not been established here.
 
 ## Direct streaming worker validation
 

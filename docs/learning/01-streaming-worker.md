@@ -79,5 +79,5 @@ request reads, and stream write duration; this fixture has no admission limit ye
 2. Set `max_tokens` to 129. Why is the HTTP error still possible before streaming starts?
 3. Explain the difference between flushing the response and cancelling the request context.
 
-Next: put the gateway between this worker and the client, and preserve the same streaming
-and cancellation behavior across the extra network connection.
+Continue with [the gateway walkthrough](02-gateway-streaming.md) to put the gateway between
+this worker and the client and trace cancellation across the extra connection.
