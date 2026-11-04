@@ -1,0 +1,12 @@
+/bin/
+/artifacts/
+/.tools/
+.env
+.env.*
+!.env.example
+*.log
+*.test
+*.exe
+coverage.out
+.DS_Store
+__pycache__/
