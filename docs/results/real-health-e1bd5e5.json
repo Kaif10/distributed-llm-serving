@@ -1,0 +1,239 @@
+{
+  "source_commit": "e1bd5e5576279b8395a7b3ec94be1970a8a038ba",
+  "working_tree_dirty": false,
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18081",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--slots",
+      "--no-ui",
+      "--no-cache-prompt"
+    ],
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18082",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--slots",
+      "--no-ui",
+      "--no-cache-prompt"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:18080",
+      "-admin-listen",
+      "127.0.0.1:18090",
+      "-backends",
+      "http://127.0.0.1:18081,http://127.0.0.1:18082",
+      "-policy",
+      "round-robin",
+      "-max-inflight",
+      "1",
+      "-request-timeout",
+      "60s",
+      "-health-interval",
+      "100ms",
+      "-health-timeout",
+      "100ms"
+    ]
+  ],
+  "request": {
+    "model": "smollm2-135m",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Explain what a computer server does in two short sentences."
+      }
+    ],
+    "stream": true,
+    "max_tokens": 64,
+    "temperature": 0,
+    "seed": 7
+  },
+  "initial": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:11.372454Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    },
+    {
+      "id": 1,
+      "origin": "http://127.0.0.1:18082",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:11.371851Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    }
+  ],
+  "drain_ack": {
+    "id": 0,
+    "origin": "http://127.0.0.1:18081",
+    "healthy": true,
+    "checked_at": "2026-11-04T18:08:11.5743544Z",
+    "draining": true,
+    "inflight": 1,
+    "drained": false
+  },
+  "other_worker_generation": {
+    "ttft_ms": 230.447,
+    "completion_ms": 411.704,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "original_stream_completed": true,
+  "drained": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:13.8902281Z",
+      "draining": true,
+      "inflight": 0,
+      "drained": true
+    },
+    {
+      "id": 1,
+      "origin": "http://127.0.0.1:18082",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:13.8873129Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    }
+  ],
+  "failed_stream": "EOF without DONE",
+  "after_worker_loss": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": false,
+      "checked_at": "2026-11-04T18:08:14.0958439Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    },
+    {
+      "id": 1,
+      "origin": "http://127.0.0.1:18082",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:14.0894274Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    }
+  ],
+  "survivor_generations": [
+    {
+      "ttft_ms": 132.7,
+      "completion_ms": 237.583,
+      "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+      "usage": null,
+      "finish_reason": "length",
+      "done": true
+    },
+    {
+      "ttft_ms": 119.123,
+      "completion_ms": 216.46,
+      "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+      "usage": null,
+      "finish_reason": "length",
+      "done": true
+    }
+  ],
+  "all_down": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": false,
+      "checked_at": "2026-11-04T18:08:14.6020587Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    },
+    {
+      "id": 1,
+      "origin": "http://127.0.0.1:18082",
+      "healthy": false,
+      "checked_at": "2026-11-04T18:08:14.5954951Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    }
+  ],
+  "all_down_rejected": true,
+  "recovered": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": true,
+      "checked_at": "2026-11-04T18:08:15.1069534Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    },
+    {
+      "id": 1,
+      "origin": "http://127.0.0.1:18082",
+      "healthy": false,
+      "checked_at": "2026-11-04T18:08:15.1006798Z",
+      "draining": false,
+      "inflight": 0,
+      "drained": false
+    }
+  ],
+  "recovery_generation": {
+    "ttft_ms": 105.832,
+    "completion_ms": 201.081,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "passed": true
+}

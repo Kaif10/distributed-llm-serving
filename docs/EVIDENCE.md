@@ -2,9 +2,43 @@
 
 The gateway routes streaming requests across a static worker pool with local per-worker
 admission limits. Milestones 1 and the local integration portion of 2 are implemented;
-milestone 3's routing and admission increment is verified with two real model processes.
-Health probes and draining remain next; milestones 4 through 9 remain planned.
+milestone 3's routing, admission, health, and local draining increments are verified with
+two real model processes. Milestones 4 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
+
+## Real worker health and draining
+
+Source: clean commit `e1bd5e5`. Raw results, model/engine pins, exact launch commands, request
+parameters, state observations, and generated output are in
+[real-health-e1bd5e5.json](results/real-health-e1bd5e5.json). Reproduce with
+`go build -o bin/gateway.exe ./cmd/gateway` then `python scripts/check_real_health.py`.
+
+Two real llama.cpp b12110 CPU processes run SmolLM2-135M Q4_K_M on the same Windows machine.
+Each has one slot, two threads, and a 2048-token context. The experiment uses 100 ms probe
+intervals and timeouts. This is faster than the executable defaults and is recorded in the
+raw commands. No synthetic generations are used in this experiment.
+
+- A 256-token real generation stayed active when drain was acknowledged and completed
+  with `[DONE]`. New generation completed on the other worker. Drain eventually reported
+  zero locally admitted requests, then an explicit resume restored eligibility.
+- Killing worker 0 during a subsequent generation produced a stream failure without a
+  completion marker. Its health changed to false and two new generations completed on
+  the survivor, without replaying the interrupted request.
+- Killing the survivor made all workers unhealthy. Both readiness and new generation
+  returned 503. Restarting worker 0 restored health and a new generation completed.
+- The script stopped all of its processes after the checks. Logs remain under ignored
+  `artifacts/real-health/`; raw observations are committed in the linked JSON.
+
+`go test ./...` and `go vet ./...` passed. Controlled tests cover unhealthy-to-healthy
+transitions, a stalled probe and probe shutdown, drain acknowledgement during a stream,
+stream completion under drain, resume, and health probes preserving the drain flag.
+The gateway process smoke check passed. The earlier real-model routing/admission script
+also passed under both policies after fixing its startup check to accept an empty HTTP 200
+readiness body; it had incorrectly required JSON and timed out despite successful readiness.
+
+These results establish process-failure and local-drain behavior. They do not establish
+durable drain state, coordination across gateways, multi-host partitions, or instantaneous
+failure detection. Local race detection was not run; Linux CI requests it.
 
 ## Real worker-pool admission
 
