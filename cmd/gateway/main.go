@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -20,18 +21,35 @@ import (
 func main() {
 	address := flag.String("listen", "127.0.0.1:8080", "HTTP listen address")
 	backend := flag.String("backend", "", "worker origin, e.g. http://127.0.0.1:8081")
+	backends := flag.String("backends", "", "comma-separated worker origins serving the same model")
+	policy := flag.String("policy", "least-inflight", "least-inflight or round-robin")
+	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
 	timeout := flag.Duration("request-timeout", 30*time.Second, "forwarding deadline; downstream writes bounded by this plus 1s")
 	flag.Parse()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	if err := run(ctx, *address, *backend, *timeout); err != nil {
+	if *backend != "" && *backends != "" {
+		slog.Error("use either -backend or -backends")
+		os.Exit(1)
+	}
+	var origins []string
+	if *backend != "" {
+		origins = []string{*backend}
+	}
+	if *backends != "" {
+		for _, origin := range strings.Split(*backends, ",") {
+			origins = append(origins, strings.TrimSpace(origin))
+		}
+	}
+	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit}
+	if err := run(ctx, *address, options, *timeout); err != nil {
 		slog.Error("gateway stopped", "error", err)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, address, backend string, timeout time.Duration) error {
-	handler, err := gateway.NewHandler(backend, timeout, slog.Default())
+func run(ctx context.Context, address string, options gateway.PoolOptions, timeout time.Duration) error {
+	handler, err := gateway.NewPoolHandler(options, timeout, slog.Default())
 	if err != nil {
 		return err
 	}

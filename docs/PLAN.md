@@ -2,7 +2,9 @@
 
 Progress is based on demonstrated behavior and understanding, with no calendar estimates.
 The foundation, single-worker streaming path, and milestone 2's local CPU integration are
-implemented. Milestones 3 through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
+implemented. Milestone 3 now has static worker-pool routing and bounded admission, checked
+against two real CPU model servers. Health probes and draining remain next; milestones 4
+through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
 
 ## Problem and first user
 
@@ -85,6 +87,11 @@ bounded failure. Report partial stream failures without pretending generation wa
 
 Learning: partial failure, unreliable failure detectors, load balancing, Little's Law,
 queueing, admission control, retries and duplicate execution.
+
+First increment complete: atomic worker selection/reservation, round-robin and least-inflight,
+per-worker admission limits, immediate overload rejection, and capacity release on all exits.
+See [the real worker pool experiment](learning/04-worker-pool.md). Next increment: detect
+unhealthy workers and support draining without interrupting existing streams.
 
 ## 4. Test cache locality against load
 

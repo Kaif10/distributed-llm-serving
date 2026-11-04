@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -20,17 +21,35 @@ const maxRequestBytes = 64 << 10
 // NewHandler accepts a backend origin (no path/query) and a total forwarding deadline.
 // An empty backend keeps health available and rejects generation with 503.
 func NewHandler(backend string, timeout time.Duration, logger *slog.Logger) (http.Handler, error) {
+	var backends []string
+	if backend != "" {
+		backends = []string{backend}
+	}
+	return NewPoolHandler(PoolOptions{Backends: backends, Policy: "least-inflight", MaxInflight: 1}, timeout, logger)
+}
+
+// NewPoolHandler routes each request once and holds capacity until forwarding ends.
+func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Logger) (http.Handler, error) {
+	if err := validateOptions(options); err != nil {
+		return nil, err
+	}
 	if timeout <= 0 {
 		return nil, fmt.Errorf("request timeout must be positive")
 	}
-	var proxy *httputil.ReverseProxy
-	if backend != "" {
+	pool := &workerPool{limit: options.MaxInflight, policy: options.Policy}
+	seen := make(map[string]bool)
+	for _, backend := range options.Backends {
 		target, err := url.Parse(backend)
 		if err != nil || target == nil || (target.Scheme != "http" && target.Scheme != "https") || target.Hostname() == "" || target.User != nil || (target.Path != "" && target.Path != "/") || target.RawQuery != "" || target.ForceQuery || target.Fragment != "" {
 			return nil, fmt.Errorf("backend must be an http(s) origin without credentials, path, query, or fragment")
 		}
 		target.Path = ""
-		proxy = &httputil.ReverseProxy{
+		key := strings.ToLower(target.String())
+		if seen[key] {
+			return nil, fmt.Errorf("duplicate backend origin")
+		}
+		seen[key] = true
+		proxy := &httputil.ReverseProxy{
 			Rewrite:       func(p *httputil.ProxyRequest) { p.SetURL(target) },
 			FlushInterval: -1,
 			ErrorLog:      slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
@@ -46,6 +65,8 @@ func NewHandler(backend string, timeout time.Duration, logger *slog.Logger) (htt
 				http.Error(w, "worker unavailable", http.StatusBadGateway)
 			},
 		}
+		pool.proxies = append(pool.proxies, proxy)
+		pool.inflight = append(pool.inflight, 0)
 	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -53,10 +74,18 @@ func NewHandler(backend string, timeout time.Duration, logger *slog.Logger) (htt
 		_, _ = io.WriteString(w, "{\"status\":\"ok\"}\n")
 	})
 	mux.HandleFunc("POST /v1/chat/completions", func(w http.ResponseWriter, r *http.Request) {
-		if proxy == nil {
+		if len(pool.proxies) == 0 {
 			http.Error(w, "no worker configured", http.StatusServiceUnavailable)
 			return
 		}
+		index, available := pool.acquire()
+		if !available {
+			w.Header().Set("Retry-After", "1")
+			http.Error(w, "all workers at capacity", http.StatusServiceUnavailable)
+			return
+		}
+		defer pool.release(index)
+		logger.Debug("worker selected", "worker", index, "policy", options.Policy)
 		// Buffer only the bounded request; the response is copied incrementally.
 		r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
 		body, err := io.ReadAll(r.Body)
@@ -90,7 +119,7 @@ func NewHandler(backend string, timeout time.Duration, logger *slog.Logger) (htt
 		r.Body = io.NopCloser(bytes.NewReader(body))
 		r.ContentLength = int64(len(body))
 		r.TransferEncoding = nil
-		proxy.ServeHTTP(w, r)
+		pool.proxies[index].ServeHTTP(w, r)
 	})
 	return mux, nil
 }
