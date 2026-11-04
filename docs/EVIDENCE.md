@@ -1,9 +1,39 @@
 # Evidence ledger
 
-The gateway forwards streaming requests to one configured worker, validated with both the
-synthetic fixture and real llama.cpp CPU inference. Milestones 1 and the local integration
-portion of 2 are implemented; multi-worker routing and milestones 3 through 9 remain planned.
+The gateway routes streaming requests across a static worker pool with local per-worker
+admission limits. Milestones 1 and the local integration portion of 2 are implemented;
+milestone 3's routing and admission increment is verified with two real model processes.
+Health probes and draining remain next; milestones 4 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
+
+## Real worker-pool admission
+
+Source: clean commit `9b6d8e0`. Reproduce with `go build -o bin/gateway.exe ./cmd/gateway`
+and `python scripts/check_real_pool.py` after the pinned model setup. Raw requests,
+launch commands, engine-slot observations, and outcomes are in
+[real-pool-9b6d8e0.json](results/real-pool-9b6d8e0.json).
+
+The experiment starts two separate llama.cpp b12110 CPU processes with real SmolLM2-135M
+Q4_K_M weights on the same Windows i5-1235U machine. Each has two threads, one inference
+slot, a 2048-token context, and prompt caching disabled. The gateway admits one request
+per worker. All children are stopped at the end of the experiment.
+
+Both round-robin and least-inflight passed the following sequence:
+
+1. Two requests produce real generated text; both engine slots report active generation.
+2. A third request receives 503 with `Retry-After: 1`, while those slots remain occupied.
+3. Closing both clients causes both engines to report idle slots.
+4. A new generation is admitted and completes with its finish reason and `[DONE]` marker.
+
+This verifies routing and admission behavior, not comparative throughput or a preferred
+policy. With one slot per worker, both policies select the available worker. A separate
+controlled test distinguishes least-inflight from round-robin under unequal load.
+
+`go test ./...`, `go vet ./...`, and the gateway executable smoke check passed. Controlled
+tests also cover 64 concurrent acquisition attempts against capacity four, cancellation
+releasing a selected worker, invalid input and transport failures releasing reservations,
+and rejection of invalid pool configuration. Local race detection was not run; Linux CI
+requests it. Limits apply only to this gateway, not direct engine traffic or other gateways.
 
 ## Real CPU inference baseline
 
