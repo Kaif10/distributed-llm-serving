@@ -1,7 +1,8 @@
 # Intended architecture
 
 This describes the target. The current implementation forwards streaming requests from one
-gateway to one statically configured synthetic worker. Replicated configuration is planned.
+gateway to one statically configured worker: either the synthetic fixture or pinned llama.cpp
+CPU inference with SmolLM2-135M. Replicated configuration and worker-pool routing are planned.
 
 ```mermaid
 flowchart LR

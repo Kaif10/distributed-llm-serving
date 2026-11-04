@@ -1,8 +1,8 @@
 # Milestones
 
 Progress is based on demonstrated behavior and understanding, with no calendar estimates.
-The foundation and milestone 1's single-worker streaming path are implemented and tested
-with the synthetic worker. Real inference and milestones 2 through 9 remain planned.
+The foundation, single-worker streaming path, and milestone 2's local CPU integration are
+implemented. Milestones 3 through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
 
 ## Problem and first user
 
@@ -52,7 +52,8 @@ Build this milestone in three small increments:
 All three increments are implemented for the synthetic worker; see the
 [worker walkthrough](learning/01-streaming-worker.md) and
 [gateway walkthrough](learning/02-gateway-streaming.md). The next milestone is real inference
-integration on available hardware. Tests of the fixture do not establish model-engine behavior.
+integration on available hardware, now exercised separately in milestone 2. Tests of the
+fixture alone do not establish model-engine behavior.
 
 ## 2. Connect real inference and establish a baseline
 
@@ -66,6 +67,11 @@ GPU throughput claims. Fake workers remain explicitly labelled test fixtures.
 
 Evidence: real streamed generation, cancellation integration, and direct-versus-gateway latency
 measurements. Validate engine-side work termination separately from client disconnection.
+
+Implemented locally with pinned llama.cpp b12110 and SmolLM2-135M-Instruct Q4_K_M on CPU;
+see the [real inference walkthrough](learning/03-real-inference.md). The checker records
+direct/gateway timings and observes the engine slot becoming idle after disconnect. GPU
+integration and load/capacity measurement remain future work.
 
 ## 3. Route across a worker pool and bound overload
 

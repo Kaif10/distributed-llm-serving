@@ -1,0 +1,10 @@
+{
+  "engine": "llama.cpp",
+  "release": "b12110",
+  "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+  "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+  "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+  "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+  "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+  "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+}

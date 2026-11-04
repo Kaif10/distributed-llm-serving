@@ -1,0 +1,8 @@
+{
+  "model": "smollm2-135m",
+  "messages": [{"role": "user", "content": "Explain what a computer server does in two short sentences."}],
+  "stream": true,
+  "max_tokens": 64,
+  "temperature": 0,
+  "seed": 7
+}

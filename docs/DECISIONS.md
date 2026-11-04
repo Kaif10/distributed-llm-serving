@@ -17,7 +17,19 @@ where useful. Start with the standard library and add dependencies for concrete 
 
 Alternative: implement model execution ourselves. Rejected because it distracts from the
 request-routing and distributed-control problem. No engine version is selected before checking
-available hardware and a runnable integration.
+available hardware and a runnable integration. See decision 006 for the first verified backend.
+
+## 006: Small pinned CPU backend for local integration
+
+The available machine has about 8 GB RAM and Intel integrated graphics. Select llama.cpp
+b12110's Windows x64 CPU release with SmolLM2-135M-Instruct Q4_K_M to validate real generation
+within that budget. Preserve the existing gateway and speak the same chat-completions path.
+Pin the archive checksum and model revision/checksum in config/llama-cpu.json.
+
+vLLM remains a GPU candidate when suitable hardware is available. CPU integration is enough
+for request-flow and engine cancellation checks; it cannot substantiate GPU serving or
+multi-worker throughput claims. Existing Python ML packages remain untouched. The local
+setup downloads verified artifacts into ignored .tools/ and requires no paid service.
 
 ## 003: Consensus governs configuration
 

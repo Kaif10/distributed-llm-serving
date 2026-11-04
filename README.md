@@ -6,10 +6,12 @@ The intended user operates several replicas of the same model. Requests differ i
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The
 goal is to keep useful work flowing while bounding queues and handling failures explicitly.
 
-**Current status:** a Go gateway forwarding streams to one configured synthetic worker,
-with network tests for cancellation, deadlines, and worker failures. Real inference, routing,
-model integration, and consensus are planned, not implemented. No performance results or
-production usage are claimed. The operational problem still needs validation with a real workload.
+**Current status:** a Go gateway forwarding streams to one configured worker, validated with
+both the synthetic worker and real SmolLM2-135M generation through llama.cpp on CPU. Network
+tests cover cancellation, deadlines, and worker failures; a separate local-engine check observes
+slot release on disconnect and records a small sequential latency baseline. Multi-worker routing
+and consensus remain planned. No production usage is claimed. The operational problem still
+needs validation with a real application workload.
 
 ## Start here
 
@@ -18,6 +20,7 @@ production usage are claimed. The operational problem still needs validation wit
 - [First walkthrough](docs/learning/00-service.md): run the service and understand its lifecycle.
 - [Streaming worker walkthrough](docs/learning/01-streaming-worker.md): watch chunks arrive and disconnect the client.
 - [Gateway forwarding walkthrough](docs/learning/02-gateway-streaming.md): stream across two connections and trace failures.
+- [Real inference walkthrough](docs/learning/03-real-inference.md): run pinned CPU inference and observe engine cancellation.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
