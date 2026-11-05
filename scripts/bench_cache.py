@@ -4,6 +4,7 @@ import argparse
 import contextlib
 import hashlib
 import json
+from pathlib import Path
 import platform
 import random
 import socket
@@ -92,13 +93,16 @@ def run_condition(condition, trial, config, workload, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trials", type=int, default=3)
+    parser.add_argument("--output-dir", type=Path, default=ROOT/"artifacts/cache-baseline")
+    parser.add_argument("--conditions", nargs="+", choices=["direct-cache", "direct-no-cache", "round-robin", "least-inflight"],
+                        default=["direct-cache", "direct-no-cache", "round-robin", "least-inflight"])
     args = parser.parse_args()
     if args.trials < 1:
         parser.error("trials must be positive")
     for port in (18080, 18081, 18082):
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", port))
-    output = ROOT / "artifacts/cache-baseline"
+    output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     config = json.loads((ROOT/"config/llama-cpu.json").read_text())
     workload_path = ROOT/"examples/cache-workload.json"
@@ -111,7 +115,7 @@ def main():
     rng = random.Random(7)
     try:
         for trial in range(args.trials):
-            conditions = ["direct-cache", "direct-no-cache", "round-robin", "least-inflight"]
+            conditions = list(args.conditions)
             rng.shuffle(conditions)
             for condition in conditions:
                 result["runs"].append(run_condition(condition, trial, config, workload, output))

@@ -1,0 +1,144 @@
+{
+  "condition": "least-inflight",
+  "trial": 1,
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18081",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--slots",
+      "--no-ui",
+      "--cache-ram",
+      "0",
+      "--no-cache-idle-slots",
+      "--cache-prompt"
+    ],
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18082",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--slots",
+      "--no-ui",
+      "--cache-ram",
+      "0",
+      "--no-cache-idle-slots",
+      "--cache-prompt"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:18080",
+      "-backends",
+      "http://127.0.0.1:18081,http://127.0.0.1:18082",
+      "-policy",
+      "least-inflight",
+      "-max-inflight",
+      "1",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "samples": [
+    {
+      "ttft_ms": 1462.862,
+      "completion_ms": 1624.538,
+      "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+      "usage": {
+        "completion_tokens": 16,
+        "prompt_tokens": 520,
+        "total_tokens": 536,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "finish_reason": "length",
+      "done": true,
+      "document": "A",
+      "position": 0,
+      "worker": 0,
+      "cached_tokens": 3
+    },
+    {
+      "ttft_ms": 1687.848,
+      "completion_ms": 1846.663,
+      "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+      "usage": {
+        "completion_tokens": 16,
+        "prompt_tokens": 520,
+        "total_tokens": 536,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "finish_reason": "length",
+      "done": true,
+      "document": "A",
+      "position": 1,
+      "worker": 1,
+      "cached_tokens": 3
+    },
+    {
+      "ttft_ms": 1607.872,
+      "completion_ms": 1763.982,
+      "text": "According to record 3, the Cedar team inspected 15 items.\n",
+      "usage": {
+        "completion_tokens": 16,
+        "prompt_tokens": 520,
+        "total_tokens": 536,
+        "prompt_tokens_details": {
+          "cached_tokens": 3
+        }
+      },
+      "finish_reason": "length",
+      "done": true,
+      "document": "B",
+      "position": 2,
+      "worker": 0,
+      "cached_tokens": 3
+    }
+  ],
+  "failures": 1,
+  "warmup_per_engine": {
+    "model": "smollm2-135m",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Say hello."
+      }
+    ],
+    "stream": true,
+    "max_tokens": 16,
+    "ignore_eos": true,
+    "temperature": 0,
+    "cache_prompt": false
+  },
+  "error": "Incomplete stream or no generated content"
+}
