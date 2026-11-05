@@ -67,6 +67,15 @@ uses one worker; its comparison illustrates locality, not a superior production 
 
 ## Limits and next experiment
 
+The recorded run completed 96 requests across three trials. Direct serving reused 48.654%
+of prompt tokens across the schedule with caching enabled, versus 0% with it disabled.
+Both existing pool policies reused 0.577% on this sequential schedule. See the
+[evidence ledger](../EVIDENCE.md) for raw results, timings, and the exact conditions.
+
+An earlier run encountered a 60-second incomplete generation. That failure, its logs, and
+a successful isolated replay are preserved separately. Its cause is unresolved. A later
+successful run is not a fix, and this result cannot establish reliability under load.
+
 This run has no concurrent arrival schedule, overload, latency objective, or affinity policy.
 It cannot show that cache-aware routing improves throughput or tail latency, or that these
 results generalize to GPUs. It also does not evaluate answer quality.
@@ -74,6 +83,8 @@ results generalize to GPUs. It also does not evaluate answer quality.
 Next, add an explicit prefix-affinity policy with a capacity escape rule, then compare it
 against these baselines under repeated-prefix traffic and skew. Keep estimated cache presence
 distinct from the engine's measured reuse, and report when affinity loses to load balancing.
+Carry the unresolved timeout forward with diagnostics in those experiments. Use
+`--output-dir` to preserve separate runs and `--conditions` to isolate a specific condition.
 
 - Why does repeating a document on another worker miss a local cache?
 - Why can unrelated prompts still share a few cached tokens?

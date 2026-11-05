@@ -14,7 +14,9 @@ slot release on disconnect and records a small sequential latency baseline. A tw
 experiment checks routing and overload against real models. Active health probes exclude
 unavailable workers, and a separate local admin API drains assignments while streams finish.
 Real-model experiments cover drain, worker process loss, and recovery. Consensus remains
-planned. No production usage is claimed. The operational problem still
+planned. A repeated-document experiment measures real prefix-cache reuse against disabled
+caching and the existing routing policies; its evidence includes an unresolved timeout from
+an interrupted run. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
 
 ## Start here

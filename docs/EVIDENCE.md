@@ -3,8 +3,74 @@
 The gateway routes streaming requests across a static worker pool with local per-worker
 admission limits. Milestones 1 and the local integration portion of 2 are implemented;
 milestone 3's routing, admission, health, and local draining increments are verified with
-two real model processes. Milestones 4 through 9 remain planned.
+two real model processes. Milestone 4 now has measured real-model cache controls and
+existing-policy baselines; affinity routing and load experiments remain unfinished.
+Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
+
+## Real prefix-cache controls and routing baselines
+
+Source: clean commit `5ff2ed59de61f823de45c626e2f5649137911d79`. Run
+`python scripts/bench_cache.py --trials 3 --output-dir artifacts/cache-repeat` after building
+the gateway and setting up the pinned model. Raw measurements and commands:
+[cache-baseline-5ff2ed5.json](results/cache-baseline-5ff2ed5.json).
+
+Hardware: the same Windows i5-1235U laptop with about 8 GB RAM, CPU inference only.
+Engine/model: llama.cpp b12110 and SmolLM2-135M Q4_K_M. Each engine has two CPU threads,
+one slot, a 2048-token context, and the extra RAM cache tier disabled. Processes are fresh
+for every condition and trial. One unrelated warmup per engine precedes the measured
+workload; model download/loading are excluded from client timing. No concurrent arrivals.
+
+Three trials per condition, eight requests each, 96 completed measured requests and zero
+failures in this fresh run. The constructed document schedule and questions are committed
+in `examples/cache-workload.json`, with its hash in the results. Every response generates
+16 tokens. Conditions are shuffled per trial with seed 7; worker task-ID changes identify
+where each request actually ran.
+
+| Condition | Requests | Cached prompt-token fraction | Median TTFT |
+| --- | --- | --- | --- |
+| Direct, cache disabled | 24 | 0% | 1711.519 ms |
+| Direct, cache enabled | 24 | 48.654% | 907.615 ms |
+| Round-robin, two workers | 24 | 0.577% | 1769.993 ms |
+| Least-inflight, two workers | 24 | 0.577% | 1707.033 ms |
+
+Each direct cached sequence reused `[3, 503, 3, 503, 3, 503, 3, 503]` prompt tokens.
+Three shared template tokens can survive even for unrelated documents; each adjacent
+question sharing the same document reused 503. The disabled-cache control reported zero
+for every request. Both pool policies selected workers `[0,1,0,1,0,1,0,1]` in every trial,
+placing adjacent repeated documents on different workers. This explains their low reuse
+for this particular schedule. It does not establish which policy is better under load.
+
+TTFT includes transport, scheduling, and engine computation. It is not pure prefill time.
+Per-trial median TTFT for the disabled control ranged from 1620.929 to 2892.795 ms, showing
+substantial timing variation. Token counters provide the evidence of computation reuse;
+these laptop timings should not be generalized to GPUs or interpreted as a capacity result.
+The workload is constructed, not an application-user trace. No answer cache or affinity
+policy was added, and no product adoption or answer-quality result is claimed.
+
+### Interrupted run retained
+
+An earlier three-trial attempt at `c108584` stopped after 51 completed measured requests
+when the next least-inflight request did not complete within the configured 60-second
+deadline. The gateway log reported a context deadline during response copying; the client
+reported an incomplete stream. The engine log shows that request starting but no completed
+generation before cleanup. Root cause is not established.
+
+Evidence: [completed conditions](results/cache-interrupted-c108584-results.json),
+[interrupted condition](results/cache-interrupted-c108584-failed-1-least-inflight.json), and
+[engine/gateway logs](results/cache-interrupted-c108584-logs.json). The failed request is
+not included among the fresh run's 96 successes. It remains a separate observed failure.
+
+An isolated replay of least-inflight completed eight requests without reproducing the timeout:
+`python scripts/bench_cache.py --trials 1 --conditions least-inflight --output-dir artifacts/cache-reproduction`.
+Its [raw results](results/cache-reproduction-5ff2ed5.json) are also retained. The later fresh
+three-trial run succeeded with the same deadline. That is not a root-cause fix. Further
+timeout diagnostics and a load experiment are needed before making reliability claims.
+
+Validation: the disabled-cache, repeated-prefix, unrelated-prefix, token-count, complete-stream,
+and worker-attribution checks passed in the completed run. The Python harness compiled and
+executed. No Go runtime code changed in this increment; the preceding health/drain commit's
+Linux CI completed successfully, including race detection.
 
 ## Real worker health and draining
 
