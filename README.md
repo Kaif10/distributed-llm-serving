@@ -27,6 +27,7 @@ needs validation with a real application workload.
 - [Real inference walkthrough](docs/learning/03-real-inference.md): run pinned CPU inference and observe engine cancellation.
 - [Worker pool walkthrough](docs/learning/04-worker-pool.md): run two real engines and reject excess work.
 - [Health and draining walkthrough](docs/learning/05-health-and-draining.md): remove workers safely from new assignments.
+- [Cache baseline walkthrough](docs/learning/06-cache-baseline.md): measure real prefix reuse and existing routing policies.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 

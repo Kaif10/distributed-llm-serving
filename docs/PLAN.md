@@ -4,8 +4,9 @@ Progress is based on demonstrated behavior and understanding, with no calendar e
 The foundation, single-worker streaming path, and milestone 2's local CPU integration are
 implemented. Milestone 3 now has static worker-pool routing and bounded admission, checked
 against two real CPU model servers. Its health-probe and local draining increment is now
-implemented and verified through real process failures and recovery. Milestones 4 through 9
-remain planned. CPU checks establish mechanisms, not GPU capacity.
+implemented and verified through real process failures and recovery. Milestone 4 now has a
+real-model cache measurement harness and existing-policy baselines. Affinity routing, load
+experiments, and milestones 5 through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
 
 ## Problem and first user
 
@@ -108,6 +109,11 @@ comparable. Include hot-prefix shifts, long requests, worker restarts, and heter
 Report policies that lose as well as those that win.
 
 Learning: locality, hashing, skew, prefill/decode interference, throughput versus tail latency.
+
+First increment: [cache baseline experiment](learning/06-cache-baseline.md), using fresh
+real CPU engines and a constructed repeated-document workload. Verify engine-reported
+token reuse against a disabled-cache control before changing the router. This sequential
+experiment does not complete the later affinity, overload, or existing-router comparisons.
 
 ## 5. Make fleet configuration durable
 
