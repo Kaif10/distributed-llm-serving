@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"unicode/utf8"
 )
 
 var ErrConflict = errors.New("revision or request ID conflict")
@@ -89,11 +90,17 @@ func ValidateWorkers(workers []Worker) error {
 	return validate(Update{RequestID: "snapshot", Workers: workers})
 }
 func validate(u Update) error {
+	if !utf8.ValidString(u.RequestID) {
+		return fmt.Errorf("request ID must be valid UTF-8")
+	}
 	if len(u.RequestID) < 1 || len(u.RequestID) > 128 || len(u.Workers) > 128 {
 		return fmt.Errorf("require request ID of 1..128 bytes and at most 128 workers")
 	}
 	ids, origins := map[string]bool{}, map[string]bool{}
 	for _, w := range u.Workers {
+		if !utf8.ValidString(w.ID) || !utf8.ValidString(w.Origin) {
+			return fmt.Errorf("worker fields must be valid UTF-8")
+		}
 		origin, err := url.Parse(w.Origin)
 		if w.ID == "" || len(w.ID) > 128 || ids[w.ID] || err != nil || origin == nil || (origin.Scheme != "http" && origin.Scheme != "https") || origin.Hostname() == "" || origin.User != nil || origin.Path != "" || origin.RawQuery != "" || origin.ForceQuery || origin.Fragment != "" || origins[w.Origin] {
 			return fmt.Errorf("invalid/duplicate worker ID or origin; use an http(s) origin without path or credentials")

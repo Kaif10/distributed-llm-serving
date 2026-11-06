@@ -61,6 +61,27 @@ func TestMachineOwnsInputOutputAndRetryHistory(t *testing.T) {
 	}
 }
 
+func TestMachineRejectsStringsThatCannotRoundTripJSON(t *testing.T) {
+	for _, field := range []string{"request", "worker", "origin"} {
+		m := NewMachine()
+		u := update("first", 0, true)
+		switch field {
+		case "request":
+			u.RequestID = string([]byte{255})
+		case "worker":
+			u.Workers[0].ID = string([]byte{255})
+		case "origin":
+			u.Workers[0].Origin = "http://" + string([]byte{255})
+		}
+		if _, err := m.Apply(u); err == nil {
+			t.Fatal("accepted non-round-trippable field", field)
+		}
+		if m.Snapshot().Revision != 0 {
+			t.Fatal("invalid command changed state")
+		}
+	}
+}
+
 func TestSeededMachineStoreAndRestartAgree(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "replay.wal")
 	s, err := Open(path)
