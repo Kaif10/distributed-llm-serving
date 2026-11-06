@@ -173,10 +173,17 @@ Learning: write-ahead logging, fsync, crash recovery, idempotency, revisions, st
 
 ## 6. Understand and integrate Raft
 
+Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
+timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See
+[the election walkthrough](learning/14-raft-elections.md). Replicated entries, quorum commit,
+distributed reads, and controller integration remain unimplemented.
+
+
 Preparation increment complete: [deterministic configuration machine](learning/13-state-machine.md)
 is separated from journal I/O, with replay, apply-time CAS, ownership, and compatibility checks.
 The recovered journal now requires a sync barrier before serving retries. No Raft protocol is
-implemented yet. Next: elections and term/vote state in a deterministic harness.
+integrated with the controller yet. The election slice above is now implemented; next are
+replicated entries and commit-rule checks.
 
 
 Purpose: administrative changes should survive a controller failure and have one committed

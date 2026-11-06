@@ -8,6 +8,48 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Isolated Raft election core
+
+Source: clean commit `0c79b3c8641e5c633c6295d4c4509e7b50edb4ff`. Reproduce with
+`go test ./internal/raft -v` and `go run ./cmd/electiondemo`. The
+[recorded transcript](results/election-0c79b3c.json) contains the actual core statuses from
+an explicit-tick, queued-message scenario using three real local vote journals.
+This is not a network deployment, multi-process Raft experiment, or controller failover.
+
+A became leader in term 1. While A was isolated, B/C elected C in term 2; A continued
+believing it was leader in term 1. After message delivery healed, A persisted term 2 and
+stepped down. Reopening all journals preserved terms/votes, while every node restarted as
+follower with no remembered leader. No configuration command was replicated or applied.
+
+Fifty seeded five-node transport-model runs check at most one elected leader per term
+across loss, reordering, duplication, partitions, and restarts, then require convergence
+after healing. Seed numbers are subtest names. These sample schedules with retained
+in-memory hard state; they are not formal proofs or actual process/network fault injection.
+
+Targeted tests cover strict majority and duplicate/stale response counting, split retries,
+single-node election, current/stale heartbeat behavior, outsider filtering, log-tail ordering,
+and persistence errors that return no outbound messages and fence the core. File-backed
+tests verify a durable granted vote across reopen, denial of another candidate in that term,
+new-term voting, conflicting-write rejection, writer exclusion, incomplete trailing frames,
+header/payload corruption, and recovery of an uncertain complete vote. An additional local
+case exercises failure while granting a vote in an already-persisted term.
+
+Election storage uses separate format-tagged journals and syncs before Save returns and
+before recovered state is published. OS-lock code was moved to a shared utility; controller
+and election data/formats are not combined. The rebuilt controller's existing executable
+kill/restart/CAS check passed after the move:
+[regression results](results/election-lock-regression-0c79b3c.json). It reports pending
+transcript artifacts in the working tree; runtime code was unchanged during that check.
+
+`go test ./...`, `go vet ./...`, the demo, and Linux CI for 0c79b3c passed, including race
+detection. This validates the current election slice only. Local file reopen/sync checks do
+not establish durability under disk or power loss, and the isolated old leader has no
+quorum-serving authority. The election heartbeat has no AppendEntries prefix validation.
+Replicated logs, commit/application rules, real transport, distributed reads, checkpoints,
+and controller integration are the remaining steps. The inference path stays on its current
+single-controller configuration contract.
+
+
 ## Deterministic machine separated from persistence
 
 Runtime separation: `beef146`. The public update/snapshot fields and journal envelope remain

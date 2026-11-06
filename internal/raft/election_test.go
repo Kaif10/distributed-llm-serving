@@ -116,12 +116,15 @@ func TestLogFreshnessAndRejectedVotesDoNotResetTimeout(t *testing.T) {
 	}
 }
 func TestStorageFailuresFenceBeforeSendingMessages(t *testing.T) {
-	for _, vote := range []bool{false, true} {
+	for mode := 0; mode < 3; mode++ {
 		s := &memory{fail: true}
+		if mode == 2 {
+			s.state = HardState{Term: 1}
+		}
 		n := node(t, "a", []string{"a", "b", "c"}, s, 1)
 		var out []Message
 		var err error
-		if vote {
+		if mode > 0 {
 			out, err = n.Step(Message{Type: RequestVote, From: "b", To: "a", Term: 1})
 		} else {
 			for i := 0; i < 10 && err == nil; i++ {

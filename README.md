@@ -43,6 +43,7 @@ remain future work.
 - [Durable configuration](docs/learning/11-durable-configuration.md): journal recovery and revision contracts.
 - [Applied configuration](docs/learning/12-applied-configuration.md): distinguish saved, applied, and drained state.
 - [Deterministic state machine](docs/learning/13-state-machine.md): separate ordered decisions from journal I/O.
+- [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

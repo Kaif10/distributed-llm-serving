@@ -1,0 +1,111 @@
+{
+  "healed": [
+    {
+      "ID": "a",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "",
+      "Leader": "c",
+      "Failed": false
+    },
+    {
+      "ID": "b",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "c",
+      "Failed": false
+    },
+    {
+      "ID": "c",
+      "Role": "leader",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "c",
+      "Failed": false
+    }
+  ],
+  "initial_election": [
+    {
+      "ID": "a",
+      "Role": "leader",
+      "Term": 1,
+      "VotedFor": "a",
+      "Leader": "a",
+      "Failed": false
+    },
+    {
+      "ID": "b",
+      "Role": "follower",
+      "Term": 1,
+      "VotedFor": "a",
+      "Leader": "a",
+      "Failed": false
+    },
+    {
+      "ID": "c",
+      "Role": "follower",
+      "Term": 1,
+      "VotedFor": "a",
+      "Leader": "a",
+      "Failed": false
+    }
+  ],
+  "journal_directory": "artifacts\\elections\\vote-journals-545579132",
+  "kind": "deterministic election model with real file storage",
+  "partitioned": [
+    {
+      "ID": "a",
+      "Role": "leader",
+      "Term": 1,
+      "VotedFor": "a",
+      "Leader": "a",
+      "Failed": false
+    },
+    {
+      "ID": "b",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "c",
+      "Failed": false
+    },
+    {
+      "ID": "c",
+      "Role": "leader",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "c",
+      "Failed": false
+    }
+  ],
+  "passed": true,
+  "reopened": [
+    {
+      "ID": "a",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "",
+      "Leader": "",
+      "Failed": false
+    },
+    {
+      "ID": "b",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "",
+      "Failed": false
+    },
+    {
+      "ID": "c",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "c",
+      "Leader": "",
+      "Failed": false
+    }
+  ],
+  "source_commit": "0c79b3c8641e5c633c6295d4c4509e7b50edb4ff",
+  "working_tree_dirty": false
+}
