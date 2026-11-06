@@ -31,7 +31,8 @@ type entry struct {
 
 // Machine makes deterministic decisions for an ordered command stream. It has no
 // clock, network, disk, or goroutines. Callers must serialize access. Apply is not
-// a durability or consensus acknowledgement; Store syncs before calling it.
+// a durability or consensus acknowledgement. Store owns the sync barriers and
+// publishes recovered state only after recovery succeeds.
 type Machine struct {
 	state    Snapshot
 	requests map[string]entry

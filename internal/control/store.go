@@ -88,6 +88,11 @@ func (s *Store) recover() error {
 		}
 		offset += int64(12 + length)
 	}
+	// A complete record may have survived an unacknowledged or failed sync.
+	// Make replayed state durable before Open publishes reads or cached retries.
+	if err := s.syncFile(); err != nil {
+		return err
+	}
 	_, err := s.file.Seek(0, io.SeekEnd)
 	return err
 }

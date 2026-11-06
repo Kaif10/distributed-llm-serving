@@ -187,3 +187,27 @@ func TestSyncErrorFencesStoreAndRetryRecoversUnknownOutcome(t *testing.T) {
 		t.Fatal("unknown complete record was not recovered idempotently", state, err)
 	}
 }
+
+func TestRecoveryRequiresSyncBeforePublishingState(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "uncertain.wal")
+	s, err := Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.syncFile = func() error { return errors.New("uncertain write") }
+	if _, err := s.Apply(update("uncertain", 0, true)); !errors.Is(err, ErrUnavailable) {
+		t.Fatal(err)
+	}
+	s.Close()
+	f, err := os.OpenFile(path, os.O_RDWR, 0600)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	barrierErr := errors.New("recovery sync failed")
+	calls := 0
+	recovering := &Store{file: f, machine: NewMachine(), syncFile: func() error { calls++; return barrierErr }}
+	if err := recovering.recover(); !errors.Is(err, barrierErr) || calls != 1 {
+		t.Fatal("recovery published without sync barrier", err, calls)
+	}
+}
