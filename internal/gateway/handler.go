@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -50,9 +51,10 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		}
 		seen[key] = true
 		proxy := &httputil.ReverseProxy{
-			Rewrite:       func(p *httputil.ProxyRequest) { p.SetURL(target) },
-			FlushInterval: -1,
-			ErrorLog:      slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
+			ModifyResponse: func(response *http.Response) error { response.Header.Del("X-Inference-Worker"); return nil },
+			Rewrite:        func(p *httputil.ProxyRequest) { p.SetURL(target) },
+			FlushInterval:  -1,
+			ErrorLog:       slog.NewLogLogger(logger.Handler(), slog.LevelWarn),
 			ErrorHandler: func(w http.ResponseWriter, r *http.Request, err error) {
 				if errors.Is(r.Context().Err(), context.Canceled) {
 					return
@@ -102,6 +104,7 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 			return
 		}
 		defer pool.release(index)
+		w.Header().Set("X-Inference-Worker", strconv.Itoa(index))
 		logger.Debug("worker selected", "worker", index, "policy", options.Policy)
 		// Buffer only the bounded request; the response is copied incrementally.
 		r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)

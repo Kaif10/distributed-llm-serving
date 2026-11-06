@@ -100,6 +100,7 @@ func TestWorkerStatusIsPreservedAndNoRetry(t *testing.T) {
 	worker := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		calls.Add(1)
 		w.Header().Set("Retry-After", "2")
+		w.Header().Set("X-Inference-Worker", "spoofed")
 		http.Error(w, "worker is busy", http.StatusTooManyRequests)
 	}))
 	defer worker.Close()
@@ -108,7 +109,7 @@ func TestWorkerStatusIsPreservedAndNoRetry(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if response.StatusCode != 429 || response.Header.Get("Retry-After") != "2" || string(body) != "worker is busy\n" || calls.Load() != 1 {
+	if response.StatusCode != 429 || response.Header.Get("X-Inference-Worker") != "0" || len(response.Header.Values("X-Inference-Worker")) != 1 || response.Header.Get("Retry-After") != "2" || string(body) != "worker is busy\n" || calls.Load() != 1 {
 		t.Fatal("worker rejection was changed or retried")
 	}
 }
