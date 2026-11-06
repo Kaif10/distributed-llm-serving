@@ -75,6 +75,14 @@ func (h *Handler) snapshot() []WorkerState {
 // AdminHandler belongs on the separate loopback-only listener, never on the data API.
 func (h *Handler) AdminHandler() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /config", func(w http.ResponseWriter, r *http.Request) {
+		h.pool.mu.Lock()
+		status := h.pool.config
+		status.Fresh = h.pool.freshLocked()
+		h.pool.mu.Unlock()
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(status)
+	})
 	mux.HandleFunc("GET /workers", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(h.snapshot())
@@ -87,6 +95,11 @@ func (h *Handler) AdminHandler() http.Handler {
 				return
 			}
 			h.pool.mu.Lock()
+			if h.pool.config.Managed {
+				h.pool.mu.Unlock()
+				http.Error(w, "update drain state through the controller", http.StatusConflict)
+				return
+			}
 			h.pool.states[id].Draining = draining
 			h.pool.mu.Unlock()
 			w.Header().Set("Content-Type", "application/json")

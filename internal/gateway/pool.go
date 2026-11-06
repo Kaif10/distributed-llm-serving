@@ -17,13 +17,15 @@ type PoolOptions struct {
 }
 
 type workerPool struct {
-	mu       sync.Mutex
-	proxies  []*httputil.ReverseProxy
-	inflight []int
-	next     int
-	limit    int
-	policy   string
-	states   []WorkerState
+	mu          sync.Mutex
+	proxies     []*httputil.ReverseProxy
+	inflight    []int
+	next        int
+	limit       int
+	policy      string
+	states      []WorkerState
+	config      ConfigStatus
+	configBytes string
 }
 
 // WorkerState is a local observation, not a fleet-wide guarantee.
@@ -35,6 +37,7 @@ type WorkerState struct {
 	Draining  bool      `json:"draining"`
 	Inflight  int       `json:"inflight"`
 	Drained   bool      `json:"drained"`
+	ConfigID  string    `json:"config_id,omitempty"`
 }
 
 func validateOptions(options PoolOptions) error {
@@ -52,6 +55,9 @@ func validateOptions(options PoolOptions) error {
 func (p *workerPool) acquire(keys ...string) (int, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
+	if !p.freshLocked() {
+		return 0, false
+	}
 	selected := -1
 	var best [32]byte
 	affinity := p.policy == "prefix-affinity" && len(keys) > 0 && keys[0] != ""

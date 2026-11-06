@@ -79,6 +79,10 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		pool.mu.Lock()
 		defer pool.mu.Unlock()
+		if !pool.freshLocked() {
+			http.Error(w, "configuration expired or not applied", http.StatusServiceUnavailable)
+			return
+		}
 		for _, state := range pool.states {
 			if state.Healthy && !state.Draining {
 				w.WriteHeader(http.StatusOK)

@@ -10,6 +10,7 @@ import (
 func (s *Store) Handler() http.Handler {
 	mux := http.NewServeMux()
 	write := func(w http.ResponseWriter, state Snapshot, err error) {
+		w.Header().Set("Cache-Control", "no-store")
 		if err != nil {
 			status := http.StatusBadRequest
 			if errors.Is(err, ErrConflict) {

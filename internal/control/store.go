@@ -33,6 +33,11 @@ type Update struct {
 	ExpectedRevision uint64   `json:"expected_revision"`
 	Workers          []Worker `json:"workers"`
 }
+
+func ValidateWorkers(workers []Worker) error {
+	return validate(Update{RequestID: "snapshot", Workers: workers})
+}
+
 type entry struct {
 	Update   Update `json:"update"`
 	Revision uint64 `json:"revision"`

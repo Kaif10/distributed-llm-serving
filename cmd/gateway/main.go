@@ -25,6 +25,10 @@ func main() {
 	policy := flag.String("policy", "least-inflight", "least-inflight, round-robin, or prefix-affinity")
 	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
 	admin := flag.String("admin-listen", "", "optional loopback-only administration address")
+	controller := flag.String("controller", "", "optional controller origin for durable drain settings")
+	configPoll := flag.Duration("config-poll", 500*time.Millisecond, "controller polling interval")
+	configTimeout := flag.Duration("config-timeout", time.Second, "controller fetch timeout")
+	configAge := flag.Duration("config-max-age", 5*time.Second, "maximum age of a confirmed controller view")
 	healthPath := flag.String("health-path", "/health", "worker readiness probe path")
 	healthInterval := flag.Duration("health-interval", time.Second, "delay between worker probes")
 	healthTimeout := flag.Duration("health-timeout", 500*time.Millisecond, "per-probe timeout")
@@ -46,13 +50,14 @@ func main() {
 		}
 	}
 	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit}
-	if err := run(ctx, *address, *admin, options, *timeout, *healthInterval, *healthTimeout, *healthPath); err != nil {
+	config := gateway.ControllerOptions{Origin: *controller, Interval: *configPoll, Timeout: *configTimeout, MaxAge: *configAge}
+	if err := run(ctx, *address, *admin, options, *timeout, *healthInterval, *healthTimeout, *healthPath, config); err != nil {
 		slog.Error("gateway stopped", "error", err)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, address, admin string, options gateway.PoolOptions, timeout, healthInterval, healthTimeout time.Duration, healthPath string) error {
+func run(ctx context.Context, address, admin string, options gateway.PoolOptions, timeout, healthInterval, healthTimeout time.Duration, healthPath string, config gateway.ControllerOptions) error {
 	if admin != "" {
 		host, _, err := net.SplitHostPort(admin)
 		if err != nil || !net.ParseIP(host).IsLoopback() {
@@ -68,6 +73,13 @@ func run(ctx context.Context, address, admin string, options gateway.PoolOptions
 		return err
 	}
 	defer stopHealth()
+	if config.Origin != "" {
+		stopConfig, err := handler.StartController(ctx, config)
+		if err != nil {
+			return err
+		}
+		defer stopConfig()
+	}
 	server := &http.Server{
 		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
