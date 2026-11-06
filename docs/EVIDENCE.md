@@ -20,8 +20,9 @@ Worker 0 uses one CPU thread and worker 1 four; both have one slot and a 2048-to
 Extra RAM prompt-cache storage is disabled. Both share the host; neither has pinned cores.
 There are three trials per policy/rate pair, fresh processes per run, shuffled with seed 11.
 Each run offers 12 short and 4 long requests using the same document/arrival sequence.
-Short requests use 125 prompt tokens and request 16 output tokens; long requests use 520
-prompt tokens and request 128 output tokens. Actual usage and output lengths are checked.
+Completed short requests used 125–126 prompt tokens and requested 16 output tokens; completed
+long requests used 520–521 prompt tokens and requested 128 output tokens. The exact prompt
+count depends on the document and question. Actual usage and output lengths are checked.
 
 Before offered traffic, each engine receives one direct short and one direct long calibration
 with prompt reuse disabled, followed by unrelated warmup. All calibration cached-token counts
