@@ -8,62 +8,21 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
-	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
 )
 
-var ErrConflict = errors.New("revision or request ID conflict")
 var ErrUnavailable = errors.New("store unavailable; update outcome may be unknown")
 
 const maxRecord = 1 << 20
 
-type Worker struct {
-	ID       string `json:"id"`
-	Origin   string `json:"origin"`
-	Draining bool   `json:"draining"`
-}
-type Snapshot struct {
-	Revision uint64   `json:"revision"`
-	Workers  []Worker `json:"workers"`
-}
-type Update struct {
-	RequestID        string   `json:"request_id"`
-	ExpectedRevision uint64   `json:"expected_revision"`
-	Workers          []Worker `json:"workers"`
-}
-
-func ValidateWorkers(workers []Worker) error {
-	return validate(Update{RequestID: "snapshot", Workers: workers})
-}
-
-type entry struct {
-	Update   Update `json:"update"`
-	Revision uint64 `json:"revision"`
-}
 type Store struct {
 	mu       sync.Mutex
 	file     *os.File
-	state    Snapshot
-	requests map[string]entry
+	machine  *Machine
 	poisoned bool
 	syncFile func() error
-}
-
-func validate(u Update) error {
-	if len(u.RequestID) < 1 || len(u.RequestID) > 128 || len(u.Workers) > 128 {
-		return fmt.Errorf("require request ID of 1..128 bytes and at most 128 workers")
-	}
-	ids, origins := map[string]bool{}, map[string]bool{}
-	for _, w := range u.Workers {
-		origin, err := url.Parse(w.Origin)
-		if w.ID == "" || len(w.ID) > 128 || ids[w.ID] || err != nil || origin == nil || (origin.Scheme != "http" && origin.Scheme != "https") || origin.Hostname() == "" || origin.User != nil || origin.Path != "" || origin.RawQuery != "" || origin.ForceQuery || origin.Fragment != "" || origins[w.Origin] {
-			return fmt.Errorf("invalid/duplicate worker ID or origin; use an http(s) origin without path or credentials")
-		}
-		ids[w.ID], origins[w.Origin] = true, true
-	}
-	return nil
 }
 
 func Open(path string) (*Store, error) {
@@ -78,7 +37,7 @@ func Open(path string) (*Store, error) {
 		f.Close()
 		return nil, fmt.Errorf("exclusive journal lock: %w", err)
 	}
-	s := &Store{file: f, state: Snapshot{Workers: []Worker{}}, requests: make(map[string]entry), syncFile: f.Sync}
+	s := &Store{file: f, machine: NewMachine(), syncFile: f.Sync}
 	if err := s.recover(); err != nil {
 		f.Close()
 		return nil, err
@@ -120,16 +79,13 @@ func (s *Store) recover() error {
 		if err := json.Unmarshal(data, &e); err != nil {
 			return err
 		}
-		if err := validate(e.Update); err != nil {
+		candidate, fresh, err := s.machine.prepare(e.Update)
+		if err != nil || !fresh || candidate.Revision != e.Revision {
+			return fmt.Errorf("invalid journal command or revision at %d", offset)
+		}
+		if _, err := s.machine.Apply(e.Update); err != nil {
 			return err
 		}
-		if e.Revision != s.state.Revision+1 || e.Update.ExpectedRevision != s.state.Revision {
-			return fmt.Errorf("nonsequential journal revision")
-		}
-		if _, exists := s.requests[e.Update.RequestID]; exists {
-			return fmt.Errorf("duplicate journal request ID")
-		}
-		s.install(e)
 		offset += int64(12 + length)
 	}
 	_, err := s.file.Seek(0, io.SeekEnd)
@@ -147,17 +103,13 @@ func (s *Store) trimTail(offset int64) error {
 	return err
 }
 
-func (s *Store) install(e entry) {
-	s.state = Snapshot{Revision: e.Revision, Workers: append([]Worker{}, e.Update.Workers...)}
-	s.requests[e.Update.RequestID] = e
-}
 func (s *Store) Read() (Snapshot, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.poisoned {
 		return Snapshot{}, ErrUnavailable
 	}
-	return Snapshot{Revision: s.state.Revision, Workers: append([]Worker{}, s.state.Workers...)}, nil
+	return s.machine.Snapshot(), nil
 }
 
 func (s *Store) Apply(u Update) (Snapshot, error) {
@@ -166,22 +118,13 @@ func (s *Store) Apply(u Update) (Snapshot, error) {
 	if s.poisoned {
 		return Snapshot{}, ErrUnavailable
 	}
-	if err := validate(u); err != nil {
+	e, fresh, err := s.machine.prepare(u)
+	if err != nil {
 		return Snapshot{}, err
 	}
-	u.Workers = append([]Worker{}, u.Workers...)
-	if previous, ok := s.requests[u.RequestID]; ok {
-		a, _ := json.Marshal(previous.Update)
-		b, _ := json.Marshal(u)
-		if string(a) != string(b) {
-			return Snapshot{}, ErrConflict
-		}
-		return Snapshot{Revision: previous.Revision, Workers: append([]Worker{}, previous.Update.Workers...)}, nil
+	if !fresh {
+		return result(e), nil
 	}
-	if u.ExpectedRevision != s.state.Revision {
-		return Snapshot{}, ErrConflict
-	}
-	e := entry{Update: u, Revision: s.state.Revision + 1}
 	data, err := json.Marshal(e)
 	if err != nil {
 		return Snapshot{}, err
@@ -205,8 +148,12 @@ func (s *Store) Apply(u Update) (Snapshot, error) {
 		s.poisoned = true
 		return Snapshot{}, fmt.Errorf("%w: %v", ErrUnavailable, err)
 	}
-	s.install(e)
-	return Snapshot{Revision: s.state.Revision, Workers: append([]Worker{}, s.state.Workers...)}, nil
+	state, err := s.machine.Apply(e.Update)
+	if err != nil || state.Revision != e.Revision {
+		s.poisoned = true
+		return Snapshot{}, fmt.Errorf("%w: persisted command did not apply at expected revision", ErrUnavailable)
+	}
+	return state, nil
 }
 func (s *Store) Close() error {
 	s.mu.Lock()
