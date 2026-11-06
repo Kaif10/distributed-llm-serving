@@ -1,0 +1,129 @@
+{
+  "source_commit": "efce20875e94c511cbf86fc8d52539ebfea46823",
+  "working_tree_dirty": false,
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "commands": [
+    [
+      "D:\\inference-fleet\\bin\\controller.exe",
+      "-listen",
+      "127.0.0.1:19090",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\config-follow\\journal-makc_fax\\fleet.wal"
+    ],
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18081",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--no-ui",
+      "--slots"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:18080",
+      "-admin-listen",
+      "127.0.0.1:18090",
+      "-backend",
+      "http://127.0.0.1:18081",
+      "-controller",
+      "http://127.0.0.1:19090",
+      "-config-poll",
+      "100ms",
+      "-config-timeout",
+      "200ms",
+      "-config-max-age",
+      "2s",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "initial_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-06T17:34:20.4309313Z",
+    "expires_at": "2026-11-06T17:34:22.4301553Z"
+  },
+  "drain_ack": {
+    "revision": 2,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": true
+      }
+    ]
+  },
+  "drain_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 2,
+    "fresh": true,
+    "confirmed_at": "2026-11-06T17:34:20.6318937Z",
+    "expires_at": "2026-11-06T17:34:22.6318937Z"
+  },
+  "worker_while_draining": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:18081",
+      "healthy": true,
+      "checked_at": "2026-11-06T17:34:20.0268323Z",
+      "draining": true,
+      "inflight": 1,
+      "drained": false,
+      "config_id": "worker-a"
+    }
+  ],
+  "drained_stream_completed": true,
+  "expired": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": false,
+    "confirmed_at": "2026-11-06T17:34:22.4479179Z",
+    "expires_at": "2026-11-06T17:34:24.4479179Z",
+    "last_error": "Get \"http://127.0.0.1:19090/config\": dial tcp 127.0.0.1:19090: connectex: No connection could be made because the target machine actively refused it."
+  },
+  "stream_survived_expiry": true,
+  "reconfirmed": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": true,
+    "confirmed_at": "2026-11-06T17:34:32.2788339Z",
+    "expires_at": "2026-11-06T17:34:34.2779198Z"
+  },
+  "generation_after_recovery": {
+    "ttft_ms": 41.372,
+    "completion_ms": 145.956,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "passed": true
+}

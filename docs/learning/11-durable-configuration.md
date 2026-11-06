@@ -1,8 +1,9 @@
 # Increment 11: durable, versioned configuration
 
 Gateway drain flags currently live in memory. A separate controller now stores desired
-fleet configuration and ordered revisions on local disk. Gateway consumption is next:
-writing this API does not yet change a running gateway's pool or local drain flags.
+fleet configuration and ordered revisions on local disk. This walkthrough describes storage
+independently; [the next increment](12-applied-configuration.md) now connects optional
+controller-managed gateways for fixed-pool drain application.
 
 ```powershell
 go run ./cmd/controller -listen 127.0.0.1:19090 -journal artifacts/controller/fleet.wal

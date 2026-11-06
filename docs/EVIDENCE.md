@@ -8,6 +8,48 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Gateway application and stale-view expiration
+
+Source: clean commit `efce208`. Reproduce with builds of controller and gateway, then
+`python scripts/check_config_follow.py`. The [raw results](results/config-follow-efce208.json)
+include desired/applied revisions, freshness timestamps, worker state, engine pins, launch
+commands, and the successful generation after controller recovery.
+
+A real llama.cpp b12110 CPU process serves SmolLM2-135M Q4_K_M with two threads, one slot,
+and a 2048-token context. A separate real controller uses a temporary local journal and
+one gateway polls its snapshots. The experiment uses a 100 ms configuration poll interval,
+200 ms fetch timeout, and two-second maximum age; defaults are 500 ms, one second, and
+five seconds respectively.
+
+Revision 1 enabled the configured worker and became applied/fresh. A real 256-token stream
+started, then controller revision 2 committed its drain. The gateway reported revision 2
+and draining with one inflight request, rejected new work, and allowed the stream to
+complete. Revision 3 resumed the worker. Another real stream requested 1024 tokens, and
+the controller was forcibly killed after initial content arrived.
+
+The gateway retained applied revision 3 but reported fresh=false after expiry. Readiness
+returned 503 while the active stream remained admitted; the stream completed with DONE.
+After its reservation returned to zero, generation still returned 503 despite idle capacity,
+confirming the stale-view gate rather than simple capacity rejection. Restarting the
+controller recovered revision 3 from disk. A valid same-revision confirmation restored
+freshness and a new real generation completed. No Raft or multi-host failure is involved.
+
+`go test ./...`, `go vet ./...`, and both builds passed. Controlled tests cover startup
+without an applied snapshot, atomic drain overlay, stable logical IDs, local-admin exclusion,
+expiry without stream truncation, recovery, rollback, conflicting same-revision data, and
+unsupported origins without extending freshness. A test assertion initially required two
+successive clock reads to be strictly increasing; its starting timestamp was made explicit
+so it no longer depends on timer resolution. Runtime freshness logic did not require that
+strict ordering. Linux CI passed, including race detection.
+
+Scope: the gateway retains its configured worker membership and applies desired drain flags
+by exact origin match. Unsupported membership changes reject the view without refreshing it.
+Controller acknowledgement, gateway application, and completion of draining remain separate.
+The freshness gate and reservation share a mutex; already reserved uploads and streams can
+continue after expiry. A disconnected gateway can admit from an old confirmed view before
+it expires. No fleet-wide drain completion or gateway-durable local view is claimed.
+
+
 ## Durable single-controller configuration
 
 Source: clean commit `4ae5798c7a613a50cbcf75a3c201a5071381eaec`. Reproduce with
@@ -111,8 +153,8 @@ Worker 0 uses one CPU thread and worker 1 four; both have one slot and a 2048-to
 Extra RAM prompt-cache storage is disabled. Both share the host; neither has pinned cores.
 There are three trials per policy/rate pair, fresh processes per run, shuffled with seed 11.
 Each run offers 12 short and 4 long requests using the same document/arrival sequence.
-Completed short requests used 125â€“126 prompt tokens and requested 16 output tokens; completed
-long requests used 520â€“521 prompt tokens and requested 128 output tokens. The exact prompt
+Completed short requests used 125-126 prompt tokens and requested 16 output tokens; completed
+long requests used 520-521 prompt tokens and requested 128 output tokens. The exact prompt
 count depends on the document and question. Actual usage and output lengths are checked.
 
 Before offered traffic, each engine receives one direct short and one direct long calibration
@@ -121,10 +163,10 @@ were zero. Across 12 runs, per-worker direct completion times were:
 
 | Worker allocation | Class | Samples | Median completion | Observed range |
 | --- | --- | --- | --- | --- |
-| One CPU thread | Short | 12 | 629.940 ms | 587.986â€“917.226 ms |
-| One CPU thread | Long | 12 | 6917.942 ms | 3837.484â€“9461.097 ms |
-| Four CPU threads | Short | 12 | 435.726 ms | 414.285â€“556.944 ms |
-| Four CPU threads | Long | 12 | 2600.533 ms | 2500.049â€“3303.562 ms |
+| One CPU thread | Short | 12 | 629.940 ms | 587.986-917.226 ms |
+| One CPU thread | Long | 12 | 6917.942 ms | 3837.484-9461.097 ms |
+| Four CPU threads | Short | 12 | 435.726 ms | 414.285-556.944 ms |
+| Four CPU threads | Long | 12 | 2600.533 ms | 2500.049-3303.562 ms |
 
 Calibration is isolated, in fixed short/long order, and includes first-use shape effects.
 It demonstrates different observed service costs, not a model of concurrent service time
@@ -201,7 +243,7 @@ Admission observations are not a general replacement for authoritative server co
 
 Per-trial goodput (compliant requests divided by observed duration, including response tails):
 least-inflight at 1/s ranged from 0.749 to 1.000 req/s; affinity ranged from 0.958 to 1.000.
-At 4/s the ranges were 0.167â€“0.329 and 0.000â€“0.500 respectively. This variation and only three
+At 4/s the ranges were 0.167-0.329 and 0.000-0.500 respectively. This variation and only three
 trials do not establish a general best policy. At the higher rate, affinity's sequential
 cache benefit did not yield a consistent goodput advantage. Both policies encountered the
 same admission limit and rejected 55 of 72 requests.

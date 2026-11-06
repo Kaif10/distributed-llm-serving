@@ -19,9 +19,10 @@ caching and the existing routing policies; its evidence includes an unresolved t
 an interrupted run. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
 
-A separate single-controller API now persists desired fleet configuration with CAS and
-idempotent retries. Gateway consumption and replication remain future work; controller
-updates do not yet alter running gateways.
+A durable controller persists desired configuration with CAS and idempotent retries.
+Gateways can consume its drain snapshots for a fixed worker pool, report applied revisions,
+and reject new work when their confirmed view expires. Replication and dynamic membership
+remain future work.
 
 ## Start here
 
@@ -40,6 +41,7 @@ updates do not yet alter running gateways.
 - [Restart under load](docs/learning/10-restart-under-load.md): verify real worker recovery while arrivals continue.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Durable configuration](docs/learning/11-durable-configuration.md): journal recovery and revision contracts.
+- [Applied configuration](docs/learning/12-applied-configuration.md): distinguish saved, applied, and drained state.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation
