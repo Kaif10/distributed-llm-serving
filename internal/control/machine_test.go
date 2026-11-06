@@ -37,6 +37,28 @@ func TestMachineOrderedOutcomesAndReplay(t *testing.T) {
 	}
 }
 
+func TestPreflightDoesNotDecideCompetingCommittedUpdates(t *testing.T) {
+	m := NewMachine()
+	a, b := update("a", 0, true), update("b", 0, false)
+	for _, u := range []Update{a, b} {
+		if _, fresh, err := m.prepare(u); err != nil || !fresh {
+			t.Fatal("preflight failed", err)
+		}
+	}
+	if m.Snapshot().Revision != 0 {
+		t.Fatal("preflight mutated state")
+	}
+	if _, err := m.Apply(a); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := m.Apply(b); !errors.Is(err, ErrConflict) {
+		t.Fatal("competing update bypassed apply-time CAS", err)
+	}
+	if m.Snapshot().Revision != 1 {
+		t.Fatal("failed update advanced revision")
+	}
+}
+
 func TestMachineOwnsInputOutputAndRetryHistory(t *testing.T) {
 	m := NewMachine()
 	u := update("first", 0, true)

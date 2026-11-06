@@ -173,6 +173,12 @@ Learning: write-ahead logging, fsync, crash recovery, idempotency, revisions, st
 
 ## 6. Understand and integrate Raft
 
+Preparation increment complete: [deterministic configuration machine](learning/13-state-machine.md)
+is separated from journal I/O, with replay, apply-time CAS, ownership, and compatibility checks.
+The recovered journal now requires a sync barrier before serving retries. No Raft protocol is
+implemented yet. Next: elections and term/vote state in a deterministic harness.
+
+
 Purpose: administrative changes should survive a controller failure and have one committed
 order despite concurrent writers. Use a fixed three-node configuration initially. Build the
 educational implementation in small increments: elections, replication, durable term/vote/log,

@@ -1,0 +1,65 @@
+{
+  "source_commit": "050b7f6700bd4f45d3112fe6e59a7aa5d38ffd03",
+  "working_tree_dirty": true,
+  "observations": [
+    {
+      "acknowledged_before_kill": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "second_writer_rejected": true
+    },
+    {
+      "recovered_revision": 1,
+      "old_retry_result": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "concurrent_writer_statuses": [
+        200,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409
+      ]
+    },
+    {
+      "acknowledged_after_tail_recovery": {
+        "revision": 4,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      }
+    }
+  ],
+  "final": {
+    "revision": 4,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": false
+      }
+    ]
+  },
+  "passed": true
+}

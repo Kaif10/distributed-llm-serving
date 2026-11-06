@@ -42,6 +42,7 @@ remain future work.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Durable configuration](docs/learning/11-durable-configuration.md): journal recovery and revision contracts.
 - [Applied configuration](docs/learning/12-applied-configuration.md): distinguish saved, applied, and drained state.
+- [Deterministic state machine](docs/learning/13-state-machine.md): separate ordered decisions from journal I/O.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

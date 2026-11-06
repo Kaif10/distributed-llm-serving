@@ -8,6 +8,44 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Deterministic machine separated from persistence
+
+Runtime separation: `beef146`. The public update/snapshot fields and journal envelope remain
+compatible. Machine owns ordered validation, CAS, successful retry history, and state/result
+copying; Store owns serialization, locking, append/sync, and recovery. No election, transport,
+quorum, or replication protocol is implemented. Linux CI passed for beef146 and
+0c01c21, including race detection.
+
+`go test ./...` and `go vet ./...` passed. Tests cover explicit outcomes for new commands,
+retries, conflicts, and empty fleets; replay into three independent machines; caller mutation
+isolation; and a seed-7, 300-command comparison between two in-memory machines and Store,
+with repeated reopening. A literal legacy journal frame still recovers its state and retry
+result. Competing commands can both pass read-only preflight, but only the first succeeds
+when applied in order; failed CAS does not advance the configuration revision.
+
+At clean commit beef146, both executable checks passed: actual controller kill/restart,
+CAS/idempotency/ownership, and real SmolLM2 generation through managed drain and stale-view
+expiry. Raw results: [controller](results/machine-controller-beef146.json) and
+[real-model integration](results/machine-inference-beef146.json).
+
+Follow-up 0c01c21 rejects invalid UTF-8 typed fields that would otherwise normalize during
+JSON persistence, making in-memory and replayed state differ. Tests require rejection without
+changing state. Decoded HTTP JSON commands retain their ordinary semantics.
+
+Follow-up 050b7f6 adds a recovery sync barrier: a complete record may survive an uncertain
+write, so the recovered journal is synced before Open exposes state or cached retry results.
+A regression test requires recovery to propagate a sync error. Existing incomplete-tail,
+checksum, concurrent CAS, and uncertain-write tests pass. The
+[post-barrier executable check](results/recovery-barrier-050b7f6.json) passed. That run reports
+a dirty tree because prior result artifacts were pending commit, not because runtime code
+changed during the run. Physical power/disk failure remains untested.
+
+Configuration revision is not a future Raft log index: committed errors/retries can occupy
+log positions without creating new configurations. Public Machine.Snapshot is not a full
+replication checkpoint; retry history and applied-log position must accompany any future
+compaction snapshot. Independent replay is not evidence of consensus or fault-tolerant replication.
+
+
 ## Gateway application and stale-view expiration
 
 Source: clean commit `efce208`. Reproduce with builds of controller and gateway, then
