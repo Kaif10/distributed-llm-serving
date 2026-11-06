@@ -64,7 +64,7 @@ def exercise(policy, payload):
     try:
         wait_idle()
         for _ in range(2):
-            connection, response = open_stream(gateway, dict(payload, max_tokens=1024, ignore_eos=True))
+            connection, response = open_stream(gateway, dict(payload, max_tokens=1024, ignore_eos=True), {"X-Prefix-Key": "hot-document"})
             held.append((connection, response))
             for event in events(response):
                 if event is None:
@@ -79,7 +79,7 @@ def exercise(policy, payload):
         connection = http.client.HTTPConnection("127.0.0.1", 18080, timeout=3)
         try:
             start = time.perf_counter()
-            connection.request("POST", "/v1/chat/completions", json.dumps(payload), {"Content-Type": "application/json"})
+            connection.request("POST", "/v1/chat/completions", json.dumps(payload), {"Content-Type": "application/json", "X-Prefix-Key": "hot-document"})
             response = connection.getresponse()
             result["overload"] = {"status": response.status, "retry_after": response.getheader("Retry-After"),
                                   "body": response.read().decode(), "elapsed_ms": round((time.perf_counter()-start)*1000, 3)}
@@ -123,7 +123,7 @@ def main():
                            "--slots", "--no-ui", "--no-cache-prompt"]
                 result["commands"].append(command)
                 stack.enter_context(service(command, f"http://127.0.0.1:{port}/health", output / f"engine-{port}.log"))
-            for policy in ("round-robin", "least-inflight"):
+            for policy in ("round-robin", "least-inflight", "prefix-affinity"):
                 command = [str(ROOT / "bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends",
                            "http://127.0.0.1:18081,http://127.0.0.1:18082", "-policy", policy,
                            "-max-inflight", "1", "-request-timeout", "60s"]

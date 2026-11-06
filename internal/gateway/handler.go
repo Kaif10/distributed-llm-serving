@@ -90,7 +90,12 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 			http.Error(w, "no worker configured", http.StatusServiceUnavailable)
 			return
 		}
-		index, available := pool.acquire()
+		prefixKey := r.Header.Get("X-Prefix-Key")
+		if len(prefixKey) > 256 {
+			http.Error(w, "prefix key exceeds 256 bytes", http.StatusBadRequest)
+			return
+		}
+		index, available := pool.acquire(prefixKey)
 		if !available {
 			w.Header().Set("Retry-After", "1")
 			http.Error(w, "no healthy undrained worker with capacity", http.StatusServiceUnavailable)
@@ -116,6 +121,10 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), timeout)
 		defer cancel()
+		started := time.Now()
+		defer func() {
+			logger.Info("forwarding ended", "worker", index, "duration", time.Since(started), "context_error", ctx.Err())
+		}()
 		// Bound downstream writes too: context cancellation alone cannot interrupt
 		// a blocked network write to a client that has stopped reading.
 		controller := http.NewResponseController(w)
@@ -131,6 +140,7 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		r.Body = io.NopCloser(bytes.NewReader(body))
 		r.ContentLength = int64(len(body))
 		r.TransferEncoding = nil
+		r.Header.Del("X-Prefix-Key") // Routing metadata is not part of the engine request.
 		pool.proxies[index].ServeHTTP(w, r)
 	})
 	return &Handler{Handler: mux, pool: pool}, nil

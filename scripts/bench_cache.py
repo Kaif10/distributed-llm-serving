@@ -10,6 +10,7 @@ import random
 import socket
 import statistics
 import subprocess
+import time
 
 from check_real_inference import ROOT, get_json, measure
 from check_real_pool import service
@@ -55,8 +56,9 @@ def run_condition(condition, trial, config, workload, output):
         for position, document in enumerate(workload["sequence"]):
             before = [get_json(origin, "/slots")[0].get("id_task") for origin in origins]
             payload = request_for(workload, document, position, cache)
+            started = time.monotonic()
             try:
-                sample = measure(destination, payload)
+                sample = measure(destination, payload, {"X-Prefix-Key": "smollm2-v1-document-"+document})
                 usage = sample["usage"]
                 if usage is None or usage["completion_tokens"] != 16:
                     raise RuntimeError("Expected measured usage and 16 generated tokens")
@@ -73,6 +75,14 @@ def run_condition(condition, trial, config, workload, output):
             except Exception as err:
                 result["failures"] += 1
                 result["error"] = str(err)
+                result["failed_request"] = {"position": position, "document": document, "payload": payload,
+                                            "elapsed_seconds": time.monotonic()-started, "engine_observations": []}
+                for origin in origins:
+                    try:
+                        observation = get_json(origin, "/slots")
+                    except Exception as diagnostic_error:
+                        observation = {"error": str(diagnostic_error)}
+                    result["failed_request"]["engine_observations"].append({"origin": origin, "slots": observation})
                 (output/f"failed-{trial}-{condition}.json").write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
                 raise
         samples = result["samples"]
@@ -94,7 +104,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trials", type=int, default=3)
     parser.add_argument("--output-dir", type=Path, default=ROOT/"artifacts/cache-baseline")
-    parser.add_argument("--conditions", nargs="+", choices=["direct-cache", "direct-no-cache", "round-robin", "least-inflight"],
+    parser.add_argument("--conditions", nargs="+", choices=["direct-cache", "direct-no-cache", "round-robin", "least-inflight", "prefix-affinity"],
                         default=["direct-cache", "direct-no-cache", "round-robin", "least-inflight"])
     args = parser.parse_args()
     if args.trials < 1:

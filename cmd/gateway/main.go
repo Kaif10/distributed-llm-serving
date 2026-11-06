@@ -22,7 +22,7 @@ func main() {
 	address := flag.String("listen", "127.0.0.1:8080", "HTTP listen address")
 	backend := flag.String("backend", "", "worker origin, e.g. http://127.0.0.1:8081")
 	backends := flag.String("backends", "", "comma-separated worker origins serving the same model")
-	policy := flag.String("policy", "least-inflight", "least-inflight or round-robin")
+	policy := flag.String("policy", "least-inflight", "least-inflight, round-robin, or prefix-affinity")
 	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
 	admin := flag.String("admin-listen", "", "optional loopback-only administration address")
 	healthPath := flag.String("health-path", "/health", "worker readiness probe path")

@@ -23,13 +23,13 @@ def get_json(origin, path):
         return json.load(response)
 
 
-def open_stream(origin, payload):
+def open_stream(origin, payload, headers=None):
     url = urllib.parse.urlsplit(origin)
     if url.scheme != "http" or not url.hostname or url.path not in ("", "/"):
         raise ValueError("Experiment expects an HTTP origin without a path")
     connection = http.client.HTTPConnection(url.hostname, url.port, timeout=60)
     try:
-        connection.request("POST", "/v1/chat/completions", json.dumps(payload), {"Content-Type": "application/json"})
+        connection.request("POST", "/v1/chat/completions", json.dumps(payload), {"Content-Type": "application/json", **(headers or {})})
         response = connection.getresponse()
         if response.status != 200:
             raise RuntimeError(f"HTTP {response.status}: {response.read()[:500]!r}")
@@ -52,9 +52,9 @@ def events(response):
         yield json.loads(data)
 
 
-def measure(origin, payload):
+def measure(origin, payload, headers=None):
     started = time.perf_counter()
-    connection, response = open_stream(origin, payload)
+    connection, response = open_stream(origin, payload, headers)
     first = None
     parts = []
     usage = None

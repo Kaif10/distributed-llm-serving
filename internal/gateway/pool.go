@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"bytes"
+	"crypto/sha256"
 	"fmt"
 	"net/http/httputil"
 	"sync"
@@ -36,8 +38,8 @@ type WorkerState struct {
 }
 
 func validateOptions(options PoolOptions) error {
-	if options.Policy != "round-robin" && options.Policy != "least-inflight" {
-		return fmt.Errorf("policy must be round-robin or least-inflight")
+	if options.Policy != "round-robin" && options.Policy != "least-inflight" && options.Policy != "prefix-affinity" {
+		return fmt.Errorf("policy must be round-robin, least-inflight, or prefix-affinity")
 	}
 	if options.MaxInflight < 1 {
 		return fmt.Errorf("max-inflight must be positive")
@@ -47,10 +49,12 @@ func validateOptions(options PoolOptions) error {
 
 // Selection and reservation share one lock, so concurrent requests cannot all
 // observe an available slot and oversubscribe it. No network work holds the lock.
-func (p *workerPool) acquire() (int, bool) {
+func (p *workerPool) acquire(keys ...string) (int, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	selected := -1
+	var best [32]byte
+	affinity := p.policy == "prefix-affinity" && len(keys) > 0 && keys[0] != ""
 	for offset := 0; offset < len(p.proxies); offset++ {
 		i := (p.next + offset) % len(p.proxies)
 		if len(p.states) > 0 && (!p.states[i].Healthy || p.states[i].Draining) {
@@ -59,7 +63,13 @@ func (p *workerPool) acquire() (int, bool) {
 		if p.inflight[i] >= p.limit {
 			continue
 		}
-		if selected == -1 || p.inflight[i] < p.inflight[selected] {
+		if affinity {
+			score := sha256.Sum256([]byte(keys[0] + "\x00" + p.states[i].Origin))
+			if selected == -1 || bytes.Compare(score[:], best[:]) > 0 {
+				selected = i
+				best = score
+			}
+		} else if selected == -1 || p.inflight[i] < p.inflight[selected] {
 			selected = i
 		}
 		if p.policy == "round-robin" {
