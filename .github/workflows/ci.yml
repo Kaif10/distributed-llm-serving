@@ -23,3 +23,5 @@ jobs:
       - run: go build ./...
       - run: go build -o bin/gateway ./cmd/gateway
       - run: python3 scripts/smoke.py bin/gateway
+      - run: go build -o bin/raftpeer ./cmd/raftpeer
+      - run: python3 scripts/raft_process_check.py bin/raftpeer --output artifacts/raft-process/ci.json

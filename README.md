@@ -21,8 +21,10 @@ needs validation with a real application workload.
 
 A durable controller persists desired configuration with CAS and idempotent retries.
 Gateways can consume its drain snapshots for a fixed worker pool, report applied revisions,
-and reject new work when their confirmed view expires. Replication and dynamic membership
-remain future work.
+and reject new work when their confirmed view expires. An isolated fixed-membership Raft
+implementation now runs in separate local processes with durable logs and quorum-commit
+acknowledgements. Connecting it to the serving controller and dynamic membership remain
+future work.
 
 ## Start here
 
@@ -45,6 +47,7 @@ remain future work.
 - [Deterministic state machine](docs/learning/13-state-machine.md): separate ordered decisions from journal I/O.
 - [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
 - [Raft log replication](docs/learning/15-raft-replication.md): durable proposals, conflict repair, and quorum commit.
+- [Raft peer processes](docs/learning/16-raft-processes.md): bounded HTTP transport, leader loss, and journal recovery.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

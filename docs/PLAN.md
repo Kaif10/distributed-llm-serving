@@ -175,22 +175,25 @@ Learning: write-ahead logging, fsync, crash recovery, idempotency, revisions, st
 
 Replication slice now implemented in isolation: durable bounded logs, prefix reconciliation,
 correlated responses, current-term quorum commit, and committed configuration replay. See
-[the replication walkthrough](learning/15-raft-replication.md). Real-process transport,
-client acknowledgement/read integration, checkpoints, and serving-controller replication
-remain outstanding.
+[the replication walkthrough](learning/15-raft-replication.md). Bounded loopback HTTP
+transport and raw quorum-commit acknowledgements now run in separate peer processes;
+see [the process walkthrough](learning/16-raft-processes.md). Configuration-machine
+application, request-ID retries, fresh reads, checkpoints, and serving-controller
+replication remain outstanding.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
 timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See
-[the election walkthrough](learning/14-raft-elections.md). Replicated entries, quorum commit,
-distributed reads, and controller integration remain unimplemented.
+[the election walkthrough](learning/14-raft-elections.md). Replicated entries and quorum
+commit are implemented by the later slices above; distributed reads and controller
+integration remain outstanding.
 
 
 Preparation increment complete: [deterministic configuration machine](learning/13-state-machine.md)
 is separated from journal I/O, with replay, apply-time CAS, ownership, and compatibility checks.
 The recovered journal now requires a sync barrier before serving retries. No Raft protocol is
-integrated with the controller yet. The election slice above is now implemented; next are
-replicated entries and commit-rule checks.
+integrated with the controller yet. Election, replication, and process transport are
+implemented in isolation; the next step is the application commit/apply and read contract.
 
 
 Purpose: administrative changes should survive a controller failure and have one committed
