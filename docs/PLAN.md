@@ -11,6 +11,11 @@ policies at two offered rates with a changing hot document and explicit latency 
 Broader workload comparisons and milestones 5 through 9 remain planned. CPU checks establish
 mechanisms, not GPU capacity.
 
+The mixed-cost increment adds short/long prompts and output budgets, direct per-worker
+calibration, and differing CPU thread allocations. It preserves the current policies while
+measuring class outcomes and actual worker assignments. These are same-host resource
+differences, not a heterogeneous GPU deployment.
+
 ## Problem and first user
 
 Target a developer or small infrastructure team serving one model from multiple replicas.
@@ -127,8 +132,13 @@ time. The concurrent comparison is introduced in the third increment below.
 Third increment: [fixed-arrival load and goodput](learning/08-load-and-goodput.md) records
 offered, observed admitted, completed, rejected, failed, and objective-compliant requests.
 It compares the two policies on a changing-hot-document workload using real CPU inference.
-Varied lengths, heterogeneous workers, restart-under-load, and an existing-router comparison
-remain outstanding; this experiment does not complete all milestone 4 comparisons.
+At that increment, varied lengths and worker allocations were not yet exercised. The next
+increment covers them; restart-under-load and an existing-router comparison remain outstanding.
+
+Fourth increment: [mixed costs](learning/09-mixed-costs.md) extends the offered workload with
+16/128-token output budgets, shorter/full documents, and one/four-thread CPU workers. It
+measures direct service costs and class-specific outcomes before proposing another policy.
+GPU heterogeneity, restart-under-load, and existing-router comparisons remain outstanding.
 
 ## 5. Make fleet configuration durable
 

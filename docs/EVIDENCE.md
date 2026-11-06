@@ -8,6 +8,72 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Mixed request costs and unequal CPU allocation
+
+Source: clean commit `8ec295e21535482f1f9702363c3af25181777c11`. Reproduce with
+`python scripts/bench_load.py --profile mixed --worker-threads 1 4 --calibrate --requests 16 --trials 3 --rates 1 4 --output-dir artifacts/mixed-workers`.
+[Raw results](results/mixed-8ec295e.json) contain every calibration and offered request,
+worker identifiers, token usage, class outcomes, settings, and exact launch commands.
+
+Same Windows i5-1235U host, pinned llama.cpp b12110 CPU engine and SmolLM2-135M Q4_K_M.
+Worker 0 uses one CPU thread and worker 1 four; both have one slot and a 2048-token context.
+Extra RAM prompt-cache storage is disabled. Both share the host; neither has pinned cores.
+There are three trials per policy/rate pair, fresh processes per run, shuffled with seed 11.
+Each run offers 12 short and 4 long requests using the same document/arrival sequence.
+Short requests use 125 prompt tokens and request 16 output tokens; long requests use 520
+prompt tokens and request 128 output tokens. Actual usage and output lengths are checked.
+
+Before offered traffic, each engine receives one direct short and one direct long calibration
+with prompt reuse disabled, followed by unrelated warmup. All calibration cached-token counts
+were zero. Across 12 runs, per-worker direct completion times were:
+
+| Worker allocation | Class | Samples | Median completion | Observed range |
+| --- | --- | --- | --- | --- |
+| One CPU thread | Short | 12 | 629.940 ms | 587.986–917.226 ms |
+| One CPU thread | Long | 12 | 6917.942 ms | 3837.484–9461.097 ms |
+| Four CPU threads | Short | 12 | 435.726 ms | 414.285–556.944 ms |
+| Four CPU threads | Long | 12 | 2600.533 ms | 2500.049–3303.562 ms |
+
+Calibration is isolated, in fixed short/long order, and includes first-use shape effects.
+It demonstrates different observed service costs, not a model of concurrent service time
+or an isolated causal estimate of CPU scaling. Both input and output length change together.
+
+Objectives remain TTFT <= 2000 ms and completion <= 3000 ms, measured from scheduled arrival,
+for both classes. They were not retuned after observing calibration. These are experiment
+thresholds, not validated application requirements.
+
+| Offered rate | Policy | Offered | Completed | Rejected | Failed | Met both objectives |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1/s | Least-inflight | 48 | 35 | 13 | 0 | 28 |
+| 1/s | Prefix affinity | 48 | 33 | 15 | 0 | 30 |
+| 4/s | Least-inflight | 48 | 15 | 33 | 0 | 12 |
+| 4/s | Prefix affinity | 48 | 13 | 35 | 0 | 10 |
+
+All 192 offered requests reconcile: 96 completed, 96 rejected, no non-rejection errors.
+All completed requests had exactly their requested output count. All admitted responses
+had one worker identifier, either 0 or 1; all rejections lacked one in this run. Maximum
+generator dispatch lag was below 3.1 ms. Offered/admitted class counts and successful-only
+latency percentiles remain in the raw file.
+
+At 1/s, each policy admitted all 12 offered long requests, but least-inflight rejected
+13/36 short requests and affinity rejected 15/36. At 4/s, each rejected 6/12 long requests;
+short rejections were 27/36 and 29/36 respectively. The long requests always arrive first
+in each four-request cycle; this phase and the limited key-to-worker mapping are confounds
+for any fairness or general policy claim. The previous uniform experiment has different
+request counts and resource settings, so the two runs are not a controlled single-factor comparison.
+
+These results demonstrate that binary inflight occupancy cannot express the measured service
+cost difference. They do not demonstrate that a particular cost-aware scheduler would improve
+goodput. No placement policy was changed in this increment. Heterogeneous GPUs, jittered
+arrival phases, varied independent input/output lengths, and an established-router comparison
+remain unmeasured. The earlier unexplained timeout remains open.
+
+`go test ./...`, `go vet ./...`, the build, and Linux CI passed, including race detection.
+A network test verifies that upstream values cannot replace or duplicate the gateway's
+reserved-worker header while preserving the upstream status and retry guidance. The short
+real-model smoke run exercised mixed generation budgets, calibration, and rejection; the
+full run's count, output-length, worker-attribution, and zero-cache calibration checks passed.
+
 ## Fixed-arrival load and objective-compliant goodput
 
 Source: clean commit `c7e6a88253a9ad7ad5cf9ff38d466f6ab5a88f66`. Reproduce with
