@@ -1,12 +1,57 @@
 # Evidence ledger
 
-The gateway routes streaming requests across a static worker pool with local per-worker
-admission limits. Milestones 1 and the local integration portion of 2 are implemented;
-milestone 3's routing, admission, health, and local draining increments are verified with
-two real model processes. Milestone 4 now has measured real-model cache controls and
-existing-policy baselines; affinity routing and load experiments remain unfinished.
-Milestones 5 through 9 remain planned.
-Historical entries below describe the checks at their original increments.
+The serving gateway routes real-model streams across a fixed worker pool, with admission,
+health, draining, and controller-snapshot freshness checks. Real CPU-model experiments and
+their limitations are recorded below. The serving controller has a durable single-writer
+configuration journal. Raft elections, replication, and peer-process transport are implemented
+in isolation; serving-controller replication, fresh distributed reads, durable scheduling,
+and conditional sharding remain outstanding. Historical entries describe their original
+increments rather than the project's current status.
+
+## Real-process Raft transport and recovery
+
+Source: clean commit `ec03507df0df1cace731e35936845a402544617d`. Reproduce:
+
+```powershell
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/raft_process_check.py bin/raftpeer.exe --output artifacts/raft-process/run.json
+```
+
+Windows 11 amd64, Go 1.27.3, Python 3.12.7. The
+[raw process transcript](results/raft-process-ec03507.json) records a clean working tree,
+binary SHA-256, exact invocation, process logs, acknowledged command bytes, and final peer
+states. This used three actual OS processes and separate journal files on one machine,
+with loopback HTTP. It did not use an in-process message simulator or send LLM traffic.
+The [walkthrough](learning/16-raft-processes.md) explains the transport and client contract.
+
+A became leader and acknowledged four commands. A client request in flight during A's
+abrupt termination lost its HTTP connection. The B/C majority elected C in term 2 and
+acknowledged another command at index 7. Restarted A caught up through committed index 7.
+With A/B stopped, C's next proposal returned HTTP 504 (`deadline; outcome unknown`),
+without falsely reporting commitment. Once the majority returned, this timed-out command
+committed at index 8. After killing/restarting all peers, each re-established commitment
+through index 9; all five explicitly acknowledged commands retained their exact index,
+term, and bytes. The request interrupted by the leader kill did not appear in the final
+log in this run. In general, failed HTTP delivery is not proof of rejection; the minority
+timeout above demonstrates a failed response whose command later committed.
+
+The runtime serializes core ownership, bounds application event/sender queues and handlers,
+separates protocol and client listeners, and rejects malformed/oversized messages and
+unknown claimed members. Network tests cover single-member quorum acknowledgement,
+listener separation, peer validation, oversized proposals, and no-majority behavior.
+Local `go test ./...`, `go vet ./...`, and `go build ./...` passed.
+[Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42273504664) also passed:
+formatting, vet, race tests, builds, gateway process smoke checks, and the three-peer
+process scenario. Local Windows race detection was not run.
+
+Limits: trusted loopback only, no authentication/TLS, no configuration-machine application
+or linearizable application reads at the peer API, no deduplicated raw proposals, no dynamic
+membership or compaction. Fixed IDs and journal ownership must be preserved across restarts;
+journals do not bind an authenticated cluster identity. Queue/handler limits do not bound
+all HTTP connections or OS socket resources. These checks establish observed process-crash
+recovery on one host, not arbitrary network schedules, power/disk loss, production readiness,
+or LLM serving-controller failover. The unresolved model timeout in earlier evidence is
+unaffected by this protocol-only increment.
 
 ## Isolated durable Raft replication and commitment
 

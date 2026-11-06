@@ -1,0 +1,430 @@
+{
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "source_commit": "ec03507df0df1cace731e35936845a402544617d",
+  "working_tree": "",
+  "command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "scripts/raft_process_check.py",
+    "bin/raftpeer.exe",
+    "--output",
+    "artifacts/raft-process/ec03507.json"
+  ],
+  "binary_sha256": "f76420c3cd457137742c4c61edc2220f4e429269b9da1a5bac4dd51e3f87ee87",
+  "scope": "three OS processes, same-host loopback, opaque commands, no inference",
+  "events": [
+    {
+      "initial_leader": "a",
+      "initial_commits": 4
+    },
+    {
+      "during_kill_transport_error": "URLError"
+    },
+    {
+      "replacement_leader": "c",
+      "majority_write": {
+        "node": "c",
+        "status": 200,
+        "body": "{\"committed\":true,\"index\":7,\"term\":2}\n"
+      }
+    },
+    {
+      "restarted_peer": "a",
+      "converged_commit": 7
+    },
+    {
+      "minority_write": {
+        "node": "c",
+        "status": 504,
+        "body": "deadline; outcome unknown\n"
+      }
+    }
+  ],
+  "passed": true,
+  "acknowledged": [
+    {
+      "committed": true,
+      "index": 2,
+      "term": 1,
+      "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+    },
+    {
+      "committed": true,
+      "index": 3,
+      "term": 1,
+      "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+    },
+    {
+      "committed": true,
+      "index": 4,
+      "term": 1,
+      "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+    },
+    {
+      "committed": true,
+      "index": 5,
+      "term": 1,
+      "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+    },
+    {
+      "committed": true,
+      "index": 7,
+      "term": 2,
+      "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+    }
+  ],
+  "before_full_restart": {
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 8,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 117
+    },
+    "a": {
+      "node": {
+        "ID": "a",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 8,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0
+    },
+    "b": {
+      "node": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 8,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0
+    }
+  },
+  "final": {
+    "a": {
+      "node": {
+        "ID": "a",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 9,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        },
+        {
+          "index": 9,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0
+    },
+    "b": {
+      "node": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 9,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        },
+        {
+          "index": 9,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0
+    },
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 9,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMA=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMQ=="
+        },
+        {
+          "index": 4,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMg=="
+        },
+        {
+          "index": 5,
+          "term": 1,
+          "data": "YmVmb3JlLWZhaWx1cmUtMw=="
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "YWZ0ZXItbGVhZGVyLWtpbGw="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "bWlub3JpdHktb3V0Y29tZS11bmtub3du"
+        },
+        {
+          "index": 9,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0
+    }
+  },
+  "process_logs": {
+    "a": "2026/11/06 18:44:43 INFO raft peer listening id=a peer=127.0.0.1:52578 client=127.0.0.1:52581\n2026/11/06 18:44:45 INFO raft peer listening id=a peer=127.0.0.1:52578 client=127.0.0.1:52581\n2026/11/06 18:44:51 INFO raft peer listening id=a peer=127.0.0.1:52578 client=127.0.0.1:52581\n2026/11/06 18:44:51 INFO raft peer listening id=a peer=127.0.0.1:52578 client=127.0.0.1:52581\n",
+    "b": "2026/11/06 18:44:43 INFO raft peer listening id=b peer=127.0.0.1:52579 client=127.0.0.1:52582\n2026/11/06 18:44:51 INFO raft peer listening id=b peer=127.0.0.1:52579 client=127.0.0.1:52582\n2026/11/06 18:44:51 INFO raft peer listening id=b peer=127.0.0.1:52579 client=127.0.0.1:52582\n",
+    "c": "2026/11/06 18:44:43 INFO raft peer listening id=c peer=127.0.0.1:52580 client=127.0.0.1:52583\n2026/11/06 18:44:51 INFO raft peer listening id=c peer=127.0.0.1:52580 client=127.0.0.1:52583\n"
+  }
+}
