@@ -14,17 +14,21 @@ import (
 	"github.com/Kaif10/inference-fleet/internal/filelock"
 )
 
-// FileStorage persists only election term/vote. This is not a replicated log.
+// FileStorage persists term/vote and a bounded full-log snapshot per record.
+// This simple journal favors inspectability over production append throughput.
 type FileStorage struct {
-	mu       sync.Mutex
-	file     *os.File
-	state    HardState
-	failed   bool
-	syncFile func() error
+	mu                sync.Mutex
+	file              *os.File
+	state             HardState
+	entries           []Entry
+	replicationFormat bool
+	failed            bool
+	syncFile          func() error
 }
 type stateRecord struct {
 	Kind  string    `json:"kind"`
 	State HardState `json:"state"`
+	Log   []Entry   `json:"log,omitempty"`
 }
 
 func validTransition(previous, next HardState) bool {
@@ -70,7 +74,7 @@ func (s *FileStorage) recover() error {
 			return fmt.Errorf("election header checksum mismatch")
 		}
 		length := binary.LittleEndian.Uint32(header[:4])
-		if length == 0 || length > 1024 {
+		if length == 0 || length > 8<<20 {
 			return fmt.Errorf("invalid election record length")
 		}
 		data := make([]byte, length)
@@ -91,9 +95,14 @@ func (s *FileStorage) recover() error {
 		if err := json.Unmarshal(data, &record); err != nil {
 			return err
 		}
-		if record.Kind != "raft-election-v1" || !validTransition(s.state, record.State) {
+		if (record.Kind != "raft-election-v1" && record.Kind != "raft-state-v2") || (record.Kind == "raft-election-v1" && (s.replicationFormat || len(record.Log) > 0)) || !validTransition(s.state, record.State) {
 			return fmt.Errorf("invalid election state transition")
 		}
+		if err := validLog(record.Log, record.State.Term); err != nil {
+			return err
+		}
+		s.replicationFormat = record.Kind == "raft-state-v2"
+		s.entries = cloneEntries(record.Log)
 		s.state = record.State
 		offset += int64(12 + length)
 	}
@@ -111,20 +120,39 @@ func (s *FileStorage) Load() (HardState, error) {
 	}
 	return s.state, nil
 }
+func (s *FileStorage) LoadLog() ([]Entry, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.failed {
+		return nil, ErrStorage
+	}
+	return cloneEntries(s.entries), nil
+}
+func (s *FileStorage) SaveLog(entries []Entry) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.save(s.state, entries)
+}
 func (s *FileStorage) Save(state HardState) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	return s.save(state, s.entries)
+}
+func (s *FileStorage) save(state HardState, entries []Entry) error {
 	if s.failed {
 		return ErrStorage
 	}
 	if !validTransition(s.state, state) {
 		return fmt.Errorf("term regression or conflicting durable vote")
 	}
-	data, err := json.Marshal(stateRecord{Kind: "raft-election-v1", State: state})
+	if err := validLog(entries, state.Term); err != nil {
+		return err
+	}
+	data, err := json.Marshal(stateRecord{Kind: "raft-state-v2", State: state, Log: entries})
 	if err != nil {
 		return err
 	}
-	if len(data) > 1024 {
+	if len(data) > 8<<20 {
 		return fmt.Errorf("election record too large")
 	}
 	frame := make([]byte, 12+len(data))
@@ -144,6 +172,8 @@ func (s *FileStorage) Save(state HardState) error {
 		return err
 	}
 	s.state = state
+	s.entries = cloneEntries(entries)
+	s.replicationFormat = true
 	return nil
 }
 func (s *FileStorage) Close() error {
