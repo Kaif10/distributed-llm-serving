@@ -1,10 +1,10 @@
-package control
+package filelock
 
 import (
 	"os"
 	"syscall"
 )
 
-func lockFile(file *os.File) error {
+func Acquire(file *os.File) error {
 	return syscall.Flock(int(file.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
 }

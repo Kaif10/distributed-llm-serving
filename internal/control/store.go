@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/Kaif10/inference-fleet/internal/filelock"
 )
 
 var ErrUnavailable = errors.New("store unavailable; update outcome may be unknown")
@@ -33,7 +35,7 @@ func Open(path string) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := lockFile(f); err != nil {
+	if err := filelock.Acquire(f); err != nil {
 		f.Close()
 		return nil, fmt.Errorf("exclusive journal lock: %w", err)
 	}
