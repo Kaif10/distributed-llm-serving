@@ -1,0 +1,5 @@
+{
+  "request_id": "drain-worker-a-1",
+  "expected_revision": 0,
+  "workers": [{"id": "worker-a", "origin": "http://127.0.0.1:18081", "draining": true}]
+}

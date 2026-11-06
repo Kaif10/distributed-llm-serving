@@ -19,6 +19,10 @@ caching and the existing routing policies; its evidence includes an unresolved t
 an interrupted run. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
 
+A separate single-controller API now persists desired fleet configuration with CAS and
+idempotent retries. Gateway consumption and replication remain future work; controller
+updates do not yet alter running gateways.
+
 ## Start here
 
 - [Milestones](docs/PLAN.md): what to build, why, and what evidence completes each step.
@@ -35,6 +39,7 @@ needs validation with a real application workload.
 - [Mixed request costs](docs/learning/09-mixed-costs.md): measure short/long generations and different CPU allocations.
 - [Restart under load](docs/learning/10-restart-under-load.md): verify real worker recovery while arrivals continue.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
+- [Durable configuration](docs/learning/11-durable-configuration.md): journal recovery and revision contracts.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

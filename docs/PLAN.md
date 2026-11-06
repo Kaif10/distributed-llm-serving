@@ -30,7 +30,7 @@ Before optimizing, obtain a permissioned workload from an actual application or 
 a documented workload. Record who would use this, their current setup, and a measurable pain
 point. Synthetic traffic is useful for controlled tests but does not establish user demand.
 
-## 0. Service foundation — initial increment
+## 0. Service foundation â€” initial increment
 
 Build a small Go HTTP process, health endpoint, explicit listener configuration, and bounded
 graceful shutdown. Document how to run it. No inference endpoints yet.
@@ -149,6 +149,12 @@ address the current lack of durable, versioned administrative state.
 
 ## 5. Make fleet configuration durable
 
+First increment implemented: a checksummed single-controller journal, sync-before-ack,
+CAS, request-ID retries, exclusive ownership, and process-crash recovery. See
+[the controller walkthrough](learning/11-durable-configuration.md). Snapshot consumption,
+applied revisions, and stale-view expiration are next.
+
+
 Introduce a small control API for model-to-worker assignments and drain state. Use versioned
 compare-and-swap updates and one durable state machine before replication. Write down when an
 acknowledged update survives restart; test torn/truncated storage records and retries.
@@ -196,7 +202,7 @@ anything outside local development.
 Identify a user-confirmed improvement or document that existing systems are sufficient and
 select a concrete upstream issue. Publish only measured claims, including limitations.
 
-## 8. Durable batch scheduling — later extension
+## 8. Durable batch scheduling â€” later extension
 
 Gate: the serving path works and a concrete offline workload needs restartable jobs, such as
 summarizing a collection of documents. Record why ordinary client-side request submission is
@@ -216,7 +222,7 @@ record does not make arbitrary external side effects exactly-once.
 Learning: durable scheduling, leases, fencing, retry backoff, idempotency, fairness, and the
 difference between at-least-once execution and deduplicated result publication.
 
-## 9. Shard the job queue — conditional on a measured bottleneck
+## 9. Shard the job queue â€” conditional on a measured bottleneck
 
 Gate: benchmark the durable scheduler and identify queue storage or scheduling coordination
 as a capacity limit. First consider simpler indexing, batching, and independent queues. Record

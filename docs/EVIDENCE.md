@@ -8,6 +8,47 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Durable single-controller configuration
+
+Source: clean commit `4ae5798c7a613a50cbcf75a3c201a5071381eaec`. Reproduce with
+`go build -o bin/controller.exe ./cmd/controller` and `python scripts/check_controller.py`.
+[Raw executable results](results/controller-4ae5798.json) retain the acknowledged state,
+retry result, concurrent-writer status codes, and final recovered configuration.
+
+The real controller process writes an actual local journal and serves GET/PUT /config.
+This increment is independent of inference and does not change a gateway's serving state.
+No model-performance result is claimed for a storage experiment.
+
+The executable check acknowledged revision 1, rejected a second controller opening the same
+journal, then forcibly killed and restarted the owner. Revision 1 and its drain flag survived.
+An identical retry returned its original result; a later resume committed revision 2, and
+retrying the older drain returned revision 1 without changing current state. Stale revisions
+and conflicting reuse of a request ID received 409.
+
+Eight concurrent HTTP writers using expected revision 2 produced one HTTP 200 and seven
+409 responses, advancing current state to revision 3. After another forced process kill,
+the stopped journal received a three-byte incomplete next header. Recovery retained revision
+3, repaired that tail, and acknowledged a subsequent update at revision 4. Another forced
+kill/restart preserved revision 4 and its resume flag. These checks use isolated temporary
+journal files; there is no destructive modification of application or inference data.
+
+`go test ./...`, `go vet ./...`, and the Windows controller build passed. Storage tests check
+32 concurrent CAS attempts, original retry results after later changes and restart, every
+incomplete byte-prefix of a trailing record, header/payload checksum corruption, exclusive
+journal ownership, and an injected sync error that fences the store. The complete uncertain
+record is recovered idempotently after reopening. The Windows test initially attempted to
+read a locked journal through another handle; it was corrected to close/reopen around fixture
+capture and check those I/O errors. This did not require changing the locking implementation.
+Linux CI for this source completed successfully, including race detection.
+
+Scope: one local writer, no Raft, no gateway snapshot consumer yet, no history compaction or
+request-ID expiry. A successful update follows file sync, but durability under power loss,
+file-creation metadata loss, disk failure, or remote filesystems is not established. An
+incomplete final append can be repaired; a complete corrupt record fails startup. Unknown
+append/sync outcomes return 503 and fence the store until reopening. A complete unacknowledged
+record may survive; clients resolve ambiguity by retrying its original request ID.
+
+
 ## Real worker restart during sustained arrivals
 
 Source: clean commit `2ad3185`. Reproduce with `python scripts/check_restart_load.py --output-dir artifacts/restart-load-aligned`
@@ -70,8 +111,8 @@ Worker 0 uses one CPU thread and worker 1 four; both have one slot and a 2048-to
 Extra RAM prompt-cache storage is disabled. Both share the host; neither has pinned cores.
 There are three trials per policy/rate pair, fresh processes per run, shuffled with seed 11.
 Each run offers 12 short and 4 long requests using the same document/arrival sequence.
-Completed short requests used 125–126 prompt tokens and requested 16 output tokens; completed
-long requests used 520–521 prompt tokens and requested 128 output tokens. The exact prompt
+Completed short requests used 125â€“126 prompt tokens and requested 16 output tokens; completed
+long requests used 520â€“521 prompt tokens and requested 128 output tokens. The exact prompt
 count depends on the document and question. Actual usage and output lengths are checked.
 
 Before offered traffic, each engine receives one direct short and one direct long calibration
@@ -80,10 +121,10 @@ were zero. Across 12 runs, per-worker direct completion times were:
 
 | Worker allocation | Class | Samples | Median completion | Observed range |
 | --- | --- | --- | --- | --- |
-| One CPU thread | Short | 12 | 629.940 ms | 587.986–917.226 ms |
-| One CPU thread | Long | 12 | 6917.942 ms | 3837.484–9461.097 ms |
-| Four CPU threads | Short | 12 | 435.726 ms | 414.285–556.944 ms |
-| Four CPU threads | Long | 12 | 2600.533 ms | 2500.049–3303.562 ms |
+| One CPU thread | Short | 12 | 629.940 ms | 587.986â€“917.226 ms |
+| One CPU thread | Long | 12 | 6917.942 ms | 3837.484â€“9461.097 ms |
+| Four CPU threads | Short | 12 | 435.726 ms | 414.285â€“556.944 ms |
+| Four CPU threads | Long | 12 | 2600.533 ms | 2500.049â€“3303.562 ms |
 
 Calibration is isolated, in fixed short/long order, and includes first-use shape effects.
 It demonstrates different observed service costs, not a model of concurrent service time
@@ -160,7 +201,7 @@ Admission observations are not a general replacement for authoritative server co
 
 Per-trial goodput (compliant requests divided by observed duration, including response tails):
 least-inflight at 1/s ranged from 0.749 to 1.000 req/s; affinity ranged from 0.958 to 1.000.
-At 4/s the ranges were 0.167–0.329 and 0.000–0.500 respectively. This variation and only three
+At 4/s the ranges were 0.167â€“0.329 and 0.000â€“0.500 respectively. This variation and only three
 trials do not establish a general best policy. At the higher rate, affinity's sequential
 cache benefit did not yield a consistent goodput advantage. Both policies encountered the
 same admission limit and rejected 55 of 72 requests.
