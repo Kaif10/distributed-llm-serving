@@ -1,0 +1,6027 @@
+{
+  "source_commit": "c7e6a88253a9ad7ad5cf9ff38d466f6ab5a88f66",
+  "working_tree_dirty": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "workload": {
+    "description": "Constructed document-question workload for controlled cache experiments; real model inference, no application-user trace.",
+    "documents": {
+      "A": "Harbor operations reference. Answer the question using this document.\nRecord 1: the Harbor team inspected 4 boats at dock 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Harbor team inspected 5 boats at dock 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Harbor team inspected 6 boats at dock 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Harbor team inspected 7 boats at dock 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Harbor team inspected 8 boats at dock 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Harbor team inspected 9 boats at dock 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Harbor team inspected 10 boats at dock 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Harbor team inspected 11 boats at dock 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Harbor team inspected 12 boats at dock 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Harbor team inspected 13 boats at dock 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Harbor team inspected 14 boats at dock 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Harbor team inspected 15 boats at dock 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Harbor team inspected 16 boats at dock 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Harbor team inspected 17 boats at dock 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Harbor team inspected 18 boats at dock 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Harbor team inspected 19 boats at dock 16. The inspection was completed and recorded by operator 16.",
+      "B": "Cedar operations reference. Answer the question using this document.\nRecord 1: the Cedar team inspected 4 trees at forest 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Cedar team inspected 5 trees at forest 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Cedar team inspected 6 trees at forest 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Cedar team inspected 7 trees at forest 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Cedar team inspected 8 trees at forest 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Cedar team inspected 9 trees at forest 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Cedar team inspected 10 trees at forest 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Cedar team inspected 11 trees at forest 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Cedar team inspected 12 trees at forest 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Cedar team inspected 13 trees at forest 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Cedar team inspected 14 trees at forest 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Cedar team inspected 15 trees at forest 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Cedar team inspected 16 trees at forest 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Cedar team inspected 17 trees at forest 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Cedar team inspected 18 trees at forest 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Cedar team inspected 19 trees at forest 16. The inspection was completed and recorded by operator 16.",
+      "C": "Orbit operations reference. Answer the question using this document.\nRecord 1: the Orbit team inspected 4 satellites at station 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Orbit team inspected 5 satellites at station 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Orbit team inspected 6 satellites at station 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Orbit team inspected 7 satellites at station 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Orbit team inspected 8 satellites at station 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Orbit team inspected 9 satellites at station 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Orbit team inspected 10 satellites at station 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Orbit team inspected 11 satellites at station 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Orbit team inspected 12 satellites at station 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Orbit team inspected 13 satellites at station 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Orbit team inspected 14 satellites at station 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Orbit team inspected 15 satellites at station 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Orbit team inspected 16 satellites at station 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Orbit team inspected 17 satellites at station 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Orbit team inspected 18 satellites at station 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Orbit team inspected 19 satellites at station 16. The inspection was completed and recorded by operator 16."
+    },
+    "sequence": [
+      "A",
+      "A",
+      "B",
+      "B",
+      "C",
+      "C",
+      "A",
+      "A"
+    ],
+    "question_template": "According to record {record}, how many items were inspected? Answer briefly."
+  },
+  "settings": {
+    "requests": 24,
+    "rates": [
+      1,
+      4
+    ],
+    "trials": 3,
+    "ttft_ms": 2000,
+    "completion_ms": 3000,
+    "output_dir": "D:\\inference-fleet\\artifacts\\load-baseline",
+    "documents": [
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "A",
+      "C",
+      "B",
+      "C",
+      "C",
+      "C",
+      "B",
+      "C",
+      "C",
+      "B",
+      "C",
+      "B",
+      "C"
+    ]
+  },
+  "runs": [
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 1,
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.5778998602181673,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1439.326899824664,
+          "completion_ms": 1652.0326999016106,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1652.2477997932583
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.0820997413247824,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1732.9358998686075,
+          "completion_ms": 1877.7472998481244,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1877.8998998459429
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.33929990604519844,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 177.77069984003901,
+          "completion_ms": 362.7011999487877,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 362.83899983391166
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.6176999304443598,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 83.46179989166558,
+          "completion_ms": 232.51559981144965,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 232.67379985190928
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.6967999506741762,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.47739986330271,
+          "completion_ms": 231.6604999359697,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 231.73629981465638
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.575199956074357,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 76.58469979651272,
+          "completion_ms": 218.91019982285798,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 219.06309993937612
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.6208999548107386,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 78.02259991876781,
+          "completion_ms": 238.39719989337027,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 238.46349981613457
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.47079985961318016,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 108.62019984051585,
+          "completion_ms": 287.61979984119534,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 287.69749985076487
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.29509980231523514,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 103.6767999175936,
+          "completion_ms": 260.2000997867435,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 260.2469997946173
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.734199769794941,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 82.08999992348254,
+          "completion_ms": 244.35809976421297,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 244.50989975593984
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.7358998991549015,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 80.67289995960891,
+          "completion_ms": 222.65189979225397,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 222.76539984159172
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.5863998085260391,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 86.49689983576536,
+          "completion_ms": 243.34919988177717,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 243.45169984735548
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.2275998704135418,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1522.9445998556912,
+          "completion_ms": 1761.4684998989105,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1761.5476998034865
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.461899908259511,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1789.355699904263,
+          "completion_ms": 1929.6526999678463,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1929.7321997582912
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.5181997548788786,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 166.56859987415373,
+          "completion_ms": 378.85019974783063,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 378.9961999282241
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.5423999391496181,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 97.32459974475205,
+          "completion_ms": 235.177599824965,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 235.2885997388512
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.6581998895853758,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 66.96309987455606,
+          "completion_ms": 229.8055998980999,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 229.94919982738793
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.8574998937547207,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 101.71979991719127,
+          "completion_ms": 260.2491998113692,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 260.3119998238981
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.4228998441249132,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 76.60989975556731,
+          "completion_ms": 237.29019984602928,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 237.3985997401178
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.542899826541543,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 80.54009987972677,
+          "completion_ms": 247.74779984727502,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 247.80129990540445
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.6879998836666346,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 78.10659985989332,
+          "completion_ms": 240.66979996860027,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.7747998367995
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.36729988642036915,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 80.61159984208643,
+          "completion_ms": 243.28849976882339,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 243.41599992476404
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.6743997801095247,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 95.56489996612072,
+          "completion_ms": 249.10879996605217,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 249.2131998296827
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.5171997472643852,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 92.99259982071817,
+          "completion_ms": 258.66279983893037,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 258.77269986085594
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 24,
+      "completed": 24,
+      "rejected": 0,
+      "failed": 0,
+      "objective_met": 24,
+      "objective_fraction": 1.0,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 24.0,
+      "throughput_rps": 1.0,
+      "goodput_rps": 1.0,
+      "max_dispatch_lag_ms": 1.0820997413247824,
+      "successful_ttft_p95_ms": 1732.9358998686075,
+      "successful_completion_p95_ms": 1877.7472998481244,
+      "cached_token_fraction": 0.8069992792504205
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 4,
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 1.1088999453932047,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2189.9429000914097,
+          "completion_ms": 2432.1109999436885,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2432.200500043109
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.1072999332100153,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2323.5842001158744,
+          "completion_ms": 2547.555800061673,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2547.719999914989
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.7015999872237444,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 3.0398000963032246
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.23230002261698246,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 18.418600084260106
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.4648999311029911,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.016599988564849
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.6655999459326267,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.98900005593896
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.30179996974766254,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.915500033646822
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.3223000094294548,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 16.22100011445582
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.4292000085115433,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.057800069451332
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.24669989943504333,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 22.690899902954698
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.3557000309228897,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 156.91599994897842,
+          "completion_ms": 378.05820000357926,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 378.24320001527667
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.40289992466568947,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.359899925068021
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.5697000306099653,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2584.4175000675023,
+          "completion_ms": 2790.0894000194967,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2790.2192999608815
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.4110999871045351,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2537.3726999387145,
+          "completion_ms": 2692.5458998885006,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2692.750900052488
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.3899000585079193,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.196399960666895
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.49949996173381805,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.44619992375374
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.5856000352650881,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.8295000083744526
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.24239998310804367,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.0316001027822495
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.3440999425947666,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 14.35100007802248
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.46469992958009243,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.1434000227600336
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.681400066241622,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.188200054690242
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.2536999527364969,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.6602000687271357
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.44579990208148956,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.29199999012053
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.6355000659823418,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.1693999879062176
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 5,
+      "completed": 5,
+      "rejected": 19,
+      "failed": 0,
+      "objective_met": 1,
+      "objective_fraction": 0.041666666666666664,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 6.0,
+      "throughput_rps": 0.8333333333333334,
+      "goodput_rps": 0.16666666666666666,
+      "max_dispatch_lag_ms": 1.1088999453932047,
+      "successful_ttft_p95_ms": 2584.4175000675023,
+      "successful_completion_p95_ms": 2790.0894000194967,
+      "cached_token_fraction": 0.19823280829811757
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 1,
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.9645000100135803,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1426.630700007081,
+          "completion_ms": 1627.0889998413622,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1627.2332000080496
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.178500009700656,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1727.3140999022871,
+          "completion_ms": 1869.7644998319447,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1869.9163999408484
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.781599897891283,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 167.92709985747933,
+          "completion_ms": 379.8303999938071,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 380.02789998427033
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.7474999874830246,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 85.55720001459122,
+          "completion_ms": 234.07769994810224,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 234.1918998863548
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.5854000337421894,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.31299998238683,
+          "completion_ms": 223.0114999692887,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 223.20290002971888
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.7577999494969845,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 82.09709986113012,
+          "completion_ms": 234.01089990511537,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 234.15759997442365
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.7463998626917601,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 74.74079984240234,
+          "completion_ms": 227.30150003917515,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 227.40400000475347
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.6444999016821384,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 71.23270002193749,
+          "completion_ms": 216.7269999627024,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 216.83839987963438
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.35009998828172684,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 77.62119988910854,
+          "completion_ms": 229.41290005110204,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 229.52589998021722
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.6069999653846025,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 73.12389998696744,
+          "completion_ms": 220.67559999413788,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 220.8656999282539
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.5888999439775944,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 80.43639990501106,
+          "completion_ms": 278.015400050208,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 278.175099985674
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.4493000451475382,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 69.16389986872673,
+          "completion_ms": 222.64769999310374,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 222.69259998574853
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.3845000173896551,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1410.7729999814183,
+          "completion_ms": 1618.3610998559743,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1618.551000021398
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.47670002095401287,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1808.314099907875,
+          "completion_ms": 1953.4328998997808,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1953.515199944377
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.4103998653590679,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 144.79489997029305,
+          "completion_ms": 357.0127000566572,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 357.16899996623397
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.25739986449480057,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1421.5500999707729,
+          "completion_ms": 1576.8466999288648,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1577.1325998939574
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.8193999528884888,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 152.49500004574656,
+          "completion_ms": 346.84520005248487,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 346.9153998885304
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.551499892026186,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1391.0464998334646,
+          "completion_ms": 1548.4072000253946,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1548.6689999233931
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.6009999196976423,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 155.83870001137257,
+          "completion_ms": 357.0099000353366,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 357.15049994178116
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.29090000316500664,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1431.7888000514358,
+          "completion_ms": 1654.8311999067664,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1655.0586000084877
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.3867000341415405,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1785.571799846366,
+          "completion_ms": 1930.1721998490393,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1930.2678999956697
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.3666998818516731,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 165.0002000387758,
+          "completion_ms": 369.169499957934,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 369.29149995557964
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.23969984613358974,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 87.09020004607737,
+          "completion_ms": 228.09790004976094,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 228.2324000261724
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.8159999269992113,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.93719984591007,
+          "completion_ms": 230.48370005562901,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 230.59599986299872
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 24,
+      "completed": 24,
+      "rejected": 0,
+      "failed": 0,
+      "objective_met": 24,
+      "objective_fraction": 1.0,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 24.0,
+      "throughput_rps": 1.0,
+      "goodput_rps": 1.0,
+      "max_dispatch_lag_ms": 1.178500009700656,
+      "successful_ttft_p95_ms": 1785.571799846366,
+      "successful_completion_p95_ms": 1930.1721998490393,
+      "cached_token_fraction": 0.6466725394410187
+    },
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 1,
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 1.0351999662816525,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1395.5301998648793,
+          "completion_ms": 1590.5922998208553,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1590.7279998064041
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 0.6696998607367277,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1869.2061000037938,
+          "completion_ms": 2014.754100004211,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2014.8336999118328
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.6232999730855227,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 144.4703999441117,
+          "completion_ms": 387.05319981090724,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 387.2294998727739
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.47450000420212746,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 96.48509998805821,
+          "completion_ms": 249.41209983080626,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 249.53459994867444
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.6406998727470636,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.13009989634156,
+          "completion_ms": 229.77139987051487,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 229.81779999099672
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.43709995225071907,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 97.33369993045926,
+          "completion_ms": 301.5993998851627,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 301.7688998952508
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.6840999703854322,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 90.28369979932904,
+          "completion_ms": 242.87709989584982,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.94009990990162
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.6769997999072075,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 76.89199992455542,
+          "completion_ms": 307.0172998122871,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 307.12149990722537
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.3481998573988676,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.77529989369214,
+          "completion_ms": 228.9458999875933,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 229.0709000080824
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.45519997365772724,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 97.9269000235945,
+          "completion_ms": 247.71889997646213,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 247.8517999406904
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.5189999938011169,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 73.90820002183318,
+          "completion_ms": 240.29089999385178,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.3758999425918
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.42649987153708935,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 74.42019996233284,
+          "completion_ms": 218.35209988057613,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 218.41309987939894
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.8278000168502331,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1843.406799947843,
+          "completion_ms": 2066.3232000079006,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2066.5423998143524
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.49080001190304756,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1705.3964999504387,
+          "completion_ms": 1849.8471998609602,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1849.9539999756962
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 1.0118999052792788,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.5824999902397394
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.5764998495578766,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 98.55519980192184,
+          "completion_ms": 253.39979981072247,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 253.55849997140467
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.3418999258428812,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 66.13359996117651,
+          "completion_ms": 228.799199918285,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 228.91449998132885
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.45819999650120735,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 77.53809983842075,
+          "completion_ms": 239.95790001936257,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.0835999287665
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.4803999327123165,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.16260002739727,
+          "completion_ms": 243.91239997930825,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 244.04959985986352
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.5299998447299004,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 88.13519985415041,
+          "completion_ms": 249.8310999944806,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 249.96739998459816
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.6994998548179865,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 77.09509995765984,
+          "completion_ms": 231.48279986344278,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 231.57139983959496
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.722500029951334,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 73.59629985876381,
+          "completion_ms": 233.7775998748839,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 233.91179996542633
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.6371999625116587,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 74.67409991659224,
+          "completion_ms": 240.86399981752038,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.93439988791943
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.772399827837944,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 78.40869994834065,
+          "completion_ms": 240.3139998205006,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.3720999136567
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 23,
+      "completed": 23,
+      "rejected": 1,
+      "failed": 0,
+      "objective_met": 23,
+      "objective_fraction": 0.9583333333333334,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 24.0,
+      "throughput_rps": 0.9583333333333334,
+      "goodput_rps": 0.9583333333333334,
+      "max_dispatch_lag_ms": 1.0351999662816525,
+      "successful_ttft_p95_ms": 1843.406799947843,
+      "successful_completion_p95_ms": 2014.754100004211,
+      "cached_token_fraction": 0.8000167140230654
+    },
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 1,
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.5430998280644417,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1598.3237999025732,
+          "completion_ms": 1849.5230998378247,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1849.6945998631418
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.0035999584943056,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2052.889300044626,
+          "completion_ms": 2263.1920999847353,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2263.336099917069
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.5903998389840126,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 173.8012998830527,
+          "completion_ms": 427.0381999667734,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 427.1013999823481
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.6639999337494373,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 163.17069996148348,
+          "completion_ms": 366.1217999178916,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 366.34379997849464
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.2609000075608492,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 84.96809983626008,
+          "completion_ms": 239.1818999312818,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 239.33759983628988
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.6850999779999256,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 70.64439984969795,
+          "completion_ms": 222.0727999228984,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 222.17649989761412
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.5039998795837164,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 76.20320003479719,
+          "completion_ms": 226.50330001488328,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 226.57349985092878
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.3657999914139509,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.54490002803504,
+          "completion_ms": 227.13589994236827,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 227.21369983628392
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.6651999428868294,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.56320005096495,
+          "completion_ms": 222.25599992088974,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 222.33539982698858
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.3076000139117241,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 104.71599991433322,
+          "completion_ms": 252.05969996750355,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 252.1819998510182
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.38730003871023655,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.43849991634488,
+          "completion_ms": 241.25769990496337,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 241.39029998332262
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.6736000068485737,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.02379990182817,
+          "completion_ms": 233.0408999696374,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 233.17130003124475
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.5163999740034342,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1432.8425000421703,
+          "completion_ms": 1644.8035999201238,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1644.968899898231
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.626599881798029,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1736.4461000543088,
+          "completion_ms": 1874.3071998469532,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1874.390299897641
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.7118999492377043,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 159.512999933213,
+          "completion_ms": 347.1510000526905,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 347.31399989686906
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.19029993563890457,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 84.06049991026521,
+          "completion_ms": 232.0997000206262,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 232.18739987351
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.6569998804479837,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 87.64889999292791,
+          "completion_ms": 247.65489995479584,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 247.7704999037087
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.38330000825226307,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 69.87069989554584,
+          "completion_ms": 222.09219983778894,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 222.1406998578459
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.45499997213482857,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.05859990790486,
+          "completion_ms": 225.81860003992915,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 225.89530004188418
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.46600005589425564,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.06539995968342,
+          "completion_ms": 224.85119989141822,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 224.9537999741733
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.6708998698741198,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 71.8157000374049,
+          "completion_ms": 216.53109998442233,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 216.6146000381559
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.7156999781727791,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 74.72050003707409,
+          "completion_ms": 219.16310000233352,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 219.30289990268648
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.5789999850094318,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.3075999673456,
+          "completion_ms": 224.85759994015098,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 224.96829996816814
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.8127999026328325,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 76.44860004074872,
+          "completion_ms": 223.52480003610253,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 223.62719988450408
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 24,
+      "completed": 24,
+      "rejected": 0,
+      "failed": 0,
+      "objective_met": 23,
+      "objective_fraction": 0.9583333333333334,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 24.0,
+      "throughput_rps": 1.0,
+      "goodput_rps": 0.9583333333333334,
+      "max_dispatch_lag_ms": 1.0035999584943056,
+      "successful_ttft_p95_ms": 1736.4461000543088,
+      "successful_completion_p95_ms": 1874.3071998469532,
+      "cached_token_fraction": 0.8069992792504205
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 1,
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.8145000319927931,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1446.7060999013484,
+          "completion_ms": 1655.4473000578582,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1655.5492000188679
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 0.8451000321656466,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1824.0261999890208,
+          "completion_ms": 1969.8464998509735,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1969.972399994731
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.38430001586675644,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 122.93999991379678,
+          "completion_ms": 319.7512000333518,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 319.8766000568867
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.5965998861938715,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 94.8544000275433,
+          "completion_ms": 237.12039995007217,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 237.22580005414784
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.7360999006778002,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 69.99520002864301,
+          "completion_ms": 232.49209998175502,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 232.54540003836155
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.6957000587135553,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 81.31519984453917,
+          "completion_ms": 242.28039989247918,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.35099996440113
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.4425998777151108,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 72.15949986129999,
+          "completion_ms": 220.88469984009862,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 220.95909994095564
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.7267999462783337,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 73.0532999150455,
+          "completion_ms": 236.00639984942973,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 236.18549993261695
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.5140998400747776,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 86.05439984239638,
+          "completion_ms": 242.04759998247027,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.15369997546077
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.548599986359477,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 103.04119996726513,
+          "completion_ms": 258.58059991151094,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 258.6417000275105
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.45499997213482857,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 89.11509998142719,
+          "completion_ms": 242.21999989822507,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.3135000281036
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.5165999755263329,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 89.71079997718334,
+          "completion_ms": 240.89580005966127,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 240.99890002980828
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.528999837115407,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1628.3990999218076,
+          "completion_ms": 1824.3384999223053,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1824.495199834928
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.6001999136060476,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2188.0159999709576,
+          "completion_ms": 2425.586699973792,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2425.710199866444
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.6492999382317066,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 133.6902000475675,
+          "completion_ms": 395.7310998812318,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 396.005499875173
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.51099993288517,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 143.284099875018,
+          "completion_ms": 365.88499997742474,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 366.0607000347227
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.45469985343515873,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2106.7530000582337,
+          "completion_ms": 2336.082800058648,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2336.3103000447154
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.3662998788058758,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2208.951999899,
+          "completion_ms": 2438.1539998576045,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2438.24419984594
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 1.2739000376313925,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 13.003299944102764
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.4233999643474817,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 125.05070003680885,
+          "completion_ms": 369.9343998450786,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 370.0757999904454
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.46040001325309277,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 83.99249985814095,
+          "completion_ms": 242.71290004253387,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.85359983332455
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.6186999380588531,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 90.55499988608062,
+          "completion_ms": 257.97889987006783,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 258.0627000425011
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.4542998503893614,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 106.25239997170866,
+          "completion_ms": 268.116399878636,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 268.2681998703629
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.3378998953849077,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 83.10170006006956,
+          "completion_ms": 248.1028998736292,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 248.2099998742342
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 23,
+      "completed": 23,
+      "rejected": 1,
+      "failed": 0,
+      "objective_met": 20,
+      "objective_fraction": 0.8333333333333334,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 24.0,
+      "throughput_rps": 0.9583333333333334,
+      "goodput_rps": 0.8333333333333334,
+      "max_dispatch_lag_ms": 1.2739000376313925,
+      "successful_ttft_p95_ms": 2188.0159999709576,
+      "successful_completion_p95_ms": 2425.586699973792,
+      "cached_token_fraction": 0.7163031670427008
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 4,
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.9858999401330948,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2464.1766999848187,
+          "completion_ms": 2680.333700031042,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2680.4728000424802
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 0.9248999413102865,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2404.7338999807835,
+          "completion_ms": 2613.8391999993473,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2613.9141998719424
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.9320999961346388,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.4697999469935894
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.6478000432252884,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.0254000555723906
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.2810999285429716,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.7865998670458794
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.328300055116415,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 26.0882000438869
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.5890000611543655,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 12.506800005212426
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.4561000969260931,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.968099968507886
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.55720005184412,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.00289992429316
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.4803999327123165,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.995400059968233
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.7227000314742327,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.79019993916154
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.39439997635781765,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 110.4796000290662,
+          "completion_ms": 293.14150009304285,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 293.2825998868793
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.7887000683695078,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2248.57970001176,
+          "completion_ms": 2441.9939999934286,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2442.1864999458194
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.3130999393761158,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2530.0970999523997,
+          "completion_ms": 2732.534799957648,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2732.7640999574214
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.2935000229626894,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 19.95870005339384
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.5093999207019806,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.284900052472949
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.45490008778870106,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.0158998668193817
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.4374999552965164,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.5104000233113766
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.49780006520450115,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.4623998906463385
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.39039994589984417,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.752100041136146
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.41779992170631886,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.865800004452467
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.73640001937747,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.704199869185686
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.5427999421954155,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1526.593599934131,
+          "completion_ms": 1680.619299877435,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1680.8019999880344
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.3931999672204256,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 15.825999900698662
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 6,
+      "completed": 6,
+      "rejected": 18,
+      "failed": 0,
+      "objective_met": 2,
+      "objective_fraction": 0.08333333333333333,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 7.181229699868709,
+      "throughput_rps": 0.8355115002253298,
+      "goodput_rps": 0.27850383340844326,
+      "max_dispatch_lag_ms": 0.9858999401330948,
+      "successful_ttft_p95_ms": 2530.0970999523997,
+      "successful_completion_p95_ms": 2732.534799957648,
+      "cached_token_fraction": 0.16618635926993275
+    },
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 4,
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.9471999946981668,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2066.1071999929845,
+          "completion_ms": 2242.7924000658095,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2242.983999894932
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 0.9864000603556633,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2386.8459998629987,
+          "completion_ms": 2596.4522999711335,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2596.7792998999357
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.7495998870581388,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.2245999425649643
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.6096998695284128,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.604100078344345
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.5703999195247889,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.875000074505806
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.5969000048935413,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.241699956357479
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.31180004589259624,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 14.263399876654148
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.8417000062763691,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 17.836800077930093
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.7265000604093075,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 19.66069987975061
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.48859999515116215,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 158.56739995069802,
+          "completion_ms": 387.0769999921322,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 387.33870000578463
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.4336000420153141,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 25.37059993483126
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.3869999200105667,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 152.38479990512133,
+          "completion_ms": 357.091800076887,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 357.25030000321567
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.30860002152621746,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2343.671699985862,
+          "completion_ms": 2530.700600007549,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2530.9220999479294
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.6621000356972218,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2275.6443999242038,
+          "completion_ms": 2430.8362998999655,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2430.9898000210524
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.6949000526219606,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.2094000596553087
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.41539990343153477,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8629999831318855
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.4648000467568636,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.145299920812249
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.4787000361829996,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 26.463199872523546
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.35530002787709236,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.240200061351061
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.4064000677317381,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9040999468415976
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.4344999324530363,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9888000097125769
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.5425000563263893,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 21.129499888047576
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.2902999985963106,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8440999556332827
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.6810000631958246,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 81.13300008699298,
+          "completion_ms": 229.06659985892475,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 229.1317000053823
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 7,
+      "completed": 7,
+      "rejected": 17,
+      "failed": 0,
+      "objective_met": 3,
+      "objective_fraction": 0.125,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 6.0,
+      "throughput_rps": 1.1666666666666667,
+      "goodput_rps": 0.5,
+      "max_dispatch_lag_ms": 0.9864000603556633,
+      "successful_ttft_p95_ms": 2386.8459998629987,
+      "successful_completion_p95_ms": 2596.4522999711335,
+      "cached_token_fraction": 0.41794731064763996
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 4,
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.6342998240143061,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2198.866599937901,
+          "completion_ms": 2420.2788998372853,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2420.396899804473
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.3110998552292585,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2543.647699756548,
+          "completion_ms": 2738.839899888262,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2738.9681998174638
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.8810998406261206,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 15.039099846035242
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.5120998248457909,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 18.63629976287484
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.7608998566865921,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 22.21939992159605
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.8186998311430216,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.41609976813197
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.36979978904128075,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 11.632099747657776
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.22719986736774445,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.6046997625380754
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.7141998503357172,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 16.871299827471375
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.3891999367624521,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 19.566699862480164
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.6205998361110687,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 171.40749981626868,
+          "completion_ms": 382.4663998093456,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 382.6761997770518
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.36409986205399036,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9213997293263674
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.3332998603582382,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2306.4829998183995,
+          "completion_ms": 2517.661899793893,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2517.777499742806
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.5374997854232788,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2608.4292999003083,
+          "completion_ms": 2837.467899778858,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2837.6909997314215
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.2758998889476061,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.719099935144186
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.587299931794405,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.606999941170216
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.30969991348683834,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8010998610407114
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.699599739164114,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 15.057499753311276
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.4752997774630785,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9148997962474823
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.4811999388039112,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.228599896654487
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.3334998618811369,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.53349973075092
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.578099861741066,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.004699781537056
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.5066997837275267,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8363997805863619
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.7574998307973146,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 94.15419981814921,
+          "completion_ms": 309.4937999267131,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 309.7171997651458
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 6,
+      "completed": 6,
+      "rejected": 18,
+      "failed": 0,
+      "objective_met": 2,
+      "objective_fraction": 0.08333333333333333,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 6.088195099728182,
+      "throughput_rps": 0.9855137527159537,
+      "goodput_rps": 0.3285045842386512,
+      "max_dispatch_lag_ms": 1.3110998552292585,
+      "successful_ttft_p95_ms": 2608.4292999003083,
+      "successful_completion_p95_ms": 2837.467899778858,
+      "cached_token_fraction": 0.32628882484790267
+    },
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 4,
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.6092998664826155,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2376.252699876204,
+          "completion_ms": 2581.5884999465197,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2581.6744999028742
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 0.9309998713433743,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2310.153399826959,
+          "completion_ms": 2499.8154998756945,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2499.903199961409
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 1.0616998188197613,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.6453998871147633
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.4141998942941427,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 18.62969994544983
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.7476997561752796,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.2183998953551054
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.8074997458606958,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 24.68869974836707
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.7425998337566853,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 12.290599755942822
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.48949988558888435,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9824998453259468
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.4696999676525593,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 17.865699948742986
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.6761997938156128,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 20.77469974756241
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.5008997395634651,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 25.378699880093336
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.6843998562544584,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 88.06859981268644,
+          "completion_ms": 261.6662997752428,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 261.7704998701811
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.39719976484775543,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2402.9056997969747,
+          "completion_ms": 2606.356899952516,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2606.47189989686
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.3203998785465956,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2683.9379998855293,
+          "completion_ms": 2894.7436998132616,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2894.9986998923123
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.641699880361557,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.04699975438416
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.4233999643474817,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 23.799599846825004
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.6896997801959515,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 12.541899923235178
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.6710998713970184,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 15.821899753063917
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.5284999497234821,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.981399953365326
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.5766998510807753,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 22.627899888902903
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.30819978564977646,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.5737998764961958
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.4595997743308544,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 12.43909983895719
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.5776998586952686,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9501999486237764
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.48179994337260723,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 169.96479989029467,
+          "completion_ms": 405.41069977916777,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 405.62219987623394
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 6,
+      "completed": 6,
+      "rejected": 18,
+      "failed": 0,
+      "objective_met": 2,
+      "objective_fraction": 0.08333333333333333,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 6.155971499858424,
+      "throughput_rps": 0.9746633817485979,
+      "goodput_rps": 0.3248877939161993,
+      "max_dispatch_lag_ms": 1.0616998188197613,
+      "successful_ttft_p95_ms": 2683.9379998855293,
+      "successful_completion_p95_ms": 2894.7436998132616,
+      "cached_token_fraction": 0.32628882484790267
+    },
+    {
+      "policy": "least-inflight",
+      "rate_rps": 1,
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 0.5790998693555593,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1597.9458999354392,
+          "completion_ms": 1834.1597998514771,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 1834.234699839726
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.2302999384701252,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1989.0387998893857,
+          "completion_ms": 2202.315100003034,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2202.49000005424
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.6184999365359545,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 192.4960999749601,
+          "completion_ms": 401.7352999653667,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 401.87459997832775
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.3714000340551138,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 154.37859995290637,
+          "completion_ms": 347.26640000008047,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 347.35869988799095
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.6515998393297195,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 109.71169988624752,
+          "completion_ms": 268.7047999352217,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 268.8873000442982
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.42559998109936714,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 95.52449989132583,
+          "completion_ms": 250.7752999663353,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 250.94969989731908
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.820899847894907,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 79.1056000161916,
+          "completion_ms": 242.07079992629588,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 242.28150001727045
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.7245000451803207,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 82.23100006580353,
+          "completion_ms": 254.88749984651804,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 255.02429995685816
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.5661000031977892,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 75.51499991677701,
+          "completion_ms": 235.0244999397546,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 235.28070002794266
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.49569993279874325,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 104.67309993691742,
+          "completion_ms": 279.1056998539716,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 279.3517999816686
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.37739984691143036,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 78.36619997397065,
+          "completion_ms": 228.8164000492543,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 228.95170003175735
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.5735000595450401,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 136.16180000826716,
+          "completion_ms": 342.7722998894751,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 342.88070001639426
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.44899992644786835,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2625.79429987818,
+          "completion_ms": 2860.276499995962,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2860.3602999355644
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.3014998510479927,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2908.399400068447,
+          "completion_ms": 3201.5197998844087,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 3201.724600046873
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.9128998499363661,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 11.678699869662523
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.7199000101536512,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 159.9262000527233,
+          "completion_ms": 470.92149988748133,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 471.0665999446064
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.7499000057578087,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 166.22809995897114,
+          "completion_ms": 385.9897998627275,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 504
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 386.2619998399168
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.8628000505268574,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 114.12949999794364,
+          "completion_ms": 260.7390000484884,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 260.8872000128031
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.8655998390167952,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 121.75379996187985,
+          "completion_ms": 297.8149999398738,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 298.01200004294515
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.38899993523955345,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1833.51149992086,
+          "completion_ms": 2099.889799952507,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2100.106699857861
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.5230000242590904,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1953.2012999989092,
+          "completion_ms": 2151.068100007251,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2151.234299875796
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.36800000816583633,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.182499971240759
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.5615998525172472,
+          "admitted": true,
+          "within_objective": true,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 1881.7225999664515,
+          "completion_ms": 2129.773800028488,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2129.9792998470366
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.4922000225633383,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2203.5298000555485,
+          "completion_ms": 2374.648099998012,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2374.829899985343
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 22,
+      "completed": 22,
+      "rejected": 2,
+      "failed": 0,
+      "objective_met": 19,
+      "objective_fraction": 0.7916666666666666,
+      "arrival_window_seconds": 24.0,
+      "observed_seconds": 25.375264500034973,
+      "throughput_rps": 0.8669860367354862,
+      "goodput_rps": 0.7487606680897381,
+      "max_dispatch_lag_ms": 1.2302999384701252,
+      "successful_ttft_p95_ms": 2625.79429987818,
+      "successful_completion_p95_ms": 2860.276499995962,
+      "cached_token_fraction": 0.6175956666084221
+    },
+    {
+      "policy": "prefix-affinity",
+      "rate_rps": 4,
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--no-ui",
+          "--slots",
+          "--cache-prompt",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "id": 0,
+          "document": "A",
+          "dispatch_lag_ms": 1.170499948784709,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2552.2463999222964,
+          "completion_ms": 2810.91249990277,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2811.0545000527054
+        },
+        {
+          "id": 1,
+          "document": "A",
+          "dispatch_lag_ms": 1.3182999100536108,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2823.0105999391526,
+          "completion_ms": 3043.8111999537796,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 3044.0461998805404
+        },
+        {
+          "id": 2,
+          "document": "A",
+          "dispatch_lag_ms": 0.8553001098334789,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.5466999504715204
+        },
+        {
+          "id": 3,
+          "document": "A",
+          "dispatch_lag_ms": 0.5725999362766743,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 19.6622998919338
+        },
+        {
+          "id": 4,
+          "document": "A",
+          "dispatch_lag_ms": 0.5944001022726297,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.9712999928742647
+        },
+        {
+          "id": 5,
+          "document": "A",
+          "dispatch_lag_ms": 0.453700078651309,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 26.69809991493821
+        },
+        {
+          "id": 6,
+          "document": "A",
+          "dispatch_lag_ms": 0.5357000045478344,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.0828000269830227
+        },
+        {
+          "id": 7,
+          "document": "A",
+          "dispatch_lag_ms": 0.3464000765234232,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 18.454999895766377
+        },
+        {
+          "id": 8,
+          "document": "A",
+          "dispatch_lag_ms": 0.4958999343216419,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.979100052267313
+        },
+        {
+          "id": 9,
+          "document": "A",
+          "dispatch_lag_ms": 0.5020999815315008,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 25.098599959164858
+        },
+        {
+          "id": 10,
+          "document": "A",
+          "dispatch_lag_ms": 0.6150000263005495,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.2187998984009027
+        },
+        {
+          "id": 11,
+          "document": "A",
+          "dispatch_lag_ms": 0.40520005859434605,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.4063000455498695
+        },
+        {
+          "id": 12,
+          "document": "C",
+          "dispatch_lag_ms": 0.38590002804994583,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2693.163099931553,
+          "completion_ms": 2934.5112999435514,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 2934.6626999322325
+        },
+        {
+          "id": 13,
+          "document": "B",
+          "dispatch_lag_ms": 0.3478999715298414,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8752000760287046
+        },
+        {
+          "id": 14,
+          "document": "C",
+          "dispatch_lag_ms": 0.4483000375330448,
+          "admitted": true,
+          "within_objective": false,
+          "status": 200,
+          "outcome": "completed",
+          "ttft_ms": 2837.192500010133,
+          "completion_ms": 3015.9386000595987,
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 521,
+            "total_tokens": 537,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "elapsed_from_due_ms": 3016.035299981013
+        },
+        {
+          "id": 15,
+          "document": "C",
+          "dispatch_lag_ms": 0.6351000629365444,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.2241000551730394
+        },
+        {
+          "id": 16,
+          "document": "C",
+          "dispatch_lag_ms": 0.5238000303506851,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.0894999615848064
+        },
+        {
+          "id": 17,
+          "document": "B",
+          "dispatch_lag_ms": 0.3402999136596918,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.927000004798174
+        },
+        {
+          "id": 18,
+          "document": "C",
+          "dispatch_lag_ms": 0.30339998193085194,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.080699894577265
+        },
+        {
+          "id": 19,
+          "document": "C",
+          "dispatch_lag_ms": 0.36450009793043137,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.8505000043660402
+        },
+        {
+          "id": 20,
+          "document": "B",
+          "dispatch_lag_ms": 0.4954999312758446,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.1402998827397823
+        },
+        {
+          "id": 21,
+          "document": "C",
+          "dispatch_lag_ms": 0.2804000396281481,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 1.6962999943643808
+        },
+        {
+          "id": 22,
+          "document": "B",
+          "dispatch_lag_ms": 0.7050998974591494,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.225700067356229
+        },
+        {
+          "id": 23,
+          "document": "C",
+          "dispatch_lag_ms": 0.7013999857008457,
+          "admitted": false,
+          "within_objective": false,
+          "status": 503,
+          "outcome": "rejected",
+          "body": "no healthy undrained worker with capacity\n",
+          "elapsed_from_due_ms": 2.3590000346302986
+        }
+      ],
+      "offered": 24,
+      "observed_admitted": 4,
+      "completed": 4,
+      "rejected": 20,
+      "failed": 0,
+      "objective_met": 0,
+      "objective_fraction": 0.0,
+      "arrival_window_seconds": 6.0,
+      "observed_seconds": 6.516463000094518,
+      "throughput_rps": 0.6138299258266305,
+      "goodput_rps": 0.0,
+      "max_dispatch_lag_ms": 1.3182999100536108,
+      "successful_ttft_p95_ms": 2837.192500010133,
+      "successful_completion_p95_ms": 3043.8111999537796,
+      "cached_token_fraction": 0.005763688760806916
+    }
+  ],
+  "condition_order_seed": 11,
+  "experiment_completed": true
+}

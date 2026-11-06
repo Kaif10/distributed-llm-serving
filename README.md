@@ -31,6 +31,7 @@ needs validation with a real application workload.
 - [Health and draining walkthrough](docs/learning/05-health-and-draining.md): remove workers safely from new assignments.
 - [Cache baseline walkthrough](docs/learning/06-cache-baseline.md): measure real prefix reuse and existing routing policies.
 - [Prefix affinity walkthrough](docs/learning/07-prefix-affinity.md): preserve locality with capacity escape and real-model checks.
+- [Load and goodput walkthrough](docs/learning/08-load-and-goodput.md): compare fixed arrivals and changing hot prefixes.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 

@@ -6,8 +6,10 @@ implemented. Milestone 3 now has static worker-pool routing and bounded admissio
 against two real CPU model servers. Its health-probe and local draining increment is now
 implemented and verified through real process failures and recovery. Milestone 4 now has a
 real-model cache measurement harness, existing-policy baselines, and capacity-bounded
-prefix affinity verified with real engines. Concurrent arrival/load
-experiments, and milestones 5 through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
+prefix affinity verified with real engines. A fixed-arrival experiment now compares both
+policies at two offered rates with a changing hot document and explicit latency objectives.
+Broader workload comparisons and milestones 5 through 9 remain planned. CPU checks establish
+mechanisms, not GPU capacity.
 
 ## Problem and first user
 
@@ -119,8 +121,14 @@ experiment does not complete the later affinity, overload, or existing-router co
 Second increment: [prefix affinity](learning/07-prefix-affinity.md) uses an explicit client
 hint and rendezvous hashing, skipping workers without capacity. A real hot-prefix burst
 checks spillover and rejection; a repeated sequential run compares actual engine cache reuse.
-Concurrent open-loop latency/goodput and skew comparisons remain future work. The earlier
-timeout is unresolved; failure diagnostics now preserve engine state and elapsed time.
+The earlier timeout is unresolved; failure diagnostics now preserve engine state and elapsed
+time. The concurrent comparison is introduced in the third increment below.
+
+Third increment: [fixed-arrival load and goodput](learning/08-load-and-goodput.md) records
+offered, observed admitted, completed, rejected, failed, and objective-compliant requests.
+It compares the two policies on a changing-hot-document workload using real CPU inference.
+Varied lengths, heterogeneous workers, restart-under-load, and an existing-router comparison
+remain outstanding; this experiment does not complete all milestone 4 comparisons.
 
 ## 5. Make fleet configuration durable
 

@@ -8,6 +8,58 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Fixed-arrival load and objective-compliant goodput
+
+Source: clean commit `c7e6a88253a9ad7ad5cf9ff38d466f6ab5a88f66`. Reproduce with
+`python scripts/bench_load.py` after the pinned model setup and gateway build.
+[Raw results](results/load-c7e6a88.json) retain settings, exact arrival document sequence,
+commands, every request outcome, token usage, dispatch lag, and per-trial summaries.
+
+Two fresh real llama.cpp b12110 CPU processes per run, SmolLM2-135M Q4_K_M, one slot and
+two threads each, 2048-token context, extra RAM prompt-cache tier disabled. One unrelated
+warmup per engine. Same Windows i5-1235U laptop with about 8 GB RAM. The gateway permits
+one admitted request per worker. Each run offers 24 requests, with 16 output tokens each.
+
+Three trials for each policy/rate pair, shuffled with seed 11. Rates are 1 and 4 requests
+per second, independent of outstanding responses. The seed-7 schedule changes from hot A
+to hot C halfway through and includes B as background; the exact selected sequence is in
+the raw settings. Inputs are constructed documents, not an application-user trace.
+
+The objectives were specified before the measured run: first content within 2000 ms and
+complete response within 3000 ms of the scheduled arrival. Both must hold. Rejected and
+failed work contributes zero compliant requests. These are experimental objectives, not
+an application owner's validated requirements.
+
+| Offered rate | Policy | Offered | Completed | Rejected | Failed | Met both objectives |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1/s | Least-inflight | 72 | 69 | 3 | 0 | 63 |
+| 1/s | Prefix affinity | 72 | 71 | 1 | 0 | 70 |
+| 4/s | Least-inflight | 72 | 17 | 55 | 0 | 5 |
+| 4/s | Prefix affinity | 72 | 17 | 55 | 0 | 5 |
+
+All 288 offered requests reconcile: 174 completed, 114 rejected, zero transport/stream/HTTP
+errors other than rejection. Observed HTTP-200 admissions matched completions in this run.
+Admission observations are not a general replacement for authoritative server counters.
+
+Per-trial goodput (compliant requests divided by observed duration, including response tails):
+least-inflight at 1/s ranged from 0.749 to 1.000 req/s; affinity ranged from 0.958 to 1.000.
+At 4/s the ranges were 0.167–0.329 and 0.000–0.500 respectively. This variation and only three
+trials do not establish a general best policy. At the higher rate, affinity's sequential
+cache benefit did not yield a consistent goodput advantage. Both policies encountered the
+same admission limit and rejected 55 of 72 requests.
+
+Maximum measured generator dispatch lag was below 1.4 ms across all runs. Latencies include
+that lag. Successful-only nearest-rank p95 values are recorded per trial alongside failures,
+rejections, and all-offered objective compliance; they are not whole-population latency
+percentiles. Cache fractions likewise describe completed work only. The observed interval
+includes the full scheduled arrival window and any remaining response tail.
+
+The executable owns and cleans up all engine/gateway processes. The harness compiled,
+its short real-model smoke run exercised completion and rejection accounting, and all
+per-run outcome-reconciliation assertions passed. No Go runtime code changed. No timeout
+was observed here; the earlier isolated timeout remains unresolved. GPU performance,
+heterogeneous workers, varied lengths, and existing-router comparisons remain unmeasured.
+
 ## Capacity-bounded prefix affinity
 
 Gateway source: `90c7678bbd6ae2ca7d14beb4bbb3e692aa7ce5f6`. Recorded runs report a dirty
