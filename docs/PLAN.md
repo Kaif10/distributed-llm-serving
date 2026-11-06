@@ -138,7 +138,14 @@ increment covers them; restart-under-load and an existing-router comparison rema
 Fourth increment: [mixed costs](learning/09-mixed-costs.md) extends the offered workload with
 16/128-token output budgets, shorter/full documents, and one/four-thread CPU workers. It
 measures direct service costs and class-specific outcomes before proposing another policy.
-GPU heterogeneity, restart-under-load, and existing-router comparisons remain outstanding.
+After that increment, GPU heterogeneity, restart-under-load, and existing-router comparisons
+were still outstanding. The next increment covers restart-under-load.
+
+Fifth increment: [restart under fixed-arrival load](learning/10-restart-under-load.md) checks
+an interrupted real generation, survivor progress, recovery to a restarted process, and
+final zero admission counts/idle engine slots. GPU heterogeneity and existing-router
+performance comparison remain outstanding. Milestone 5 can proceed independently to
+address the current lack of durable, versioned administrative state.
 
 ## 5. Make fleet configuration durable
 

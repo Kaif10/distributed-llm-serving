@@ -8,6 +8,56 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Real worker restart during sustained arrivals
+
+Source: clean commit `2ad3185`. Reproduce with `python scripts/check_restart_load.py --output-dir artifacts/restart-load-aligned`
+after building the gateway and setting up the pinned real model. The
+[raw results](results/restart-load-2ad3185.json) retain commands, process IDs, observed
+event times, all traffic outcomes, interrupted control streams, and final capacity state.
+
+Two actual llama.cpp b12110 CPU processes serve SmolLM2-135M Q4_K_M on the same Windows
+machine, each with one slot, two threads, and a 2048-token context. One gateway uses
+per-worker limit one, a 100 ms probe interval, and 500 ms probe timeout. Each trial starts
+fresh processes. Policy order is fixed least-inflight then affinity, so the run is a
+correctness check, not a performance ranking.
+
+A separate control request starts a 1024-token generation with EOS stopping disabled. After
+real content arrives, traffic offers 32 requests at two per second independently of responses.
+At two seconds, the control worker must still be generating; its process is terminated.
+The test observes it becoming unhealthy, requires the control stream to fail without a
+completion marker, waits two seconds, starts a new process at the same origin, and requires
+health-based recovery. Traffic continues throughout.
+
+| Policy | Trials | Offered traffic | Completed | Rejected | Failed traffic | Intentionally interrupted controls |
+| --- | --- | --- | --- | --- | --- | --- |
+| Least-inflight | 3 | 96 | 96 | 0 | 0 | 3 |
+| Prefix affinity | 3 | 96 | 96 | 0 | 0 | 3 |
+
+All 192 offered traffic requests completed. All six separate control generations failed
+explicitly when their workers were killed; these intentional failures are not hidden inside
+or excluded silently from the traffic counts. Every run observed four requests scheduled
+during the detected outage complete on the survivor. After observed recovery, later
+requests completed on the new process (11 per least-inflight run, 22 per affinity run).
+Different counts reflect placement and timing, not a capacity or performance ranking.
+
+All original and restarted process IDs differed. Every final gateway snapshot showed both
+workers healthy with zero inflight requests, and both real engines reported idle slots.
+This verifies eventual cleanup and progress in these runs; it does not promise instantaneous
+cleanup or lossless traffic in every failure race. In this schedule no traffic request hit
+the detection race. No interrupted generation was retried or resumed by the gateway.
+
+The first harness attempt at `bd7e89e` used different prefix labels for the targeted stream
+and background traffic. Affinity legitimately preferred the survivor after recovery, so an
+assertion requiring traffic on the recovered worker failed. The
+[initial result](results/restart-initial-bd7e89e.json) is retained. The correction aligns
+labels and preserves per-run diagnostics on failure; it changes no gateway behavior.
+
+Validation: the harness compiled and completed six real-model runs. It checks active engine
+state before kill, incomplete control streams, survivor/restarted-worker progress, count
+reconciliation, and zero gateway/engine occupancy after completion. No Go runtime code
+changed in this increment. The previous unexplained generation timeout remains open.
+Multi-host partitions, disk failure, and gateway restart are not exercised here.
+
 ## Mixed request costs and unequal CPU allocation
 
 Source: clean commit `8ec295e21535482f1f9702363c3af25181777c11`. Reproduce with
