@@ -5,7 +5,8 @@ The foundation, single-worker streaming path, and milestone 2's local CPU integr
 implemented. Milestone 3 now has static worker-pool routing and bounded admission, checked
 against two real CPU model servers. Its health-probe and local draining increment is now
 implemented and verified through real process failures and recovery. Milestone 4 now has a
-real-model cache measurement harness and existing-policy baselines. Affinity routing, load
+real-model cache measurement harness, existing-policy baselines, and capacity-bounded
+prefix affinity verified with real engines. Concurrent arrival/load
 experiments, and milestones 5 through 9 remain planned. CPU checks establish mechanisms, not GPU capacity.
 
 ## Problem and first user
@@ -114,6 +115,12 @@ First increment: [cache baseline experiment](learning/06-cache-baseline.md), usi
 real CPU engines and a constructed repeated-document workload. Verify engine-reported
 token reuse against a disabled-cache control before changing the router. This sequential
 experiment does not complete the later affinity, overload, or existing-router comparisons.
+
+Second increment: [prefix affinity](learning/07-prefix-affinity.md) uses an explicit client
+hint and rendezvous hashing, skipping workers without capacity. A real hot-prefix burst
+checks spillover and rejection; a repeated sequential run compares actual engine cache reuse.
+Concurrent open-loop latency/goodput and skew comparisons remain future work. The earlier
+timeout is unresolved; failure diagnostics now preserve engine state and elapsed time.
 
 ## 5. Make fleet configuration durable
 

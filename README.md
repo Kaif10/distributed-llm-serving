@@ -7,7 +7,7 @@ popular prompts concentrate traffic, and workers sometimes slow down or disappea
 goal is to keep useful work flowing while bounding queues and handling failures explicitly.
 
 **Current status:** a Go gateway routing streams across statically configured replicas with
-round-robin or least-inflight selection and per-worker admission limits, validated with
+round-robin, least-inflight, or hinted prefix-affinity selection and per-worker admission limits, validated with
 both the synthetic worker and real SmolLM2-135M generation through llama.cpp on CPU. Network
 tests cover cancellation, deadlines, and worker failures; a separate local-engine check observes
 slot release on disconnect and records a small sequential latency baseline. A two-engine CPU
@@ -30,6 +30,7 @@ needs validation with a real application workload.
 - [Worker pool walkthrough](docs/learning/04-worker-pool.md): run two real engines and reject excess work.
 - [Health and draining walkthrough](docs/learning/05-health-and-draining.md): remove workers safely from new assignments.
 - [Cache baseline walkthrough](docs/learning/06-cache-baseline.md): measure real prefix reuse and existing routing policies.
+- [Prefix affinity walkthrough](docs/learning/07-prefix-affinity.md): preserve locality with capacity escape and real-model checks.
 - [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 

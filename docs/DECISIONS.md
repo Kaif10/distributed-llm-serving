@@ -1,5 +1,17 @@
 # Decisions
 
+## 007: Explicit prefix hints with capacity-bounded affinity
+
+Use a client-supplied X-Prefix-Key label and SHA-256 rendezvous hashing over worker origins
+to obtain stable placement without storing a cache directory. Skip full, unhealthy, and
+draining workers. Missing hints use least-inflight. The engine validates token reuse; hints
+affect placement only and never authorize serving a cached answer.
+
+Automatic prefix extraction would require an explicit message/token-prefix contract and
+engine-aware cache observations. Keep that as a separate design step. Labels should include
+model and document versions. The admission limit is local to each gateway, and the current
+policy only escapes at that limit; it does not predict queue delay or prefill cost.
+
 ## 001: One product problem, incremental learning
 
 Build reliable request routing for an inference fleet. Components enter when their role can

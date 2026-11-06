@@ -8,6 +8,43 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Capacity-bounded prefix affinity
+
+Gateway source: `90c7678bbd6ae2ca7d14beb4bbb3e692aa7ce5f6`. Recorded runs report a dirty
+working tree because README and walkthrough edits were pending; the measured runtime and
+experiment source matched this commit. No runtime code changed during measurement.
+Raw comparison: [affinity-90c7678.json](results/affinity-90c7678.json).
+Reproduce with `python scripts/bench_cache.py --trials 3 --conditions least-inflight prefix-affinity --output-dir artifacts/affinity-comparison`.
+
+Same Windows CPU/model setup and constructed documents as the previous cache baseline:
+two fresh real llama.cpp processes per condition/trial, one slot and two threads each,
+2048-token contexts, RAM cache tier disabled. Each engine receives an unrelated warmup.
+Both policies receive identical X-Prefix-Key labels, messages, and generation settings.
+Three shuffled trials, eight sequential measured requests per policy/trial, 48 completed
+requests and no observed failures in this comparison.
+
+| Policy | Requests | Cached prompt tokens | Median TTFT |
+| --- | --- | --- | --- |
+| Least-inflight | 24 | 0.577% | 1514.194 ms |
+| Prefix affinity with capacity escape | 24 | 48.654% | 752.857 ms |
+
+These are whole-workload fractions, not a binary cache-hit rate. The sequential comparison
+establishes locality on this document schedule. It does not establish concurrent throughput,
+tail latency, GPU performance, or superiority on other workloads. The policy estimates
+placement from an explicit label; it does not know actual engine cache contents.
+
+Real capacity check: `python scripts/check_real_pool.py` now includes prefix affinity and
+a common hot-prefix key on its long generation requests. Two real engines become busy,
+the third request receives 503, cancellation releases both slots, and another generation
+completes. [Raw capacity results](results/affinity-capacity-90c7678.json) retain all three
+policies. This is a bounded burst assertion, not an open-loop load experiment.
+
+`go test ./...`, `go vet ./...`, and the gateway build passed. Controlled tests verify stable
+key placement, spillover when preferred capacity is occupied, and exclusion of unhealthy
+and draining preferred workers. The cache harness now captures failed-request parameters,
+elapsed time, and engine slot observations; forwarding logs record worker, duration, and
+context error. No earlier timeout was reproduced in these runs, and its cause remains unresolved.
+
 ## Real prefix-cache controls and routing baselines
 
 Source: clean commit `5ff2ed59de61f823de45c626e2f5649137911d79`. Run

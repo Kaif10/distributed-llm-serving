@@ -1,0 +1,1480 @@
+{
+  "source_commit": "90c7678bbd6ae2ca7d14beb4bbb3e692aa7ce5f6",
+  "working_tree_dirty": true,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "workload": {
+    "description": "Constructed document-question workload for controlled cache experiments; real model inference, no application-user trace.",
+    "documents": {
+      "A": "Harbor operations reference. Answer the question using this document.\nRecord 1: the Harbor team inspected 4 boats at dock 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Harbor team inspected 5 boats at dock 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Harbor team inspected 6 boats at dock 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Harbor team inspected 7 boats at dock 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Harbor team inspected 8 boats at dock 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Harbor team inspected 9 boats at dock 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Harbor team inspected 10 boats at dock 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Harbor team inspected 11 boats at dock 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Harbor team inspected 12 boats at dock 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Harbor team inspected 13 boats at dock 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Harbor team inspected 14 boats at dock 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Harbor team inspected 15 boats at dock 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Harbor team inspected 16 boats at dock 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Harbor team inspected 17 boats at dock 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Harbor team inspected 18 boats at dock 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Harbor team inspected 19 boats at dock 16. The inspection was completed and recorded by operator 16.",
+      "B": "Cedar operations reference. Answer the question using this document.\nRecord 1: the Cedar team inspected 4 trees at forest 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Cedar team inspected 5 trees at forest 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Cedar team inspected 6 trees at forest 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Cedar team inspected 7 trees at forest 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Cedar team inspected 8 trees at forest 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Cedar team inspected 9 trees at forest 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Cedar team inspected 10 trees at forest 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Cedar team inspected 11 trees at forest 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Cedar team inspected 12 trees at forest 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Cedar team inspected 13 trees at forest 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Cedar team inspected 14 trees at forest 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Cedar team inspected 15 trees at forest 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Cedar team inspected 16 trees at forest 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Cedar team inspected 17 trees at forest 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Cedar team inspected 18 trees at forest 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Cedar team inspected 19 trees at forest 16. The inspection was completed and recorded by operator 16.",
+      "C": "Orbit operations reference. Answer the question using this document.\nRecord 1: the Orbit team inspected 4 satellites at station 1. The inspection was completed and recorded by operator 1.\nRecord 2: the Orbit team inspected 5 satellites at station 2. The inspection was completed and recorded by operator 2.\nRecord 3: the Orbit team inspected 6 satellites at station 3. The inspection was completed and recorded by operator 3.\nRecord 4: the Orbit team inspected 7 satellites at station 4. The inspection was completed and recorded by operator 4.\nRecord 5: the Orbit team inspected 8 satellites at station 5. The inspection was completed and recorded by operator 5.\nRecord 6: the Orbit team inspected 9 satellites at station 6. The inspection was completed and recorded by operator 6.\nRecord 7: the Orbit team inspected 10 satellites at station 7. The inspection was completed and recorded by operator 7.\nRecord 8: the Orbit team inspected 11 satellites at station 8. The inspection was completed and recorded by operator 8.\nRecord 9: the Orbit team inspected 12 satellites at station 9. The inspection was completed and recorded by operator 9.\nRecord 10: the Orbit team inspected 13 satellites at station 10. The inspection was completed and recorded by operator 10.\nRecord 11: the Orbit team inspected 14 satellites at station 11. The inspection was completed and recorded by operator 11.\nRecord 12: the Orbit team inspected 15 satellites at station 12. The inspection was completed and recorded by operator 12.\nRecord 13: the Orbit team inspected 16 satellites at station 13. The inspection was completed and recorded by operator 13.\nRecord 14: the Orbit team inspected 17 satellites at station 14. The inspection was completed and recorded by operator 14.\nRecord 15: the Orbit team inspected 18 satellites at station 15. The inspection was completed and recorded by operator 15.\nRecord 16: the Orbit team inspected 19 satellites at station 16. The inspection was completed and recorded by operator 16."
+    },
+    "sequence": [
+      "A",
+      "A",
+      "B",
+      "B",
+      "C",
+      "C",
+      "A",
+      "A"
+    ],
+    "question_template": "According to record {record}, how many items were inspected? Answer briefly."
+  },
+  "workload_sha256": "629a1a942fe0c6d19453ba553fa8f2c355343341847115745958cee6c2678267",
+  "order_seed": 7,
+  "trials": 3,
+  "runs": [
+    {
+      "condition": "least-inflight",
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1456.503,
+          "completion_ms": 1630.315,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1692.305,
+          "completion_ms": 1847.677,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1481.579,
+          "completion_ms": 1631.689,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1574.475,
+          "completion_ms": 1790.203,
+          "text": "According to record 4, the Cedar team inspected 4 items at forest ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1749.607,
+          "completion_ms": 1939.521,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1510.892,
+          "completion_ms": 1678.014,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1723.291,
+          "completion_ms": 1882.515,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1573.569,
+          "completion_ms": 1744.067,
+          "text": "According to record 8, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 3
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.0057692307692307696,
+      "median_ttft_ms": 1574.022
+    },
+    {
+      "condition": "prefix-affinity",
+      "trial": 0,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1541.812,
+          "completion_ms": 1786.979,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 123.875,
+          "completion_ms": 336.633,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1613.896,
+          "completion_ms": 1798.72,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 126.322,
+          "completion_ms": 302.415,
+          "text": "According to record 4, the Cedar team inspected 4 items.\n\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1433.075,
+          "completion_ms": 1583.372,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 76.913,
+          "completion_ms": 228.356,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 0,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1530.631,
+          "completion_ms": 1694.97,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 141.946,
+          "completion_ms": 356.339,
+          "text": "According to record 8, the Harbor team inspected 16 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 503
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.48653846153846153,
+      "median_ttft_ms": 787.5105
+    },
+    {
+      "condition": "prefix-affinity",
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1363.767,
+          "completion_ms": 1506.541,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 83.836,
+          "completion_ms": 226.285,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1377.28,
+          "completion_ms": 1535.471,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 82.545,
+          "completion_ms": 231.514,
+          "text": "According to record 4, the Cedar team inspected 4 items.\n\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1658.447,
+          "completion_ms": 1816.698,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 72.035,
+          "completion_ms": 223.291,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 0,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1703.147,
+          "completion_ms": 1859.143,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 75.079,
+          "completion_ms": 227.629,
+          "text": "According to record 8, the Harbor team inspected 16 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 503
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.48653846153846153,
+      "median_ttft_ms": 723.8015
+    },
+    {
+      "condition": "least-inflight",
+      "trial": 1,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1238.547,
+          "completion_ms": 1382.082,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1632.069,
+          "completion_ms": 1814.046,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1517.496,
+          "completion_ms": 1679.359,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1521.31,
+          "completion_ms": 1685.656,
+          "text": "According to record 4, the Cedar team inspected 4 items at forest ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1484.617,
+          "completion_ms": 1644.323,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1632.509,
+          "completion_ms": 1800.528,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1465.911,
+          "completion_ms": 1617.639,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1384.633,
+          "completion_ms": 1535.662,
+          "text": "According to record 8, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 3
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.0057692307692307696,
+      "median_ttft_ms": 1501.0565000000001
+    },
+    {
+      "condition": "least-inflight",
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "least-inflight",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1240.677,
+          "completion_ms": 1410.507,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1668.325,
+          "completion_ms": 1907.125,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1547.675,
+          "completion_ms": 1825.724,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1862.199,
+          "completion_ms": 2041.159,
+          "text": "According to record 4, the Cedar team inspected 4 items at forest ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1434.537,
+          "completion_ms": 1595.603,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1421.465,
+          "completion_ms": 1574.159,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1399.764,
+          "completion_ms": 1555.595,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 1450.45,
+          "completion_ms": 1604.889,
+          "text": "According to record 8, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 3
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.0057692307692307696,
+      "median_ttft_ms": 1442.4935
+    },
+    {
+      "condition": "prefix-affinity",
+      "trial": 2,
+      "commands": [
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18081",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+          "-m",
+          "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18082",
+          "--alias",
+          "smollm2-135m",
+          "-c",
+          "2048",
+          "-np",
+          "1",
+          "-t",
+          "2",
+          "-ngl",
+          "0",
+          "--slots",
+          "--no-ui",
+          "--cache-ram",
+          "0",
+          "--no-cache-idle-slots",
+          "--cache-prompt"
+        ],
+        [
+          "D:\\inference-fleet\\bin\\gateway.exe",
+          "-listen",
+          "127.0.0.1:18080",
+          "-backends",
+          "http://127.0.0.1:18081,http://127.0.0.1:18082",
+          "-policy",
+          "prefix-affinity",
+          "-max-inflight",
+          "1",
+          "-request-timeout",
+          "60s"
+        ]
+      ],
+      "samples": [
+        {
+          "ttft_ms": 1544.64,
+          "completion_ms": 1700.182,
+          "text": "According to record 1, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 0,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 86.156,
+          "completion_ms": 237.428,
+          "text": "According to record 2, the Harbor team inspected 4 boats at dock ",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 1,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1562.699,
+          "completion_ms": 1714.484,
+          "text": "According to record 3, the Cedar team inspected 15 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 2,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 80.961,
+          "completion_ms": 272.5,
+          "text": "According to record 4, the Cedar team inspected 4 items.\n\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "B",
+          "position": 3,
+          "worker": 1,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1572.045,
+          "completion_ms": 1735.161,
+          "text": "Answer: 10 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 4,
+          "worker": 0,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 75.103,
+          "completion_ms": 226.425,
+          "text": "Answer: 16 items were inspected.\n\nExplanation: The Orbit team",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "C",
+          "position": 5,
+          "worker": 0,
+          "cached_tokens": 503
+        },
+        {
+          "ttft_ms": 1449.64,
+          "completion_ms": 1615.316,
+          "text": "According to record 7, the Harbor team inspected 16 boats.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 3
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 6,
+          "worker": 1,
+          "cached_tokens": 3
+        },
+        {
+          "ttft_ms": 79.133,
+          "completion_ms": 240.987,
+          "text": "According to record 8, the Harbor team inspected 16 items.\n",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 520,
+            "total_tokens": 536,
+            "prompt_tokens_details": {
+              "cached_tokens": 503
+            }
+          },
+          "finish_reason": "length",
+          "done": true,
+          "document": "A",
+          "position": 7,
+          "worker": 1,
+          "cached_tokens": 503
+        }
+      ],
+      "failures": 0,
+      "warmup_per_engine": {
+        "model": "smollm2-135m",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say hello."
+          }
+        ],
+        "stream": true,
+        "max_tokens": 16,
+        "ignore_eos": true,
+        "temperature": 0,
+        "cache_prompt": false
+      },
+      "cached_token_fraction": 0.48653846153846153,
+      "median_ttft_ms": 767.898
+    }
+  ],
+  "passed": true
+}
