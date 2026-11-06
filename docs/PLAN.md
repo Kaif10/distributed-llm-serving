@@ -173,6 +173,13 @@ Learning: write-ahead logging, fsync, crash recovery, idempotency, revisions, st
 
 ## 6. Understand and integrate Raft
 
+Replication slice now implemented in isolation: durable bounded logs, prefix reconciliation,
+correlated responses, current-term quorum commit, and committed configuration replay. See
+[the replication walkthrough](learning/15-raft-replication.md). Real-process transport,
+client acknowledgement/read integration, checkpoints, and serving-controller replication
+remain outstanding.
+
+
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
 timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See
 [the election walkthrough](learning/14-raft-elections.md). Replicated entries, quorum commit,

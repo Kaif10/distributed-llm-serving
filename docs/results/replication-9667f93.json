@@ -1,0 +1,511 @@
+{
+  "healed": {
+    "a": {
+      "commit_index": 4,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "a",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "",
+        "Leader": "c",
+        "Failed": false
+      }
+    },
+    "b": {
+      "commit_index": 4,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    },
+    "c": {
+      "commit_index": 4,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    }
+  },
+  "initial_commit": {
+    "a": {
+      "commit_index": 2,
+      "config": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        }
+      ],
+      "status": {
+        "ID": "a",
+        "Role": "leader",
+        "Term": 1,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      }
+    },
+    "b": {
+      "commit_index": 2,
+      "config": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        }
+      ],
+      "status": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 1,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      }
+    },
+    "c": {
+      "commit_index": 2,
+      "config": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        }
+      ],
+      "status": {
+        "ID": "c",
+        "Role": "follower",
+        "Term": 1,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      }
+    }
+  },
+  "journal_directory": "artifacts\\replication\\replica-journals-3785687953",
+  "kind": "deterministic transport model with actual log journals and configuration machines",
+  "partitioned": {
+    "a": {
+      "commit_index": 2,
+      "config": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": true
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoib3JwaGFuIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "a",
+        "Role": "leader",
+        "Term": 1,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      }
+    },
+    "b": {
+      "commit_index": 4,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    },
+    "c": {
+      "commit_index": 4,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        }
+      ],
+      "status": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    }
+  },
+  "passed": true,
+  "reopened_and_recommitted": {
+    "a": {
+      "commit_index": 5,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        },
+        {
+          "index": 5,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "status": {
+        "ID": "a",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    },
+    "b": {
+      "commit_index": 5,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        },
+        {
+          "index": 5,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "status": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    },
+    "c": {
+      "commit_index": 5,
+      "config": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:18081",
+            "draining": false
+          }
+        ]
+      },
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJyZXF1ZXN0X2lkIjoiZHJhaW4iLCJleHBlY3RlZF9yZXZpc2lvbiI6MCwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJyZXF1ZXN0X2lkIjoicmVzdW1lIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjEsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjE4MDgxIiwiZHJhaW5pbmciOmZhbHNlfV19"
+        },
+        {
+          "index": 5,
+          "term": 3,
+          "noop": true
+        }
+      ],
+      "status": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 3,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      }
+    }
+  },
+  "source_commit": "9667f935844e8ac586f3c0d66b910250f448c0c6",
+  "working_tree_dirty": false
+}

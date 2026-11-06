@@ -13,7 +13,7 @@ tests cover cancellation, deadlines, and worker failures; a separate local-engin
 slot release on disconnect and records a small sequential latency baseline. A two-engine CPU
 experiment checks routing and overload against real models. Active health probes exclude
 unavailable workers, and a separate local admin API drains assignments while streams finish.
-Real-model experiments cover drain, worker process loss, and recovery. Consensus remains
+Real-model experiments cover drain, worker process loss, and recovery. Serving-controller replication remains
 planned. A repeated-document experiment measures real prefix-cache reuse against disabled
 caching and the existing routing policies; its evidence includes an unresolved timeout from
 an interrupted run. No production usage is claimed. The operational problem still
@@ -44,6 +44,7 @@ remain future work.
 - [Applied configuration](docs/learning/12-applied-configuration.md): distinguish saved, applied, and drained state.
 - [Deterministic state machine](docs/learning/13-state-machine.md): separate ordered decisions from journal I/O.
 - [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
+- [Raft log replication](docs/learning/15-raft-replication.md): durable proposals, conflict repair, and quorum commit.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

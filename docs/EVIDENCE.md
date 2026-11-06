@@ -8,6 +8,45 @@ existing-policy baselines; affinity routing and load experiments remain unfinish
 Milestones 5 through 9 remain planned.
 Historical entries below describe the checks at their original increments.
 
+## Isolated durable Raft replication and commitment
+
+Source: clean commit `9667f93`. Reproduce with `go test ./internal/raft -v` and
+`go run ./cmd/replicationdemo`. The [recorded transcript](results/replication-9667f93.json)
+uses explicit ticks/queued message delivery with three real local journals and independent
+configuration machines. It is not a peer-process network deployment or serving-controller
+failover test. No LLM performance experiment is part of this protocol-only increment.
+
+Initially A led term 1 and all nodes committed through index 2, reaching configuration
+revision 1. Isolated A appended an additional proposal, but its commit index remained 2.
+B/C elected C in term 2 and committed a no-op plus resume command through index 4, reaching
+revision 2. After healing, A's conflicting uncommitted suffix was repaired; every node had
+commit index 4 and revision 2. The isolated proposal was never applied. Reopening all journals
+preserved entries and hard state while resetting volatile commitment; election of C in
+term 3 committed its no-op at index 5 and fresh configuration machines replayed revision 2.
+
+Targeted tests verify file-backed commit/delivery, command-buffer ownership, volatile delivery
+cursor behavior, prior-term majority blocked until a current-term entry commits, unmatched
+follower suffixes not being committed by shorter appends, conflict truncation, preservation
+of committed prefixes, retransmitted probe identity, stale rejection handling, and no follower
+acknowledgement after failed log persistence. A literal election-v1 fixture upgrades to v2,
+preserves its log after incomplete append recovery, and cannot be opened by the election-only
+constructor once log entries exist.
+
+Twenty-five seeded five-node schedules exercise proposals, loss, duplication, reordering,
+partitions, and restarts using retained model storage. They check historical uniqueness of
+committed term/command by index, leader uniqueness per term, and progress after healing.
+The prior fifty election schedules continue to pass. Sampled schedules are not formal proofs,
+exhaustive interleaving coverage, or evidence of physical network/storage fault tolerance.
+
+`go test ./...`, `go vet ./...`, the demo, and Linux CI passed, including race detection.
+The new storage writes synced full hard-state/log images, with conservative bounds rather
+than an optimized incremental WAL. Per-command limit is 64 KiB; total log is bounded by
+1024 entries/four MiB payload. No compaction is implemented, so reaching the bound can stop
+progress. Commit/application cursors are volatile; exactly-once external side effects and
+durable application checkpoints are not provided. The serving controller is not yet connected
+to this replicated core. Power/disk loss and dynamic membership remain outside tested scope.
+
+
 ## Isolated Raft election core
 
 Source: clean commit `0c79b3c8641e5c633c6295d4c4509e7b50edb4ff`. Reproduce with
