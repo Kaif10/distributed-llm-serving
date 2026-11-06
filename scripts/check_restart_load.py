@@ -15,6 +15,17 @@ from check_real_inference import ROOT, get_json, open_stream
 from check_real_pool import service
 
 
+@contextlib.contextmanager
+def record_run(result, path):
+    try:
+        yield
+    except Exception as err:
+        result.update(passed=False, error=str(err))
+        raise
+    finally:
+        path.write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
+
+
 def collect_interruption(stream, connection, response):
     try:
         completed = any(event is None for event in stream)
@@ -44,7 +55,7 @@ def run(policy, trial, args, config, output):
     result = {"policy": policy, "trial": trial, "commands": [], "events": []}
     engine = ROOT/".tools"/("llama-"+config["release"])/"llama-server.exe"
     payload = json.loads((ROOT/"examples/real-stream.json").read_text())
-    with contextlib.ExitStack() as stack:
+    with record_run(result, output/f"{label}.json"), contextlib.ExitStack() as stack:
         processes = []
         for i in range(2):
             command = [str(engine), "-m", str(ROOT/".tools/models"/config["model_file"]), "--host", "127.0.0.1",
@@ -58,7 +69,8 @@ def run(policy, trial, args, config, output):
         result["commands"].append(command)
         stack.enter_context(service(command, "http://127.0.0.1:18080/readyz", output/f"{label}-gateway.log"))
         wait_states(lambda s: all(w["healthy"] for w in s))
-        conn, response = open_stream("http://127.0.0.1:18080", dict(payload, max_tokens=1024, ignore_eos=True), {"X-Prefix-Key": "restart-test"})
+        result["prefix_key"] = "smollm2-v1-document-restart-test"
+        conn, response = open_stream("http://127.0.0.1:18080", dict(payload, max_tokens=1024, ignore_eos=True), {"X-Prefix-Key": result["prefix_key"]})
         try:
             stream = first_content(response)
             victim = int(response.getheader("X-Inference-Worker"))
@@ -74,6 +86,7 @@ def run(policy, trial, args, config, output):
                 if not result["slot_before_kill"][0]["is_processing"] or control.done():
                     raise RuntimeError("Target must still be generating when killed")
                 result["victim"] = victim
+                result["original_pid"] = processes[victim].pid
                 processes[victim].terminate(); processes[victim].wait(timeout=5)
                 result["events"].append({"event": "killed", "seconds": time.perf_counter()-start})
                 result["unhealthy_state"] = wait_states(lambda s: not s[victim]["healthy"] and s[1-victim]["healthy"])
@@ -83,7 +96,8 @@ def run(policy, trial, args, config, output):
                 if result["interrupted_control_stream"]["completed"]:
                     raise RuntimeError("Killed generation appeared complete")
                 time.sleep(2)
-                stack.enter_context(service(result["commands"][victim], f"http://127.0.0.1:{18081+victim}/health", output/f"{label}-restarted.log"))
+                restarted = stack.enter_context(service(result["commands"][victim], f"http://127.0.0.1:{18081+victim}/health", output/f"{label}-restarted.log"))
+                result["restarted_pid"] = restarted.pid
                 result["recovered_state"] = wait_states(lambda s: all(w["healthy"] for w in s))
                 recovered = time.perf_counter()-start
                 result["events"].append({"event": "recovered_observed", "seconds": recovered})
