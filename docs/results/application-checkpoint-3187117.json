@@ -1,0 +1,112 @@
+{
+  "altered_id_rejected": true,
+  "before_restart": {
+    "revision": 3,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": true
+      }
+    ]
+  },
+  "checkpoint": "artifacts\\checkpoint\\checkpoint-demo-3831684130\\application.checkpoint",
+  "checkpoint_bytes": 492,
+  "checkpoint_configuration": {
+    "revision": 2,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": false
+      }
+    ]
+  },
+  "checkpoint_plus_tail": {
+    "revision": 3,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": true
+      }
+    ]
+  },
+  "checkpoint_position": {
+    "index": 3,
+    "term": 1
+  },
+  "checkpoint_sha256": "b3f2cb988f9d917a76ba58a868a5407e7c2d5012f3219a61043386bcb45f1cd8",
+  "corruption_rejected": true,
+  "final_position": {
+    "index": 7,
+    "term": 2
+  },
+  "full_checkpoint_images_equal": true,
+  "full_replay": {
+    "revision": 3,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": true
+      }
+    ]
+  },
+  "go_version": "go1.27.3",
+  "historical_retry": {
+    "revision": 1,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:18081",
+        "draining": true
+      }
+    ]
+  },
+  "journal": "artifacts\\checkpoint\\checkpoint-demo-3831684130\\node.wal",
+  "log": [
+    {
+      "index": 1,
+      "term": 1,
+      "noop": true
+    },
+    {
+      "index": 2,
+      "term": 1,
+      "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJkcmFpbiIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMToxODA4MSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+    },
+    {
+      "index": 3,
+      "term": 1,
+      "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+    },
+    {
+      "index": 4,
+      "term": 1,
+      "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJkcmFpbiIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMToxODA4MSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+    },
+    {
+      "index": 5,
+      "term": 1,
+      "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJzdGFsZSIsImV4cGVjdGVkX3JldmlzaW9uIjoxLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMToxODA4MSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+    },
+    {
+      "index": 6,
+      "term": 1,
+      "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJjaGFuZ2UiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MTgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+    },
+    {
+      "index": 7,
+      "term": 2,
+      "noop": true
+    }
+  ],
+  "passed": true,
+  "platform": "windows/amd64",
+  "rejected_before_commit_reestablished": true,
+  "rejected_wrong_boundary_term": true,
+  "scope": "single Raft core, explicit ticks, actual journal/checkpoint files; offline application recovery only",
+  "source_commit": "3187117cb4c69cfc491dcc458f6c1f8c33aa3bac",
+  "working_tree": ""
+}

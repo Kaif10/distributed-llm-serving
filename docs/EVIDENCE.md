@@ -6,8 +6,66 @@ their limitations are recorded below. The serving controller has a durable singl
 configuration journal. Raft elections, replication, peer-process transport, and a replicated
 configuration API with fresh quorum-confirmed reads are implemented. Reads no longer append
 log entries. Gateway controller-peer failover is implemented and checked with real CPU
-inference. Write retention, complete checkpoints, durable scheduling, and conditional
-sharding remain outstanding. Historical entries describe their original increments rather than current status.
+inference. A complete application checkpoint codec is validated in an offline recovery
+scenario. Durable checkpoint publication/live installation, write retention, scheduling,
+and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+
+## Complete application checkpoint and offline suffix recovery
+
+Source: clean commit `3187117cb4c69cfc491dcc458f6c1f8c33aa3bac`. Reproduce:
+
+```powershell
+go test ./internal/control -run Checkpoint -v
+go run ./cmd/checkpointdemo -output artifacts/checkpoint/3187117.json
+```
+
+The [raw transcript](results/application-checkpoint-3187117.json) records a clean source
+commit, Go 1.27.3, Windows amd64, checkpoint file size/hash, actual journal entries, and
+restored states/results. The scenario uses one actual Raft core with explicit ticks and
+real local journal/checkpoint files. It is an offline application-recovery check, not
+networked snapshot installation or a new inference/model experiment.
+
+After a leader no-op, drain, and resume, the machine reached revision 2 at applied log
+position `(index=3, term=1)`. The synced, closed checkpoint was 492 bytes, SHA-256
+`b3f2cb988f9d917a76ba58a868a5407e7c2d5012f3219a61043386bcb45f1cd8`.
+It retained both successful IDs, including the original revision-1 drain result. The
+subsequent suffix contained a successful retry, a stale CAS conflict, and one new update,
+reaching revision 3 without changing the checkpoint file.
+
+After closing/reopening the Raft journal, the demo refused to treat the checkpoint boundary
+as confirmed while volatile commit knowledge was zero. A term-2 leader no-op re-established
+commitment through index 7. The checkpoint boundary matched the trusted entry's term;
+a deliberately wrong boundary term was rejected. Restoring the checkpoint and replaying
+only the committed suffix after index 3 produced a canonical complete application image
+identical to full replay through index 7, including the successful-request table. Both
+machines reached revision 3. Retrying the original drain returned revision 1 without
+rewinding current state; altered fields under that ID conflicted. Corruption was rejected.
+
+The codec stores a versioned current snapshot, successful history, and owner-supplied
+applied position in one canonical checksummed frame. It validates complete framing,
+checksum, kind, revision/CAS order, duplicate IDs/keys, worker records, state/history
+agreement, and canonical encoding, returning no machine on failure. It bounds wire payload
+to eight MiB and retained successes to 1024 without silently evicting IDs. Checkpoint size
+still grows with distinct successful requests. The codec does not certify commitment,
+authenticate group identity, or prove the owner supplied the correct capture boundary.
+
+Tests cover historical retry restoration, independent buffers, deterministic output,
+every truncation point of a fixture, framing/semantic corruption with valid checksums,
+unknown versions/fields, ambiguous encoding, invalid positions, and count/size bounds.
+Twenty seeded histories compare complete execution with repeated checkpoint restore plus
+tail execution. Local `go test ./...`, `go vet ./...`, `go build ./...`, and the file-backed
+demo passed. [Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42414242867)
+also passed formatting, vet, race tests, builds, the file-backed checkpoint demo, gateway
+smoke checks, and both protocol process scenarios. Local Windows race detection was not run.
+
+The [walkthrough](learning/20-application-checkpoints.md) defines capture/publication and
+compaction follow-ups. Live serving recovery remains unchanged and no log entries are
+removed. The new offline file is not an atomically installed snapshot or a directory/
+power-loss durability contract. Current Raft term/vote stay independent of the checkpoint's
+boundary term. Checkpoint publication/recovery selection, offset-aware storage, snapshot
+transfer to lagging peers, and successful-ID retention policy remain prerequisites for
+live compaction. No change to earlier real-model performance or unresolved timeout evidence
+is established by this control-plane preparation.
 
 ## Gateway controller failover with real CPU inference
 
