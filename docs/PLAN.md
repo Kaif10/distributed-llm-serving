@@ -198,10 +198,15 @@ A versioned application checkpoint codec now preserves configuration and all ret
 successful request-ID results, with an offline file-backed checkpoint-plus-tail/full-replay
 comparison; see [application checkpoints](learning/20-application-checkpoints.md).
 
-Next: trusted, crash-safe checkpoint publication/recovery selection; then offset-aware log
-storage and lagging-peer snapshot installation before enabling networked compaction.
-Write/retry/conflict growth and leader no-ops still reach the existing log bound. Public
-snapshots alone remain insufficient; live serving recovery does not consume checkpoints yet.
+A separate checkpoint publication store now appends/syncs complete scoped images, recovers
+the last complete valid generation, fences uncertain I/O, and preserves successful history.
+Actual child-process kills verify partial, complete uncertain, synced, and acknowledged
+boundaries; see [checkpoint publication](learning/21-checkpoint-publication.md).
+
+Next: controller-owned committed-prefix capture and selected-checkpoint validation/recovery
+while retaining the full Raft log. Offset-aware log storage, lagging-peer snapshot installation,
+and publication-journal rollover follow before continuous networked compaction. Write growth
+still reaches the existing log bound; live serving recovery does not consume checkpoints yet.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded

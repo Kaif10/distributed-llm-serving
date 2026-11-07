@@ -28,8 +28,9 @@ serves fresh reads through majority confirmations without growing the journal. T
 log remains bounded without compaction; write retention, live checkpoint installation,
 and dynamic membership require further work.
 
-A versioned application checkpoint now preserves configuration plus successful request-ID
-history, verified with offline journal/checkpoint recovery. Durable publication, live Raft
+A versioned application checkpoint preserves configuration plus successful request-ID
+history. A separate publication journal selects synced images across process crashes, with
+identity/history checks and idempotent retries. Live controller integration, snapshot
 installation, and compaction remain pending.
 
 ## Start here
@@ -58,6 +59,7 @@ installation, and compaction remain pending.
 - [Read quorums](docs/learning/18-read-quorum.md): fresh reads without per-poll journal growth.
 - [Controller failover](docs/learning/19-controller-failover.md): bounded peer polling, stale-view expiry, and real-model recovery.
 - [Application checkpoints](docs/learning/20-application-checkpoints.md): preserve retry results before log retention.
+- [Checkpoint publication](docs/learning/21-checkpoint-publication.md): sync-before-selection, process-kill recovery, and uncertain retries.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

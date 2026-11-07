@@ -30,6 +30,22 @@ type checkpointPayload struct {
 	Requests []entry            `json:"requests"`
 }
 
+// ValidateSuccessor prevents a later checkpoint from discarding or changing an
+// already retained successful request/result. Position and group binding remain
+// the publisher's responsibility. Callers serialize access to both machines.
+func (m *Machine) ValidateSuccessor(previous *Machine) error {
+	if previous == nil || m.state.Revision < previous.state.Revision {
+		return fmt.Errorf("checkpoint configuration regressed")
+	}
+	for id, old := range previous.requests {
+		next, ok := m.requests[id]
+		if !ok || !reflect.DeepEqual(next, old) {
+			return fmt.Errorf("checkpoint changed retained successful history")
+		}
+	}
+	return nil
+}
+
 func validCheckpointPosition(position CheckpointPosition, revision uint64) bool {
 	return (position.Index == 0) == (position.Term == 0) && revision <= position.Index
 }
