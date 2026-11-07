@@ -3,10 +3,60 @@
 The serving gateway routes real-model streams across a fixed worker pool, with admission,
 health, draining, and controller-snapshot freshness checks. Real CPU-model experiments and
 their limitations are recorded below. The serving controller has a durable single-writer
-configuration journal. Raft elections, replication, and peer-process transport are implemented
-in isolation; serving-controller replication, fresh distributed reads, durable scheduling,
-and conditional sharding remain outstanding. Historical entries describe their original
-increments rather than the project's current status.
+configuration journal. Raft elections, replication, peer-process transport, and a replicated
+configuration API with committed read barriers are implemented. Gateway leader failover,
+sustained read/log retention, checkpoints, durable scheduling, and conditional sharding remain
+outstanding. Historical entries describe their original increments rather than current status.
+
+## Replicated configuration application and read barriers
+
+Source: clean commit `e27279297cfca4e1bdac5e039f408b987aedcbcc`. Reproduce:
+
+```powershell
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/replicated_config_check.py bin/raftpeer.exe --output artifacts/replicated-config/run.json
+```
+
+Windows 11 amd64, Go 1.27.3, Python 3.12.7. The
+[raw transcript](results/replicated-config-e272792.json) includes a clean working tree,
+binary hash, invocation, peer logs, protocol entries, applied/committed indices, and API
+outcomes. Three real peer processes use separate journals and HTTP fault-injection relays
+on the same host. Relays deliberately drop messages across the selected partition; they
+are not replacement Raft implementations. No model requests or inference measurements
+are part of this increment. See the [walkthrough](learning/17-replicated-configuration.md).
+
+B initially committed/applied a drain at revision 1. Its protocol traffic was isolated
+while its client API stayed alive. A/C elected A and committed a resume at revision 2.
+After that update returned, A's read returned revision 2; B still called itself leader
+but its read returned HTTP 504. An isolated update also returned 504 and B's diagnostic
+application state remained at revision 1, confirming no application of that uncommitted
+update in this run. After healing, the isolated update's retry conflicted at revision 2.
+
+Retrying the original successful drain ID returned its historical revision-1 result without
+reverting current state. Two concurrent commands expecting revision 2 produced one HTTP 200
+(revision 3, empty workers) and one HTTP 409. After killing/restarting all peers, their fresh
+machines replayed revision 3. A fresh read returned revision 3; the original successful ID
+still returned its original result. Altered fields under that ID returned 409. A follower
+refused a configuration read with HTTP 503. Final commit/applied indices were both 13 on
+all three peers, with identical logs and configuration.
+
+Local `go test ./...`, `go vet ./...`, and `go build ./...` passed. Network tests additionally
+exercise single-member committed reads, concurrent apply-time CAS, successful retry results,
+malformed updates, raw-endpoint exclusion in configuration mode, and rejection of raw journals.
+[Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42399829760) passed formatting,
+vet, race tests, builds, gateway smoke checks, raw peer recovery, and the replicated
+configuration partition/replay scenario. Local Windows race detection was not run.
+
+The optional `raftpeer -configuration` mode serves GET/PUT `/config`; the old single-writer
+`cmd/controller` is unchanged. The machine applies only committed entries in order, skips
+no-ops, and rebuilds successful request-ID results after recovery. Reads are actual replicated
+commands, not local leadership checks or leases. Every read/retry/conflict consumes bounded
+log space and synced full-image journal writes. Continuous gateway polling still needs a
+read/log-retention design; no compaction, checkpoint, gateway leader discovery, remote
+security, dynamic membership, or performance improvement is established. Fixed membership
+and consistent application mode/journal ownership are operator requirements. Same-host
+process kills and selected relay faults are not power/disk-loss tests, exhaustive histories,
+or evidence of production readiness. Earlier unresolved real-model timeouts remain unchanged.
 
 ## Real-process Raft transport and recovery
 

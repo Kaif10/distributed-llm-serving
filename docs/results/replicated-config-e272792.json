@@ -1,0 +1,370 @@
+{
+  "source_commit": "e27279297cfca4e1bdac5e039f408b987aedcbcc",
+  "working_tree": "",
+  "binary_sha256": "8ae32859dafbc37ae98c9dd377b05ad982f47d7df68fdf95e72fc703ce49159a",
+  "command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "scripts/replicated_config_check.py",
+    "bin/raftpeer.exe",
+    "--output",
+    "artifacts/replicated-config/final.json"
+  ],
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "events": [
+    {
+      "initial_leader": "b",
+      "initial_result": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:8081",
+            "draining": true
+          }
+        ]
+      }
+    },
+    {
+      "replacement_leader": "a",
+      "majority_read": [
+        200,
+        {
+          "revision": 2,
+          "workers": [
+            {
+              "id": "worker",
+              "origin": "http://127.0.0.1:8081",
+              "draining": false
+            }
+          ]
+        }
+      ],
+      "isolated_former_leader_read": [
+        504,
+        "deadline; outcome unknown\n"
+      ],
+      "isolated_update": [
+        504,
+        "deadline; outcome unknown\n"
+      ],
+      "old_diagnostic_configuration": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:8081",
+            "draining": true
+          }
+        ]
+      }
+    },
+    {
+      "retry_original_result": {
+        "revision": 1,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:8081",
+            "draining": true
+          }
+        ]
+      },
+      "concurrent_CAS": [
+        [
+          200,
+          {
+            "revision": 3,
+            "workers": []
+          }
+        ],
+        [
+          409,
+          "revision or request ID conflict\n"
+        ]
+      ]
+    }
+  ],
+  "scope": "three real peer processes, same-host HTTP, controlled relay partitions; no LLM traffic",
+  "passed": true,
+  "final": {
+    "a": {
+      "node": {
+        "ID": "a",
+        "Role": "leader",
+        "Term": 3,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 13,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+        },
+        {
+          "index": 5,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpc29sYXRlZC11cGRhdGUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTAiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 9,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTEiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        },
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 12,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 13,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjMsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 13,
+      "configuration": {
+        "revision": 3,
+        "workers": []
+      }
+    },
+    "b": {
+      "node": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 13,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+        },
+        {
+          "index": 5,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpc29sYXRlZC11cGRhdGUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTAiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 9,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTEiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        },
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 12,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 13,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjMsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 13,
+      "configuration": {
+        "revision": 3,
+        "workers": []
+      }
+    },
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 13,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+        },
+        {
+          "index": 5,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 6,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpc29sYXRlZC11cGRhdGUiLCJleHBlY3RlZF9yZXZpc2lvbiI6MSwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 7,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTAiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 9,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyYWNlLTEiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXIiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgwODEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        },
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoicmVhZCJ9"
+        },
+        {
+          "index": 12,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        },
+        {
+          "index": 13,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsLWRyYWluIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjMsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgxIiwiZHJhaW5pbmciOnRydWV9XX19"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 13,
+      "configuration": {
+        "revision": 3,
+        "workers": []
+      }
+    }
+  },
+  "expected_configuration": {
+    "revision": 3,
+    "workers": []
+  },
+  "recovered_retry": {
+    "revision": 1,
+    "workers": [
+      {
+        "id": "worker",
+        "origin": "http://127.0.0.1:8081",
+        "draining": true
+      }
+    ]
+  },
+  "follower_read": {
+    "status": 503,
+    "body": "not a replication leader\n"
+  },
+  "process_logs": {
+    "a": "2026/11/07 16:38:21 INFO raft peer listening id=a peer=127.0.0.1:61253 client=127.0.0.1:61256\n2026/11/07 16:38:28 INFO raft peer listening id=a peer=127.0.0.1:61253 client=127.0.0.1:61256\n",
+    "b": "2026/11/07 16:38:21 INFO raft peer listening id=b peer=127.0.0.1:61254 client=127.0.0.1:61257\n2026/11/07 16:38:28 INFO raft peer listening id=b peer=127.0.0.1:61254 client=127.0.0.1:61257\n",
+    "c": "2026/11/07 16:38:21 INFO raft peer listening id=c peer=127.0.0.1:61255 client=127.0.0.1:61258\n2026/11/07 16:38:28 INFO raft peer listening id=c peer=127.0.0.1:61255 client=127.0.0.1:61258\n"
+  }
+}
