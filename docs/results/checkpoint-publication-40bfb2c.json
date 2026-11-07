@@ -1,0 +1,318 @@
+{
+  "source_commit": "40bfb2c9ed102c83784c49fcd43c445d028ec40a",
+  "working_tree": "",
+  "go_version": "go version go1.27.3 windows/amd64",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\inference-fleet\\toolchains\\go1.27.3\\go\\bin\\go.exe",
+    "test",
+    "-json",
+    "./internal/checkpoint",
+    "-run",
+    "TestPublicationProcess",
+    "-count=1"
+  ],
+  "invocation": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "scripts/check_checkpoint_publication.py",
+    "--go",
+    "C:\\Users\\kaifk\\AppData\\Local\\inference-fleet\\toolchains\\go1.27.3\\go\\bin\\go.exe",
+    "--output",
+    "artifacts/checkpoint-publication/40bfb2c.json"
+  ],
+  "scope": "real test subprocesses killed at write/sync/ack boundaries; actual files, no Raft installation or inference",
+  "returncode": 0,
+  "stderr": "",
+  "events": [
+    {
+      "Time": "2026-11-07T22:58:26.7026896Z",
+      "Action": "start",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0154631Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessHelper"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0227211Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessHelper",
+      "Output": "=== RUN   TestPublicationProcessHelper\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0227211Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessHelper",
+      "Output": "    process_test.go:17: child process only\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessHelper",
+      "Output": "--- SKIP: TestPublicationProcessHelper (0.00s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "skip",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessHelper",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery",
+      "Output": "=== RUN   TestPublicationProcessKillRecovery\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/partial"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.0234813Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/partial",
+      "Output": "=== RUN   TestPublicationProcessKillRecovery/partial\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7603084Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/partial",
+      "Output": "    process_test.go:145: stage=partial selected_generation=1 retry_generation=2 acknowledged_before_kill=false\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7614713Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/partial",
+      "Output": "--- PASS: TestPublicationProcessKillRecovery/partial (0.75s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7614713Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/partial",
+      "Elapsed": 0.75
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7620301Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/before-sync"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7620301Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/before-sync",
+      "Output": "=== RUN   TestPublicationProcessKillRecovery/before-sync\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7926317Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/before-sync",
+      "Output": "    process_test.go:145: stage=before-sync selected_generation=2 retry_generation=2 acknowledged_before_kill=false\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7931844Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/before-sync",
+      "Output": "--- PASS: TestPublicationProcessKillRecovery/before-sync (0.03s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7931844Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/before-sync",
+      "Elapsed": 0.03
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7931844Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/after-sync"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.7931844Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/after-sync",
+      "Output": "=== RUN   TestPublicationProcessKillRecovery/after-sync\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8336028Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/after-sync",
+      "Output": "    process_test.go:145: stage=after-sync selected_generation=2 retry_generation=2 acknowledged_before_kill=false\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8341942Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/after-sync",
+      "Output": "--- PASS: TestPublicationProcessKillRecovery/after-sync (0.04s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8341942Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/after-sync",
+      "Elapsed": 0.04
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8341942Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/acknowledged"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8341942Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/acknowledged",
+      "Output": "=== RUN   TestPublicationProcessKillRecovery/acknowledged\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8736653Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/acknowledged",
+      "Output": "    process_test.go:145: stage=acknowledged selected_generation=2 retry_generation=2 acknowledged_before_kill=true\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/acknowledged",
+      "Output": "--- PASS: TestPublicationProcessKillRecovery/acknowledged (0.04s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery/acknowledged",
+      "Elapsed": 0.04
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery",
+      "Output": "--- PASS: TestPublicationProcessKillRecovery (0.86s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessKillRecovery",
+      "Elapsed": 0.86
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "run",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessExclusiveOwner"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8749236Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessExclusiveOwner",
+      "Output": "=== RUN   TestPublicationProcessExclusiveOwner\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8992566Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessExclusiveOwner",
+      "Output": "--- PASS: TestPublicationProcessExclusiveOwner (0.02s)\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8992566Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Test": "TestPublicationProcessExclusiveOwner",
+      "Elapsed": 0.02
+    },
+    {
+      "Time": "2026-11-07T22:58:29.8992566Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Output": "PASS\n",
+      "OutputType": "frame"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.9011509Z",
+      "Action": "output",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Output": "ok  \tgithub.com/Kaif10/inference-fleet/internal/checkpoint\t3.196s\n"
+    },
+    {
+      "Time": "2026-11-07T22:58:29.9019324Z",
+      "Action": "pass",
+      "Package": "github.com/Kaif10/inference-fleet/internal/checkpoint",
+      "Elapsed": 3.199
+    }
+  ],
+  "crash_outcomes": [
+    {
+      "stage": "partial",
+      "selected_generation": 1,
+      "retry_generation": 2,
+      "acknowledged_before_kill": false
+    },
+    {
+      "stage": "before-sync",
+      "selected_generation": 2,
+      "retry_generation": 2,
+      "acknowledged_before_kill": false
+    },
+    {
+      "stage": "after-sync",
+      "selected_generation": 2,
+      "retry_generation": 2,
+      "acknowledged_before_kill": false
+    },
+    {
+      "stage": "acknowledged",
+      "selected_generation": 2,
+      "retry_generation": 2,
+      "acknowledged_before_kill": true
+    }
+  ],
+  "passed": true
+}

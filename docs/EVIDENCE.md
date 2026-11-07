@@ -7,8 +7,60 @@ configuration journal. Raft elections, replication, peer-process transport, and 
 configuration API with fresh quorum-confirmed reads are implemented. Reads no longer append
 log entries. Gateway controller-peer failover is implemented and checked with real CPU
 inference. A complete application checkpoint codec is validated in an offline recovery
-scenario. Durable checkpoint publication/live installation, write retention, scheduling,
-and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+scenario. A scoped publication journal now survives tested process-kill boundaries and
+selects complete images after recovery sync. Live controller integration, write retention,
+scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+
+## Checkpoint publication journal and actual process-kill selection
+
+Source: clean commit `40bfb2c9ed102c83784c49fcd43c445d028ec40a`. Reproduce:
+
+```powershell
+go test ./internal/checkpoint -v
+python scripts/check_checkpoint_publication.py --output artifacts/checkpoint-publication/run.json
+```
+
+Use `--go <executable>` if Go is not on PATH. The
+[recorded process run](results/checkpoint-publication-40bfb2c.json) contains the actual command,
+clean source commit, Go 1.27.3 Windows amd64, Python/platform, uncached Go JSON events,
+all four kill outcomes, and the second-process exclusive-owner check. Fault boundaries
+are controlled by private test hooks, but writes, Sync calls, OS locks, process termination,
+and recovery use actual files/processes. No inference traffic or live Raft checkpoint
+installation is part of this check.
+
+A child process opened a journal already containing generation 1 and tried to publish a
+complete newer application image as generation 2. Killing it during a partial frame write
+recovered generation 1; retrying the candidate published generation 2. Killing after a
+complete append but before Sync recovered generation 2 after the recovery sync barrier.
+Kills after Sync but before Publish returned, and after Publish returned, also recovered
+generation 2. Every candidate retry then returned generation 2. These are process-crash
+observations with kernel/filesystem state retained; before-Sync recovery is not proof of
+power-loss durability. A complete unacknowledged append has an unknown outcome until reopen.
+
+The new separate publication store checks canonical framing, checksums, group/member labels,
+increasing generation and applied position, checkpoint digest, and application-image validity.
+A later checkpoint must retain every prior successful request's original result. Exact
+latest-image retries append nothing. Recovery repairs incomplete final headers/payloads,
+fails closed on complete corruption/invalid metadata, and syncs before exposing selection.
+Write, short-write, or sync errors fence reads/writes until reopen; simulated failure tests
+exercise those branches. An unreferenced checkpoint file cannot change journal selection.
+
+Other Go tests cover wrong group/member, position/config/history regression, idempotency,
+caller buffer independence, recovery-sync failure, invalid complete metadata, capacity,
+and concurrent readers/publication. Local `go test ./...`, `go vet ./...`, and `go build ./...`
+passed. [Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42423071759) passed
+formatting, vet, race tests (including real publication-process kills and concurrent
+selection), builds, the offline checkpoint demo, gateway smoke checks, and both protocol
+process scenarios. Local Windows race detection was not run.
+
+Limits: 16 full-image generations, at most 12 MiB per outer record, and the existing
+application-codec limits. New images return `ErrFull` at capacity without eviction; retrying
+the latest image still succeeds. Publication-journal rollover is outstanding. Labels do not
+authenticate a Raft group or prove capture at a committed boundary. Controller-owned capture,
+selected-image binding/installation, offset-aware log recovery, and lagging-peer snapshot
+transfer remain separate prerequisites for compaction. The live controller/gateway path and
+Raft log bound are unchanged. No directory-entry/power-loss, disk-loss, multi-host, or model
+performance claim is added. See the [publication walkthrough](learning/21-checkpoint-publication.md).
 
 ## Complete application checkpoint and offline suffix recovery
 
