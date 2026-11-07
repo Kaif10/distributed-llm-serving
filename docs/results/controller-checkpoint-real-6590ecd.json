@@ -1,0 +1,426 @@
+{
+  "source_commit": "6590ecd06e69471a53aed268c1e527ab4a858d19",
+  "working_tree": "",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "logical_cpus": 12,
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "54129",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--no-ui",
+      "--slots"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:54123,b=http://127.0.0.1:54124,c=http://127.0.0.1:54125",
+      "-client-listen",
+      "127.0.0.1:54126",
+      "-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\a.wal",
+      "-checkpoint-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\a.checkpoint.wal",
+      "-checkpoint-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:54123,b=http://127.0.0.1:54124,c=http://127.0.0.1:54125",
+      "-client-listen",
+      "127.0.0.1:54127",
+      "-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\b.wal",
+      "-checkpoint-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\b.checkpoint.wal",
+      "-checkpoint-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "c",
+      "-peers",
+      "a=http://127.0.0.1:54123,b=http://127.0.0.1:54124,c=http://127.0.0.1:54125",
+      "-client-listen",
+      "127.0.0.1:54128",
+      "-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\c.wal",
+      "-checkpoint-journal",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-78_sfnd6\\c.checkpoint.wal",
+      "-checkpoint-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:54130",
+      "-admin-listen",
+      "127.0.0.1:54131",
+      "-backend",
+      "http://127.0.0.1:54129",
+      "-controllers",
+      "http://127.0.0.1:54126,http://127.0.0.1:54127,http://127.0.0.1:54128",
+      "-config-poll",
+      "100ms",
+      "-config-timeout",
+      "900ms",
+      "-config-max-age",
+      "3s",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "observations": [
+    {
+      "killed_leader": "a",
+      "replacement": "b",
+      "observed_failover_ms": 703.0
+    }
+  ],
+  "binary_sha256": {
+    "gateway": "3846341f1db265fc8491e18f84087b986adc4f55b13b1aa35e6717357c76b723",
+    "raftpeer": "5b5b1b5549cc6ac4be3c0970aab62d05927cf4a5ece8c4e83d9cd0e86e1259d8",
+    "engine": "00d50686815af38249d0218c91558fbd0e9093ac8c074bac86196907f4305e31"
+  },
+  "initial_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-07T23:29:47.8942621Z",
+    "expires_at": "2026-11-07T23:29:50.8936179Z",
+    "controller_origin": "http://127.0.0.1:54126"
+  },
+  "initial_generation": {
+    "ttft_ms": 150.86,
+    "completion_ms": 267.215,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "after_failover": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-07T23:29:48.9164394Z",
+    "expires_at": "2026-11-07T23:29:51.9154211Z",
+    "controller_origin": "http://127.0.0.1:54127"
+  },
+  "drain_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 2,
+    "fresh": true,
+    "confirmed_at": "2026-11-07T23:29:49.017852Z",
+    "expires_at": "2026-11-07T23:29:52.0167738Z",
+    "controller_origin": "http://127.0.0.1:54127"
+  },
+  "drain_rejection": 503,
+  "generation_after_failover": {
+    "ttft_ms": 14.059,
+    "completion_ms": 146.152,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "captured_checkpoint": {
+    "published": {
+      "generation": 1,
+      "identity": {
+        "group": "real-failover-check",
+        "member": "c"
+      },
+      "position": {
+        "index": 5,
+        "term": 2
+      },
+      "sha256": "989f289c5571e207ba0a0798b9557a90e4190887f96537255fbe8711c92a685c"
+    },
+    "recovery_pending": false,
+    "recovery_verified": false,
+    "recovery_index": 0
+  },
+  "expired": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": false,
+    "confirmed_at": "2026-11-07T23:29:49.3222445Z",
+    "expires_at": "2026-11-07T23:29:52.3211601Z",
+    "last_error": "no fresh controller snapshot: http://127.0.0.1:54127: Get \"http://127.0.0.1:54127/config\": context deadline exceeded; http://127.0.0.1:54128: Get \"http://127.0.0.1:54128/config\": dial tcp 127.0.0.1:54128: connectex: No connection could be made because the target machine actively refused it.; http://127.0.0.1:54126: Get \"http://127.0.0.1:54126/config\": dial tcp 127.0.0.1:54126: connectex: No connection could be made because the target machine actively refused it.",
+    "controller_origin": "http://127.0.0.1:54127"
+  },
+  "worker_at_expiry": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:54129",
+      "healthy": true,
+      "checked_at": "2026-11-07T23:29:51.4967096Z",
+      "draining": false,
+      "inflight": 1,
+      "drained": false,
+      "config_id": "worker-a"
+    }
+  ],
+  "readiness_when_expired": 503,
+  "long_stream": {
+    "done": true,
+    "finish_reason": "length",
+    "chunks_after_first_content": 1536
+  },
+  "active_stream_survived_expiry": true,
+  "idle_generation_when_expired": 503,
+  "restored_checkpoint_peer": {
+    "node": {
+      "ID": "c",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "b",
+      "Leader": "b",
+      "Failed": false
+    },
+    "commit_index": 5,
+    "log": [
+      {
+        "index": 1,
+        "term": 1,
+        "noop": true
+      },
+      {
+        "index": 2,
+        "term": 1,
+        "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU0MTI5IiwiZHJhaW5pbmciOmZhbHNlfV19fQ=="
+      },
+      {
+        "index": 3,
+        "term": 2,
+        "noop": true
+      },
+      {
+        "index": 4,
+        "term": 2,
+        "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJkcmFpbiIsImV4cGVjdGVkX3JldmlzaW9uIjoxLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo1NDEyOSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+      },
+      {
+        "index": 5,
+        "term": 2,
+        "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6NTQxMjkiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+      }
+    ],
+    "dropped_outbound": 0,
+    "send_failures": 0,
+    "applied_index": 5,
+    "configuration": {
+      "revision": 3,
+      "workers": [
+        {
+          "id": "worker-a",
+          "origin": "http://127.0.0.1:54129",
+          "draining": false
+        }
+      ]
+    },
+    "pending_reads": 0,
+    "checkpoint": {
+      "published": {
+        "generation": 1,
+        "identity": {
+          "group": "real-failover-check",
+          "member": "c"
+        },
+        "position": {
+          "index": 5,
+          "term": 2
+        },
+        "sha256": "989f289c5571e207ba0a0798b9557a90e4190887f96537255fbe8711c92a685c"
+      },
+      "recovery_pending": false,
+      "recovery_verified": true,
+      "recovery_index": 5
+    }
+  },
+  "after_quorum_recovery": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": true,
+    "confirmed_at": "2026-11-07T23:30:08.3210528Z",
+    "expires_at": "2026-11-07T23:30:11.3194722Z",
+    "controller_origin": "http://127.0.0.1:54127"
+  },
+  "generation_after_recovery": {
+    "ttft_ms": 28.932,
+    "completion_ms": 148.31,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "controller_statuses": {
+    "b": {
+      "node": {
+        "ID": "b",
+        "Role": "leader",
+        "Term": 2,
+        "VotedFor": "b",
+        "Leader": "b",
+        "Failed": false
+      },
+      "commit_index": 5,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU0MTI5IiwiZHJhaW5pbmciOmZhbHNlfV19fQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJkcmFpbiIsImV4cGVjdGVkX3JldmlzaW9uIjoxLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo1NDEyOSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+        },
+        {
+          "index": 5,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6NTQxMjkiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 793,
+      "applied_index": 5,
+      "configuration": {
+        "revision": 3,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:54129",
+            "draining": false
+          }
+        ]
+      },
+      "pending_reads": 0,
+      "checkpoint": {
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      }
+    },
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "b",
+        "Leader": "b",
+        "Failed": false
+      },
+      "commit_index": 5,
+      "log": [
+        {
+          "index": 1,
+          "term": 1,
+          "noop": true
+        },
+        {
+          "index": 2,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU0MTI5IiwiZHJhaW5pbmciOmZhbHNlfV19fQ=="
+        },
+        {
+          "index": 3,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 4,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJkcmFpbiIsImV4cGVjdGVkX3JldmlzaW9uIjoxLCJ3b3JrZXJzIjpbeyJpZCI6Indvcmtlci1hIiwib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMTo1NDEyOSIsImRyYWluaW5nIjp0cnVlfV19fQ=="
+        },
+        {
+          "index": 5,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJyZXN1bWUiLCJleHBlY3RlZF9yZXZpc2lvbiI6Miwid29ya2VycyI6W3siaWQiOiJ3b3JrZXItYSIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6NTQxMjkiLCJkcmFpbmluZyI6ZmFsc2V9XX19"
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 5,
+      "configuration": {
+        "revision": 3,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:54129",
+            "draining": false
+          }
+        ]
+      },
+      "pending_reads": 0,
+      "checkpoint": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "real-failover-check",
+            "member": "c"
+          },
+          "position": {
+            "index": 5,
+            "term": 2
+          },
+          "sha256": "989f289c5571e207ba0a0798b9557a90e4190887f96537255fbe8711c92a685c"
+        },
+        "recovery_pending": false,
+        "recovery_verified": true,
+        "recovery_index": 5
+      }
+    }
+  },
+  "passed": true
+}

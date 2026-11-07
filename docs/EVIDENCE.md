@@ -8,8 +8,71 @@ configuration API with fresh quorum-confirmed reads are implemented. Reads no lo
 log entries. Gateway controller-peer failover is implemented and checked with real CPU
 inference. A complete application checkpoint codec is validated in an offline recovery
 scenario. A scoped publication journal now survives tested process-kill boundaries and
-selects complete images after recovery sync. Live controller integration, write retention,
-scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+selects complete images after recovery sync. Configuration peers can opt into owner capture
+and checkpoint-plus-suffix recovery verified against full replay. Write retention, snapshot
+transfer, scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+
+## Controller-owned checkpoint capture and confirmed-prefix recovery
+
+Source: clean commit `6590ecd06e69471a53aed268c1e527ab4a858d19`. Reproduce:
+
+```powershell
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+go build -o bin/gateway.exe ./cmd/gateway
+python scripts/replicated_config_check.py bin/raftpeer.exe --checkpoints --output artifacts/replicated-config/checkpoint-6590ecd.json
+python scripts/check_controller_failover.py --checkpoints --output artifacts/controller-failover/checkpoint-6590ecd.json
+```
+
+Both raw runs record the same clean source. The
+[three-peer run](results/controller-checkpoint-6590ecd.json) uses actual peer processes,
+retained journals, and controlled loopback relay faults without inference traffic. The
+[real CPU-model run](results/controller-checkpoint-real-6590ecd.json) uses pinned llama.cpp
+b12110 and checksum-verified SmolLM2-135M Q4_K_M, actual gateway/peer processes, two engine
+threads, Windows amd64, Go 1.27.3, and Python 3.12.7. Commands, executable hashes, model pins,
+responses, selected checkpoint metadata, and recovery status are recorded.
+
+The peer run captured B's application at index 8/term 2, revision 3, publication generation 1.
+After killing/restarting every peer, B reported confirmed recovery index 8 with pending=false
+and verification=true. A's empty publication store used full replay. Capturing A and B at the
+same committed index 9/term 3 produced identical complete application-image SHA-256 values,
+`06ac1906ec6331f0177012c5e799ae88c19ee87c67f8f73e4444f839d03213ac`.
+A published generation 1 and B generation 2. The comparison includes historical request-ID
+results, not just worker state. Subsequent original-ID retries and altered-ID conflicts
+remained correct. Existing partition, quorum-read, CAS, and read-journal-size checks passed.
+
+In the real-model run, C captured generation 1 at index 5/term 2 after revision 3 applied.
+C was then killed, removing the majority while another real generation was active. The
+gateway view expired and readiness/new work were rejected; the admitted 1536-token-budget
+stream finished with finish_reason=length and [DONE]. Restarted C verified/installed its
+checkpoint at recovery index 5 after commitment returned. The gateway reconfirmed revision 3
+and a further real generation completed. These remain same-host process observations.
+
+Implementation: optional `-checkpoint-journal` and explicit `-checkpoint-group` flags in
+configuration mode. POST `/checkpoint` accepts an empty body and captures through the
+serialized owner after applying the committed prefix. It stores the exact applied index/
+entry term and complete machine image through the synced publication journal. The selected
+image stays uninstalled until Raft confirms commitment through its position. Startup and
+installation compare the entire image against retained-prefix replay; a matching index/term
+alone is insufficient. Only committed entries after the installed boundary reach application.
+No-op, CAS, retry, fresh-read, and Raft term/vote behavior remain separate and unchanged.
+
+Go tests check pending-image isolation at commit index zero, suffix application, owner/member
+binding, missing/wrong boundaries, identical current state with different retry history,
+revalidation after an unconfirmed prefix changes, HTTP capture/idempotency, response metadata
+ownership, and unavailable-publisher errors. Local `go test ./...`, `go vet ./...`, and
+`go build ./...` passed. [Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42425470768)
+passed formatting, vet, race tests, builds, the offline checkpoint demo, gateway smoke,
+raw peer recovery, and configuration runs both with and without controller checkpoints.
+Local Windows race detection was not run. The real-model run is separate from Linux CI.
+
+Costs/limits: full retained-prefix replay is still performed for verification, and the full
+Raft log remains mandatory. No startup speedup, log-space reduction, compaction, or lagging-peer
+snapshot-transfer claim is established. Manual capture performs bounded encoding/publication
+I/O on the controller owner; slow disk work can delay progress. Uncertain publisher I/O stops
+the owner; publication capacity rejects capture while allowing configuration service to
+continue. Current application/publication/log bounds, trusted-loopback assumptions, and
+single-host failure domain remain. See the [walkthrough](learning/22-controller-checkpoint-recovery.md).
+The final working-demo video is a planned deliverable, not yet recorded.
 
 ## Checkpoint publication journal and actual process-kill selection
 
