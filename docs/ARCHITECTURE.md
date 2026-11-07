@@ -6,11 +6,11 @@ Both policies have been checked against two pinned llama.cpp CPU inference serve
 SmolLM2-135M. Health probes, draining, and consumption of single-controller snapshots are
 implemented. A separate `raftpeer -configuration` API now applies replicated updates and
 serves fresh quorum-confirmed reads after local application. Gateways can fail over reads
-across a configured list of controller peers while bounding view age. Write retention,
-live checkpoint installation, and compaction remain pending. A complete application checkpoint
-codec and separate synced publication journal are verified through offline recovery and
-process-kill tests; controller-owned capture/installation is the next integration boundary.
-The drain discussion describes the fleet-wide target.
+across a configured list of controller peers while bounding view age. Configuration peers
+can opt into owner-serialized checkpoint capture and confirmed-prefix recovery. Full retained
+prefix replay verifies selected images, so the full log is still mandatory. Offset-aware
+retention, lagging-peer snapshot transfer, and compaction remain pending. The drain discussion
+describes the fleet-wide target.
 
 ```mermaid
 flowchart LR

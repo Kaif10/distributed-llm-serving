@@ -64,6 +64,9 @@ func clone(s Selection) Selection { s.Data = bytes.Clone(s.Data); return s }
 func digest(data []byte) string   { sum := sha256.Sum256(data); return hex.EncodeToString(sum[:]) }
 
 func Open(path string, id Identity) (*Store, error) { return open(path, id, nil) }
+
+// Identity is immutable metadata, available even before the first publication.
+func (s *Store) Identity() Identity { return s.identity }
 func open(path string, id Identity, syncOverride func(*os.File) error) (*Store, error) {
 	if !validIdentity(id) {
 		return nil, fmt.Errorf("checkpoint store requires group/member IDs of 1..128 UTF-8 bytes")

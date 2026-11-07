@@ -12,6 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/Kaif10/inference-fleet/internal/checkpoint"
 	"github.com/Kaif10/inference-fleet/internal/control"
 	"github.com/Kaif10/inference-fleet/internal/raft"
 )
@@ -25,6 +26,7 @@ type Snapshot struct {
 	Applied       uint64            `json:"applied_index,omitempty"`
 	Configuration *control.Snapshot `json:"configuration,omitempty"`
 	PendingReads  int               `json:"pending_reads"`
+	Checkpoint    *CheckpointStatus `json:"checkpoint,omitempty"`
 }
 type result struct {
 	State         *Snapshot
@@ -32,6 +34,7 @@ type result struct {
 	Err           string
 	Code          int
 	Configuration *control.Snapshot
+	Checkpoint    *CheckpointStatus
 }
 type event struct {
 	ctx     context.Context
@@ -39,6 +42,7 @@ type event struct {
 	data    []byte
 	status  bool
 	read    bool
+	capture bool
 	reply   chan result
 }
 type waiter struct {
@@ -47,16 +51,19 @@ type waiter struct {
 	reply       chan result
 }
 type Host struct {
-	node         *raft.Node
-	id           string
-	peers        map[string]string
-	events       chan event
-	out          map[string]chan raft.Message
-	done         chan struct{}
-	sendFailures atomic.Int64
-	dropped      uint64
-	machine      *control.Machine
-	applied      uint64
+	node             *raft.Node
+	id               string
+	peers            map[string]string
+	events           chan event
+	out              map[string]chan raft.Message
+	done             chan struct{}
+	sendFailures     atomic.Int64
+	dropped          uint64
+	machine          *control.Machine
+	applied          uint64
+	checkpoints      *checkpoint.Store
+	checkpointStatus *CheckpointStatus
+	recovery         *checkpointRecovery
 }
 
 // Node must not be accessed elsewhere after handing it to Run.
@@ -185,6 +192,7 @@ func (h *Host) Run(parent context.Context) error {
 			}
 			if e.status {
 				state := &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load(), Applied: h.applied, PendingReads: len(reads)}
+				state.Checkpoint = h.checkpointSnapshot()
 				if h.machine != nil {
 					configuration := h.machine.Snapshot()
 					state.Configuration = &configuration
@@ -235,6 +243,14 @@ func (h *Host) Run(parent context.Context) error {
 				if err := complete(); err != nil {
 					return err
 				}
+				continue
+			}
+			if e.capture {
+				response, err := h.captureCheckpoint()
+				if err != nil {
+					return err
+				}
+				e.reply <- response
 				continue
 			}
 			if len(pending) >= 8 {
@@ -307,6 +323,8 @@ func write(w http.ResponseWriter, response result) {
 	w.Header().Set("Content-Type", "application/json")
 	if response.Configuration != nil {
 		json.NewEncoder(w).Encode(response.Configuration)
+	} else if response.Checkpoint != nil {
+		json.NewEncoder(w).Encode(response.Checkpoint)
 	} else if response.State != nil {
 		json.NewEncoder(w).Encode(response.State)
 	} else {

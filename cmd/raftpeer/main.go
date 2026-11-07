@@ -19,6 +19,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Kaif10/inference-fleet/internal/checkpoint"
 	"github.com/Kaif10/inference-fleet/internal/raft"
 	"github.com/Kaif10/inference-fleet/internal/raftnet"
 )
@@ -30,10 +31,12 @@ func main() {
 	journal := flag.String("journal", "", "exclusive durable journal path")
 	configuration := flag.Bool("configuration", false, "serve replicated GET/PUT /config instead of raw proposals; use fresh configuration-only journals")
 	peerListen := flag.String("peer-listen", "", "optional loopback bind address behind a test relay; defaults to local advertised origin")
+	checkpointPath := flag.String("checkpoint-journal", "", "optional local checkpoint publication journal; configuration mode only")
+	checkpointGroup := flag.String("checkpoint-group", "", "explicit group label required with -checkpoint-journal")
 	flag.Parse()
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-	if err := run(ctx, *id, *peers, *client, *journal, *configuration, *peerListen); err != nil {
+	if err := run(ctx, *id, *peers, *client, *journal, *configuration, *peerListen, *checkpointPath, *checkpointGroup); err != nil {
 		slog.Error("raft peer stopped", "error", err)
 		os.Exit(1)
 	}
@@ -68,7 +71,10 @@ func members(local, spec string) (map[string]string, error) {
 	return peers, nil
 }
 
-func run(parent context.Context, id, spec, address, path string, configuration bool, peerBind string) error {
+func run(parent context.Context, id, spec, address, path string, configuration bool, peerBind, checkpointPath, checkpointGroup string) error {
+	if (checkpointPath == "") != (checkpointGroup == "") || (checkpointPath != "" && !configuration) {
+		return fmt.Errorf("checkpoint journal requires configuration mode and an explicit checkpoint group")
+	}
 	peers, err := members(id, spec)
 	if err != nil {
 		return err
@@ -97,6 +103,25 @@ func run(parent context.Context, id, spec, address, path string, configuration b
 	if err != nil {
 		return err
 	}
+	host := raftnet.New(node, peers)
+	if configuration {
+		if checkpointPath != "" {
+			publications, err := checkpoint.Open(checkpointPath, checkpoint.Identity{Group: checkpointGroup, Member: id})
+			if err != nil {
+				return err
+			}
+			defer publications.Close()
+			host, err = raftnet.NewConfigurationWithCheckpoints(node, peers, publications)
+			if err != nil {
+				return err
+			}
+		} else {
+			host, err = raftnet.NewConfiguration(node, peers)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	origin, _ := url.Parse(peers[id])
 	if peerBind == "" {
 		peerBind = origin.Host
@@ -116,13 +141,6 @@ func run(parent context.Context, id, spec, address, path string, configuration b
 	defer clientListener.Close()
 	ctx, cancel := context.WithCancel(parent)
 	defer cancel()
-	host := raftnet.New(node, peers)
-	if configuration {
-		host, err = raftnet.NewConfiguration(node, peers)
-		if err != nil {
-			return err
-		}
-	}
 	server := func(handler http.Handler) *http.Server {
 		return &http.Server{Handler: handler, ReadHeaderTimeout: 2 * time.Second, ReadTimeout: 6 * time.Second, WriteTimeout: 8 * time.Second, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 << 10, BaseContext: func(net.Listener) context.Context { return ctx }}
 	}

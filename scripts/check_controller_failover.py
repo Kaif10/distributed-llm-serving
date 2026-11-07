@@ -24,6 +24,7 @@ from check_real_pool import service
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/controller-failover/results.json")
+    parser.add_argument("--checkpoints", action="store_true", help="capture the peer that is restarted after quorum loss")
     args = parser.parse_args()
     output = args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -102,6 +103,8 @@ def main():
             for i, node in enumerate(ids):
                 command = [str(ROOT / "bin/raftpeer.exe"), "-configuration", "-id", node, "-peers", members,
                            "-client-listen", f"127.0.0.1:{ports[i+3]}", "-journal", str(Path(temporary) / f"{node}.wal")]
+                if args.checkpoints:
+                    command += ["-checkpoint-journal", str(Path(temporary) / f"{node}.checkpoint.wal"), "-checkpoint-group", "real-failover-check"]
                 commands[node] = command
                 result["commands"].append(command)
                 processes[node] = stack.enter_context(service(command, clients[node] + "/status", output.parent / f"peer-{node}.log"))
@@ -132,11 +135,16 @@ def main():
             assert put(replacement, "resume", 2, False)["revision"] == 3
             wait_for(lambda: config_when(lambda s: s["fresh"] and s["applied_revision"] == 3), "resume applied")
             result["generation_after_failover"] = measure(gateway, dict(payload, max_tokens=16))
+            other = next(node for node in ids if node not in (initial, replacement))
+            if args.checkpoints:
+                wait_for(lambda: get_json(clients[other], "/status")["configuration"]["revision"] == 3, "checkpoint peer applies revision 3")
+                req = urllib.request.Request(clients[other] + "/checkpoint", data=b"", method="POST")
+                with urllib.request.urlopen(req, timeout=5) as captured:
+                    result["captured_checkpoint"] = json.load(captured)
             connection, response = open_stream(gateway, dict(payload, max_tokens=1536, ignore_eos=True))
             try:
                 stream = first_content(response)
                 assert get_json(admin, "/workers")[0]["inflight"] == 1
-                other = next(node for node in ids if node not in (initial, replacement))
                 processes[other].kill()
                 processes[other].wait(timeout=5)
                 result["expired"] = wait_for(lambda: config_when(lambda s: not s["fresh"]), "view expires without majority")
@@ -161,6 +169,12 @@ def main():
             wait_for(lambda: not get_json(admin, "/workers")[0]["inflight"], "active stream released")
             result["idle_generation_when_expired"] = rejected("/v1/chat/completions", payload)
             processes[other] = stack.enter_context(service(commands[other], clients[other] + "/status", output.parent / f"peer-{other}-restarted.log"))
+            if args.checkpoints:
+                expected = result["captured_checkpoint"]["published"]["position"]["index"]
+                def restored_checkpoint():
+                    state = get_json(clients[other], "/status")
+                    return state if state["checkpoint"]["recovery_index"] == expected and not state["checkpoint"]["recovery_pending"] else None
+                result["restored_checkpoint_peer"] = wait_for(restored_checkpoint, "checkpoint prefix installed after commitment")
             result["after_quorum_recovery"] = wait_for(lambda: config_when(lambda s: s["fresh"] and s["applied_revision"] == 3), "same-revision reconfirmation")
             result["generation_after_recovery"] = measure(gateway, dict(payload, max_tokens=16))
             result["controller_statuses"] = {node: get_json(clients[node], "/status") for node, proc in processes.items() if proc.poll() is None}

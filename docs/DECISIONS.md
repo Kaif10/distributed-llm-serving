@@ -18,11 +18,15 @@ add implementation and maintenance cost; their existence does not establish that
 operational deployment should replace an established implementation. Same-host correctness
 checks do not establish multi-host resilience or large-scale inference capacity.
 
-The next bounded change is controller-owned checkpoint capture and recovery while retaining
+The bounded integration gate is controller-owned checkpoint capture and recovery while retaining
 the full Raft log. Completion requires an actual controller restart to recover the same
 configuration and historical retry results as full replay, reject invalid boundaries, and
 preserve gateway freshness behavior. Do not add another independent subsystem as a substitute
 for closing this integration loop.
+
+Status: [increment 22](learning/22-controller-checkpoint-recovery.md) closes this gate with
+opt-in controller recovery, full-replay comparison, and real-model gateway checks. Log
+retention and snapshot transfer remain separate work.
 
 Before extending retention or claiming a capacity improvement, record the current limits
 and the failure being removed. Prototype bounds are resource guardrails, not evidence of

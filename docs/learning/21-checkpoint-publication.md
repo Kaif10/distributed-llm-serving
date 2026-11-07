@@ -1,5 +1,8 @@
 # Increment 21: publish and select checkpoints across process crashes
 
+This records the publication-store introduction. [Increment 22](22-controller-checkpoint-recovery.md)
+connects it to opt-in controller capture/recovery; the journal contracts below still apply.
+
 The checkpoint codec validates one application image. Recovery also needs to know which
 image was published, whether a newer append finished, and whether the file belongs to the
 expected group/member. `internal/checkpoint` now provides that publication store. It is a

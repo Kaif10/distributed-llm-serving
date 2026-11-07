@@ -25,13 +25,14 @@ Gateways can consume its drain snapshots for a fixed worker pool, report applied
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
 serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction; write retention, live checkpoint installation,
+log remains bounded without compaction; write retention, lagging-peer snapshot transfer,
 and dynamic membership require further work.
 
 A versioned application checkpoint preserves configuration plus successful request-ID
 history. A separate publication journal selects synced images across process crashes, with
-identity/history checks and idempotent retries. Live controller integration, snapshot
-installation, and compaction remain pending.
+identity/history checks and idempotent retries. Configuration peers can opt into manual
+checkpoint capture and checkpoint-plus-suffix recovery, verified against retained-prefix
+replay. The full log is still required; network snapshot transfer and compaction remain pending.
 
 ## Start here
 
@@ -60,6 +61,7 @@ installation, and compaction remain pending.
 - [Controller failover](docs/learning/19-controller-failover.md): bounded peer polling, stale-view expiry, and real-model recovery.
 - [Application checkpoints](docs/learning/20-application-checkpoints.md): preserve retry results before log retention.
 - [Checkpoint publication](docs/learning/21-checkpoint-publication.md): sync-before-selection, process-kill recovery, and uncertain retries.
+- [Controller checkpoint recovery](docs/learning/22-controller-checkpoint-recovery.md): owner capture, confirmed-prefix installation, and full-replay comparison.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

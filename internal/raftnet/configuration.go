@@ -118,32 +118,37 @@ func (h *Host) applyCommitted() (map[uint64]result, error) {
 	if h.machine == nil {
 		return nil, nil
 	}
+	skipThrough := uint64(0)
+	if h.recovery != nil {
+		if h.node.CommitIndex() < h.recovery.selection.Position.Index {
+			return nil, nil
+		}
+		if _, err := h.verifyCheckpoint(h.recovery.selection); err != nil {
+			return nil, err
+		}
+		h.machine = h.recovery.machine
+		h.applied = h.recovery.selection.Position.Index
+		skipThrough = h.applied
+		h.checkpointStatus.RecoveryIndex = h.applied
+		h.checkpointStatus.RecoveryPending = false
+		h.recovery = nil
+	}
 	entries, err := h.node.DrainCommitted()
 	if err != nil {
 		return nil, err
 	}
 	results := make(map[uint64]result, len(entries))
 	for _, entry := range entries {
+		if entry.Index <= skipThrough {
+			continue
+		}
 		if entry.Index != h.applied+1 {
 			return nil, fmt.Errorf("noncontiguous application at %d", entry.Index)
 		}
 		if !entry.Noop {
-			command, err := decodeConfiguration(entry.Data)
+			r, err := applyConfiguration(h.machine, entry)
 			if err != nil {
-				return nil, fmt.Errorf("committed configuration index %d: %w", entry.Index, err)
-			}
-			state := h.machine.Snapshot()
-			if command.Kind == "update" {
-				state, err = h.machine.Apply(*command.Update)
-			}
-			r := result{Configuration: &state, Code: 200}
-			if err != nil {
-				r.Configuration = nil
-				r.Err = err.Error()
-				r.Code = 400
-				if errors.Is(err, control.ErrConflict) {
-					r.Code = 409
-				}
+				return nil, err
 			}
 			results[entry.Index] = r
 		}
@@ -152,7 +157,41 @@ func (h *Host) applyCommitted() (map[uint64]result, error) {
 	return results, nil
 }
 
+func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, error) {
+	command, err := decodeConfiguration(entry.Data)
+	if err != nil {
+		return result{}, fmt.Errorf("committed configuration index %d: %w", entry.Index, err)
+	}
+	state := machine.Snapshot()
+	if command.Kind == "update" {
+		state, err = machine.Apply(*command.Update)
+	}
+	r := result{Configuration: &state, Code: 200}
+	if err != nil {
+		r.Configuration = nil
+		r.Err = err.Error()
+		r.Code = 400
+		if errors.Is(err, control.ErrConflict) {
+			r.Code = 409
+		}
+	}
+	return r, nil
+}
+
 func (h *Host) configurationRoutes(mux *http.ServeMux) {
+	if h.checkpoints != nil {
+		mux.HandleFunc("POST /checkpoint", func(w http.ResponseWriter, r *http.Request) {
+			r.Body = http.MaxBytesReader(w, r.Body, 1)
+			body, err := io.ReadAll(r.Body)
+			if err != nil || len(body) != 0 {
+				http.Error(w, "checkpoint capture requires an empty body", 400)
+				return
+			}
+			ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+			defer cancel()
+			write(w, h.call(ctx, event{capture: true}))
+		})
+	}
 	submit := func(w http.ResponseWriter, r *http.Request, command configurationCommand) {
 		data, err := json.Marshal(command)
 		if err != nil || len(data) > 64<<10 {

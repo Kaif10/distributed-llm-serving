@@ -33,6 +33,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("binary", type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--checkpoints", action="store_true", help="capture/recover one peer; compare with full-replay peers")
     args = parser.parse_args()
     binary = args.binary.resolve()
     ids = ["a", "b", "c"]
@@ -87,9 +88,12 @@ def main():
         def start(node):
             log = open(root / f"{node}.log", "ab")
             files.append(log)
-            processes[node] = subprocess.Popen([str(binary), "-configuration", "-id", node, "-peers", peers,
+            command = [str(binary), "-configuration", "-id", node, "-peers", peers,
                 "-peer-listen", f"127.0.0.1:{backend[node]}", "-client-listen", f"127.0.0.1:{clients[node]}",
-                "-journal", str(root / f"{node}.wal")], stdout=log, stderr=log)
+                "-journal", str(root / f"{node}.wal")]
+            if args.checkpoints:
+                command += ["-checkpoint-journal", str(root / f"{node}.checkpoint.wal"), "-checkpoint-group", "replicated-config-check"]
+            processes[node] = subprocess.Popen(command, stdout=log, stderr=log)
 
         def stop(node):
             process = processes.pop(node)
@@ -201,6 +205,12 @@ def main():
             expected = next(state for code, state in outcomes if code == 200)
             events.append({"retry_original_result": retried, "concurrent_CAS": outcomes})
             wait_for(lambda: converged(3), "CAS application")
+            if args.checkpoints:
+                capture_node = ids[1]
+                code, capture = request(clients[capture_node], "/checkpoint", "POST")
+                assert code == 200 and capture["published"]["generation"] == 1, (code, capture)
+                selected_index = capture["published"]["position"]["index"]
+                events.append({"captured_peer": capture_node, "checkpoint": capture})
             # Force recovery of both application and successful request-ID results.
             for node in ids:
                 stop(node)
@@ -208,6 +218,18 @@ def main():
                 start(node)
             current = wait_for(leader, "full restart leader")
             final = wait_for(lambda: converged(3), "full replay")
+            if args.checkpoints:
+                recovered = final[capture_node]["checkpoint"]
+                assert recovered["recovery_index"] == selected_index and recovered["recovery_verified"] and not recovered["recovery_pending"], recovered
+                baseline = ids[0]
+                assert final[baseline]["checkpoint"]["recovery_index"] == 0, "baseline did not use full replay"
+                code, full_image = request(clients[baseline], "/checkpoint", "POST")
+                assert code == 200, (code, full_image)
+                code, restored_image = request(clients[capture_node], "/checkpoint", "POST")
+                assert code == 200, (code, restored_image)
+                assert full_image["published"]["position"] == restored_image["published"]["position"], (full_image, restored_image)
+                assert full_image["published"]["sha256"] == restored_image["published"]["sha256"], "checkpoint/suffix and full replay retry tables diverged"
+                events.append({"restored_checkpoint": recovered, "full_replay_image": full_image, "restored_image": restored_image})
             code, state = request(clients[current], "/config")
             assert (code, state) == (200, expected), (code, state)
             code, state = request(clients[current], "/config", "PUT", initial)

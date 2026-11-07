@@ -10,8 +10,8 @@ prefix affinity verified with real engines. A fixed-arrival experiment now compa
 policies at two offered rates with a changing hot document and explicit latency objectives.
 Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
 now includes peer-process replication, configuration application, successful request-ID replay,
-fresh quorum reads, and fixed-list gateway controller failover. Live checkpoint installation,
-log retention, broader
+fresh quorum reads, fixed-list gateway controller failover, and opt-in application
+checkpoint capture/recovery. Log retention, network snapshot transfer, and broader
 workload comparisons, and milestones 7 through 9 remain outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
@@ -203,16 +203,20 @@ the last complete valid generation, fences uncertain I/O, and preserves successf
 Actual child-process kills verify partial, complete uncertain, synced, and acknowledged
 boundaries; see [checkpoint publication](learning/21-checkpoint-publication.md).
 
-Next: controller-owned committed-prefix capture and selected-checkpoint validation/recovery
-while retaining the full Raft log. Offset-aware log storage, lagging-peer snapshot installation,
-and publication-journal rollover follow before continuous networked compaction. Write growth
-still reaches the existing log bound; live serving recovery does not consume checkpoints yet.
+Controller-owned checkpoint capture and recovery are now connected behind explicit flags.
+The three-peer restart scenario compares checkpoint-plus-suffix and full replay using complete
+application-image hashes; a real-model run checks gateway expiry and service restoration after
+a checkpoint-backed peer restart. Invalid boundaries/history fail closed. The full Raft log
+is retained for verification; see [controller checkpoint recovery](learning/22-controller-checkpoint-recovery.md).
 
-Scope gate: finish the controller recovery integration before adding independent subsystems.
-Require a real restart comparison against full replay, preserved historical retry results,
-invalid-boundary rejection, and unchanged gateway freshness behavior. Keep one short request/
-failure walkthrough for the complete path. Measure limits before claiming capacity benefits;
-see [decision 008](DECISIONS.md#008-finish-recovery-integration-before-expanding-scope).
+Next: measure the current write/capacity and recovery limits before extending retention.
+Offset-aware log storage, lagging-peer snapshot installation, and publication-journal rollover
+remain prerequisites for continuous networked compaction. No log prefix is removed yet.
+
+Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
+The integration closes the prior standalone-preparation loop; new components still require
+an observable failure or measured constraint, as specified by
+[decision 008](DECISIONS.md#008-finish-recovery-integration-before-expanding-scope).
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
@@ -256,6 +260,15 @@ Evidence: a reproducible demo, configuration-change correctness checks, and a re
 serving behavior during failures. Keep same-machine process failures separate from multi-host
 network/storage failures. Document authentication and deployment requirements before exposing
 anything outside local development.
+
+Final recording deliverable: capture a complete working-demo video and link it from the
+README in the private repository. Use actual commands/output from real model generation,
+gateway routing/cancellation/admission, controller leader loss, quorum loss and stale-view
+expiry, and checkpoint-backed restart with historical retry results. Show the topology and
+explicitly label the single-laptop setup. Keep the source commit, setup commands, raw capture,
+and recorded outcomes alongside the video. Captions explain each decision/failure; disclose
+any edited or accelerated playback. The prior repository's captured-run demos provide a
+presentation reference. Record after the chosen end-to-end scope works and its checks pass.
 
 Identify a user-confirmed improvement or document that existing systems are sufficient and
 select a concrete upstream issue. Publish only measured claims, including limitations.
