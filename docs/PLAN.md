@@ -183,15 +183,14 @@ transport and raw quorum-commit acknowledgements now run in separate peer proces
 see [the process walkthrough](learning/16-raft-processes.md). Configuration-machine
 application, successful request-ID retries/replay, and committed read barriers are now
 implemented by `raftpeer -configuration`; see [the configuration walkthrough](learning/17-replicated-configuration.md).
-Gateway leader discovery/failover, sustained read/log retention, and durable application
-checkpoints remain outstanding. Each read currently consumes a synced log entry.
+Fresh reads now use term-scoped majority confirmations plus local application rather
+than a new log entry per poll; see [read quorums](learning/18-read-quorum.md). Targeted
+HTTP tests and the three-peer relay scenario check unchanged journal/log sizes and
+stale-leader rejection. Historical read-barrier entries remain replayable.
 
-Next increment: [read quorum plan](learning/18-read-quorum.md). Its core protocol and
-targeted tests are implemented: distinct current-term majority confirmations, gated on
-a current-term commit. GET `/config` still uses log barriers. Next connect the runtime
-to the new protocol plus local application, and verify unchanged journals during repeated
-HTTP reads before gateway controller-peer discovery/failover. Retention for writes and
-durable application checkpoints follow separately.
+Next: gateway controller-peer discovery/failover with bounded configuration view age.
+Write/retry/conflict retention, complete application checkpoints, and compaction follow
+separately. The read-path change does not remove the write-side log capacity bound.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded

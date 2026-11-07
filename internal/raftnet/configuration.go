@@ -15,12 +15,47 @@ import (
 )
 
 // Versioned commands keep configuration logs distinct from the raw command demo.
-// A read barrier is an ordinary current-term proposal. Its applied snapshot is
-// returned only after the barrier commits; no lease or local leadership shortcut.
+// Legacy read-barrier commands remain replayable. New HTTP reads use fresh
+// current-term quorum confirmations and wait for the captured prefix to apply.
 type configurationCommand struct {
 	Version int             `json:"version"`
 	Kind    string          `json:"kind"`
 	Update  *control.Update `json:"update,omitempty"`
+}
+
+type readWaiter struct {
+	ctx   context.Context
+	token raft.ReadToken
+	reply chan result
+}
+
+// Called only by the owner, after applying every newly committed entry. A read
+// requires BOTH a fresh term-scoped quorum and application through its index.
+func (h *Host) finishReads(reads []readWaiter) ([]readWaiter, error) {
+	kept := reads[:0]
+	for _, w := range reads {
+		if w.ctx.Err() != nil {
+			h.node.ForgetRead(w.token)
+			continue
+		}
+		ready, err := h.node.ReadReady(w.token)
+		if errors.Is(err, raft.ErrStorage) {
+			return nil, err
+		}
+		if err != nil {
+			h.node.ForgetRead(w.token)
+			w.reply <- result{Err: "read leadership changed; freshness unconfirmed", Code: 503}
+			continue
+		}
+		if ready && h.applied >= w.token.Index {
+			state := h.machine.Snapshot()
+			h.node.ForgetRead(w.token)
+			w.reply <- result{Configuration: &state, Code: 200}
+			continue
+		}
+		kept = append(kept, w)
+	}
+	return kept, nil
 }
 
 func decodeConfiguration(data []byte) (configurationCommand, error) {
@@ -129,7 +164,9 @@ func (h *Host) configurationRoutes(mux *http.ServeMux) {
 		write(w, h.call(ctx, event{data: data}))
 	}
 	mux.HandleFunc("GET /config", func(w http.ResponseWriter, r *http.Request) {
-		submit(w, r, configurationCommand{Version: 1, Kind: "read"})
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		write(w, h.call(ctx, event{read: true}))
 	})
 	mux.HandleFunc("PUT /config", func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 64<<10)

@@ -24,8 +24,9 @@ A durable controller persists desired configuration with CAS and idempotent retr
 Gateways can consume its drain snapshots for a fixed worker pool, report applied revisions,
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
-serves reads through committed barriers. It has a bounded log without compaction; sustained
-polling, gateway leader failover, and dynamic membership require further work.
+serves fresh reads through majority confirmations without growing the journal. The write
+log remains bounded without compaction; gateway leader failover, write retention, and
+dynamic membership require further work.
 
 ## Start here
 
@@ -49,7 +50,8 @@ polling, gateway leader failover, and dynamic membership require further work.
 - [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
 - [Raft log replication](docs/learning/15-raft-replication.md): durable proposals, conflict repair, and quorum commit.
 - [Raft peer processes](docs/learning/16-raft-processes.md): bounded HTTP transport, leader loss, and journal recovery.
-- [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and stale-leader read protection.
+- [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and the initial read contract.
+- [Read quorums](docs/learning/18-read-quorum.md): fresh reads without per-poll journal growth.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

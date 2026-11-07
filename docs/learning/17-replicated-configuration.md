@@ -1,5 +1,9 @@
 # Increment 17: commit, apply, and read fleet configuration
 
+This records the initial replicated read implementation. [Increment 18](18-read-quorum.md)
+replaces new per-read journal barriers with fresh quorum confirmations; old barriers remain
+replayable. The update and retry contracts below still apply.
+
 Raw committed bytes do not yet change the worker configuration. This increment adds
 `raftpeer -configuration`: a replicated configuration API backed by the existing
 deterministic `control.Machine`. The original `cmd/controller` remains the separate

@@ -1,23 +1,26 @@
-# Increment 18 plan: fresh configuration reads without journal growth
+# Increment 18: fresh configuration reads without journal growth
 
-Status: the core protocol and its targeted tests are implemented. GET `/config` still
-uses increment 17's committed journal barriers. Runtime/API integration and the repeated-
-read process check are the next slice; no HTTP read-cost reduction is claimed yet.
+GET `/config` now uses the core's fresh majority confirmation instead of appending
+another read-barrier command. The owner captures a committed index after request arrival,
+waits for a distinct current-term majority, applies through that index, then snapshots
+the machine. PUT behavior and replay of old read-barrier entries are preserved.
 
 ```powershell
 go test ./internal/raft -run Read -v
+go test ./internal/raftnet -v
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/replicated_config_check.py bin/raftpeer.exe --output artifacts/replicated-config/read-quorum.json
 ```
 
-The new core API is `BeginRead`, `ReadReady`, and `ForgetRead`. Callers must serialize
-these with every other core operation and wait for local application before responding.
-The core bounds contexts to eight, retransmits unconfirmed IDs on heartbeat ticks, checks
-the current-term committed prefix, and fences higher-term or pre-restart confirmations.
+On Linux omit `.exe`. The runner uses three actual peer processes, separate journals,
+and controlled loopback HTTP relays. These are control-plane checks without LLM traffic.
+The evidence ledger records source commits and raw results.
 
 ## Problem
 
-Every configuration read currently appends a command and syncs a full log image. Polling
-eventually exhausts the 1024-entry bound despite no configuration changes. Fix this read
-cost before wiring the gateway to sustained replicated-controller polling.
+The previous read path appended a command and synced a full log image for each poll.
+That could exhaust the 1024-entry bound despite no configuration changes. A read now
+requires network confirmation and local application, without adding a command.
 
 ## Safety contract
 
@@ -37,32 +40,59 @@ cost before wiring the gateway to sustained replicated-controller polling.
 7. Read confirmations do not append entries or update the follower commit index. Normal
    log replication continues to carry log matching and commit propagation.
 
-## Implementation sequence
+## Runtime and resource lifecycle
 
-- Implemented: explicit read-probe/read-response messages and a small bounded context map
-  to the single-owner Raft core. Retransmit unconfirmed contexts on heartbeat ticks.
-- Targeted tests pass for current-term gating, distinct majority, delayed/duplicate replies, term
-  changes, restart fencing, cancellation/context bounds, and persistence failure before
-  a higher-term acknowledgement.
-- Next: change GET `/config` to wait on that protocol and local applied index. Preserve replay
-  support for old read-barrier entries and keep PUT behavior unchanged.
-- Then extend the existing three-process relay scenario: repeated fresh reads must keep log
-  length and journal file sizes unchanged; the isolated former leader must still fail
-  fresh reads while the majority can serve them.
-- Core checks run with the existing Go suite. API integration must also pass both process
-  scenarios and record a clean source commit plus repeated-read raw output before claiming
-  that HTTP reads avoid appends.
+The HTTP handler submits a read event to the same single-owner queue as proposals and
+protocol messages. The owner first applies any newly committed entries, then calls
+`BeginRead`. Followers, fenced nodes, and leaders whose current-term no-op has not yet
+committed cannot start a read; the HTTP response is 503. Retry after leadership settles.
+There is no automatic forwarding or leader discovery yet.
+
+The core's `ReadReady` checks are necessary but insufficient on their own: the owner also
+requires `applied_index >= token.Index`. It captures a cloned configuration snapshot only
+when both conditions hold. Diagnostic `/status` remains local and potentially stale.
+The existing leader no-op establishes commitment after restart before this path can serve.
+
+There are at most eight live read contexts and eight runtime read waiters, within the
+existing eight-handler client listener admission limit. Cancellation removes a waiter and
+calls `ForgetRead` on the next owner completion/tick. Success, leadership loss, and shutdown
+also release contexts. An isolated peer with a previously committed current-term entry
+can start a read but cannot finish its quorum check; it returns HTTP 504 at the deadline.
+
+No disk write is needed to confirm an unchanged current term. Observing a newer term still
+requires normal durable term/vote handling before replying. Read probes do not replace log
+matching, replication acknowledgements, or commit propagation. Existing bounded sender queues
+may drop probes; the core retries live unconfirmed contexts on heartbeat ticks.
+
+## Verification
+
+- Core counterexamples cover current-term commit gating, distinct quorum counting,
+  delayed/wrong-context replies, terms/restart, context bounds, and persistence failure.
+- HTTP tests complete 1,100 reads through a single-member configuration runtime while
+  checking unchanged journal length and a one-entry log. This exceeds the entry limit
+  that would have stopped the former read implementation.
+- A targeted application test holds the machine behind its captured read index and
+  verifies that even an already-confirmed read cannot respond. After ordered application,
+  it sees the update and successfully skips an older persisted read-barrier command.
+- Ten network cancellations exceed the eight-context bound and verify that both runtime
+  waiters and core tokens are released. A higher-term vote request promptly fails a live
+  read rather than allowing it to finish under old leadership.
+- The three-process relay scenario serves 128 sequential reads without configuration
+  updates, checking all journal byte counts, log entries, terms, and pending read counts
+  before/after. It then isolates the former leader and verifies that a newer majority's
+  configuration is readable while the old leader cannot claim freshness. Existing CAS,
+  successful retry replay, and full-restart checks remain part of the same run.
+
+These are sampled local checks, not a formal linearizability proof or a throughput
+benchmark. Unchanged journal lengths/logs are the measured read-growth evidence; no
+filesystem syscall tracing or physical power-loss test is included.
 
 ## Boundaries and acceptance
 
-The planned HTTP integration will remove reads as a source of log growth. Writes, retries, conflicts, and leader
-no-ops still need retention/compaction. No general storage-capacity or throughput claim
+Reads no longer consume log entries. Writes, retries, conflicts, and leader no-ops
+still need retention/compaction. No general storage-capacity or throughput claim
 follows. The transport, fixed membership, trusted-loopback assumptions, and lack of
 gateway leader discovery remain unchanged.
 
-Integration acceptance: the targeted core counterexamples fail unsafe shortcuts, the existing
-configuration/recovery behavior remains valid, sustained reads in the declared small
-same-host check do not append/sync journal records, and a minority cannot claim freshness.
-
-After API integration: gateway controller-peer selection/failover with bounded view age,
+Next: gateway controller-peer selection/failover with bounded view age,
 then checkpoint/log retention with a complete successful-request-ID recovery contract.

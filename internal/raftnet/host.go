@@ -24,6 +24,7 @@ type Snapshot struct {
 	SendFailures  int64             `json:"send_failures"`
 	Applied       uint64            `json:"applied_index,omitempty"`
 	Configuration *control.Snapshot `json:"configuration,omitempty"`
+	PendingReads  int               `json:"pending_reads"`
 }
 type result struct {
 	State         *Snapshot
@@ -37,6 +38,7 @@ type event struct {
 	message *raft.Message
 	data    []byte
 	status  bool
+	read    bool
 	reply   chan result
 }
 type waiter struct {
@@ -112,6 +114,12 @@ func (h *Host) Run(parent context.Context) error {
 	ticker := time.NewTicker(50 * time.Millisecond)
 	defer ticker.Stop()
 	var pending []waiter
+	var reads []readWaiter
+	defer func() {
+		for _, w := range reads {
+			h.node.ForgetRead(w.token)
+		}
+	}()
 	emit := func(messages []raft.Message) {
 		for _, m := range messages {
 			if queue, ok := h.out[m.To]; ok {
@@ -155,7 +163,8 @@ func (h *Host) Run(parent context.Context) error {
 			kept = append(kept, w)
 		}
 		pending = kept
-		return nil
+		reads, err = h.finishReads(reads)
+		return err
 	}
 	for {
 		select {
@@ -175,7 +184,7 @@ func (h *Host) Run(parent context.Context) error {
 				continue
 			}
 			if e.status {
-				state := &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load(), Applied: h.applied}
+				state := &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load(), Applied: h.applied, PendingReads: len(reads)}
 				if h.machine != nil {
 					configuration := h.machine.Snapshot()
 					state.Configuration = &configuration
@@ -207,6 +216,26 @@ func (h *Host) Run(parent context.Context) error {
 			}
 			if err := complete(); err != nil {
 				return err
+			}
+			if e.read {
+				if h.machine == nil || len(reads) >= 8 {
+					e.reply <- result{Err: "configuration reads unavailable or full", Code: 503}
+					continue
+				}
+				token, messages, err := h.node.BeginRead()
+				if err != nil {
+					if errors.Is(err, raft.ErrStorage) {
+						return err
+					}
+					e.reply <- result{Err: err.Error(), Code: 503}
+					continue
+				}
+				reads = append(reads, readWaiter{ctx: e.ctx, token: token, reply: e.reply})
+				emit(messages)
+				if err := complete(); err != nil {
+					return err
+				}
+				continue
 			}
 			if len(pending) >= 8 {
 				e.reply <- result{Err: "proposal waiters full", Code: 503}

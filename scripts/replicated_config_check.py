@@ -143,7 +143,22 @@ def main():
             first = wait_for(leader, "initial leader")
             code, original = request(clients[first], "/config", "PUT", initial)
             assert code == 200 and original == {"revision": 1, "workers": workers}, (code, original)
-            wait_for(lambda: converged(1), "initial application")
+            before_reads = wait_for(lambda: converged(1), "initial application")
+            sizes_before = {node: (root / f"{node}.wal").stat().st_size for node in ids}
+            read_count = 128
+            for _ in range(read_count):
+                code, snapshot = request(clients[first], "/config")
+                assert (code, snapshot) == (200, original), (code, snapshot)
+            after_reads = wait_for(lambda: converged(1), "reads leave application converged")
+            sizes_after = {node: (root / f"{node}.wal").stat().st_size for node in ids}
+            assert sizes_before == sizes_after, (sizes_before, sizes_after)
+            assert all(after_reads[node]["log"] == before_reads[node]["log"] and
+                       after_reads[node]["node"]["Term"] == before_reads[node]["node"]["Term"] and
+                       after_reads[node]["pending_reads"] == 0 for node in ids), "reads grew log, changed term, or leaked waiters"
+            events.append({"repeated_reads": read_count, "journal_bytes_before": sizes_before,
+                           "journal_bytes_after": sizes_after,
+                           "log_entries_before": {node: len(before_reads[node]["log"]) for node in ids},
+                           "log_entries_after": {node: len(after_reads[node]["log"]) for node in ids}})
             events.append({"initial_leader": first, "initial_result": original})
             with partition_lock:
                 isolated.add(first)
@@ -219,7 +234,7 @@ def main():
             report["process_logs"] = {node: (root / f"{node}.log").read_text(encoding="utf-8") if (root / f"{node}.log").exists() else "" for node in ids}
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
-    print(f"PASS: commit/apply, stale-leader read blocked, CAS, retry replay, full restart; {args.output}")
+    print(f"PASS: reads leave journals unchanged, commit/apply, stale-leader read blocked, CAS, retry replay, full restart; {args.output}")
 
 
 if __name__ == "__main__":
