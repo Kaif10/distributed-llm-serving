@@ -10,7 +10,7 @@ prefix affinity verified with real engines. A fixed-arrival experiment now compa
 policies at two offered rates with a changing hot document and explicit latency objectives.
 Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
 now includes peer-process replication, configuration application, successful request-ID replay,
-and committed read barriers. Gateway leader failover, log retention/checkpoints, broader
+fresh quorum reads, and fixed-list gateway controller failover. Log retention/checkpoints, broader
 workload comparisons, and milestones 7 through 9 remain outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
@@ -188,9 +188,14 @@ than a new log entry per poll; see [read quorums](learning/18-read-quorum.md). T
 HTTP tests and the three-peer relay scenario check unchanged journal/log sizes and
 stale-leader rejection. Historical read-barrier entries remain replayable.
 
-Next: gateway controller-peer discovery/failover with bounded configuration view age.
-Write/retry/conflict retention, complete application checkpoints, and compaction follow
-separately. The read-path change does not remove the write-side log capacity bound.
+Gateway failover is implemented for a configured list of controller client origins, with
+one bounded poll-cycle budget, successful-source preference, and unchanged view-age
+expiration. A real CPU model check covers leader death, replicated drain/resume, quorum
+loss during an active stream, and same-revision recovery; see [controller failover](learning/19-controller-failover.md).
+
+Next: design and validate a complete application checkpoint containing configuration and
+successful request-ID results before log compaction/retention. Write/retry/conflict growth
+and leader no-ops still reach the log bound; public snapshots alone are insufficient.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded

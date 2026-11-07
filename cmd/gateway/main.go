@@ -26,8 +26,9 @@ func main() {
 	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
 	admin := flag.String("admin-listen", "", "optional loopback-only administration address")
 	controller := flag.String("controller", "", "optional controller origin for durable drain settings")
+	controllers := flag.String("controllers", "", "optional comma-separated controller peer origins from one replicated group")
 	configPoll := flag.Duration("config-poll", 500*time.Millisecond, "controller polling interval")
-	configTimeout := flag.Duration("config-timeout", time.Second, "controller fetch timeout")
+	configTimeout := flag.Duration("config-timeout", time.Second, "total controller poll-cycle timeout, shared across peer attempts")
 	configAge := flag.Duration("config-max-age", 5*time.Second, "maximum age of a confirmed controller view")
 	healthPath := flag.String("health-path", "/health", "worker readiness probe path")
 	healthInterval := flag.Duration("health-interval", time.Second, "delay between worker probes")
@@ -38,6 +39,10 @@ func main() {
 	defer stop()
 	if *backend != "" && *backends != "" {
 		slog.Error("use either -backend or -backends")
+		os.Exit(1)
+	}
+	if *controller != "" && *controllers != "" {
+		slog.Error("use either -controller or -controllers")
 		os.Exit(1)
 	}
 	var origins []string
@@ -51,6 +56,11 @@ func main() {
 	}
 	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit}
 	config := gateway.ControllerOptions{Origin: *controller, Interval: *configPoll, Timeout: *configTimeout, MaxAge: *configAge}
+	if *controllers != "" {
+		for _, origin := range strings.Split(*controllers, ",") {
+			config.Origins = append(config.Origins, strings.TrimSpace(origin))
+		}
+	}
 	if err := run(ctx, *address, *admin, options, *timeout, *healthInterval, *healthTimeout, *healthPath, config); err != nil {
 		slog.Error("gateway stopped", "error", err)
 		os.Exit(1)
@@ -73,7 +83,7 @@ func run(ctx context.Context, address, admin string, options gateway.PoolOptions
 		return err
 	}
 	defer stopHealth()
-	if config.Origin != "" {
+	if config.Origin != "" || len(config.Origins) > 0 {
 		stopConfig, err := handler.StartController(ctx, config)
 		if err != nil {
 			return err

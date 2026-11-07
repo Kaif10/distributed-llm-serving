@@ -14,8 +14,8 @@ slot release on disconnect and records a small sequential latency baseline. A tw
 experiment checks routing and overload against real models. Active health probes exclude
 unavailable workers, and a separate local admin API drains assignments while streams finish.
 Real-model experiments cover drain, worker process loss, and recovery. A separate replicated
-configuration API now supports committed updates and quorum-backed reads; gateway discovery
-across controller leaders remains planned. A repeated-document experiment measures real prefix-cache reuse against disabled
+configuration API supports committed updates and quorum-backed reads; gateways can poll a
+fixed peer list and switch controller sources after leadership changes. A repeated-document experiment measures real prefix-cache reuse against disabled
 caching and the existing routing policies; its evidence includes an unresolved timeout from
 an interrupted run. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
@@ -25,8 +25,8 @@ Gateways can consume its drain snapshots for a fixed worker pool, report applied
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
 serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction; gateway leader failover, write retention, and
-dynamic membership require further work.
+log remains bounded without compaction; write retention, complete application checkpoints,
+and dynamic membership require further work.
 
 ## Start here
 
@@ -52,6 +52,7 @@ dynamic membership require further work.
 - [Raft peer processes](docs/learning/16-raft-processes.md): bounded HTTP transport, leader loss, and journal recovery.
 - [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and the initial read contract.
 - [Read quorums](docs/learning/18-read-quorum.md): fresh reads without per-poll journal growth.
+- [Controller failover](docs/learning/19-controller-failover.md): bounded peer polling, stale-view expiry, and real-model recovery.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation
@@ -91,7 +92,7 @@ Application -> gateway -> inference servers running real model weights
                   |
                   +-- local view of versioned fleet configuration
                                       ^
-                           replicated control plane (gateway failover pending)
+                           replicated control plane (fixed membership)
 ```
 
 Start with static configuration and one backend. Add multiple workers, bounded admission,

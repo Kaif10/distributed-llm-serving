@@ -5,8 +5,9 @@ gateway to a statically configured worker pool, with per-worker local admission 
 Both policies have been checked against two pinned llama.cpp CPU inference servers running
 SmolLM2-135M. Health probes, draining, and consumption of single-controller snapshots are
 implemented. A separate `raftpeer -configuration` API now applies replicated updates and
-serves fresh quorum-confirmed reads after local application. Gateway discovery across
-controller leaders, write retention, and compaction remain pending. The drain discussion describes the fleet-wide target.
+serves fresh quorum-confirmed reads after local application. Gateways can fail over reads
+across a configured list of controller peers while bounding view age. Write retention,
+complete checkpoints, and compaction remain pending. The drain discussion describes the fleet-wide target.
 
 ```mermaid
 flowchart LR
@@ -24,8 +25,9 @@ Validate and bound the request, acquire admission capacity, select a compatible 
 forward the stream, and release capacity on every completion or failure path. Generation
 uses the gateway's local configuration view. Prompts and generated tokens never enter Raft.
 
-Initially one gateway uses static configuration. Multiple gateways and replicated
-configuration are separate milestones, so their coordination costs can be measured.
+A gateway may use static configuration, one controller, or a fixed list of replicated
+controller origins. Controller polling stays off the generation path. Multiple gateways
+and broader coordination/capacity experiments remain separate milestones.
 
 ## State and guarantees
 
