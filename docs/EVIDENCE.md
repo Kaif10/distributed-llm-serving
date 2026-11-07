@@ -4,11 +4,66 @@ The serving gateway routes real-model streams across a fixed worker pool, with a
 health, draining, and controller-snapshot freshness checks. Real CPU-model experiments and
 their limitations are recorded below. The serving controller has a durable single-writer
 configuration journal. Raft elections, replication, peer-process transport, and a replicated
-configuration API with committed read barriers are implemented. Gateway leader failover,
-sustained read/log retention, checkpoints, durable scheduling, and conditional sharding remain
+configuration API with fresh quorum-confirmed reads are implemented. Reads no longer append
+log entries. Gateway leader failover, write retention, checkpoints, durable scheduling, and
+conditional sharding remain
 outstanding. Historical entries describe their original increments rather than current status.
 
-## Read-confirmation core preparation (HTTP integration pending)
+## HTTP read quorums without per-read journal growth
+
+Source: clean commit `a39e8d537ae6acb03d272dd11681b96ad5a90b43`. Reproduce:
+
+```powershell
+go test ./internal/raftnet -v
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/replicated_config_check.py bin/raftpeer.exe --output artifacts/replicated-config/read-quorum.json
+```
+
+Windows 11 amd64, Go 1.27.3, Python 3.12.7. The
+[raw transcript](results/read-quorum-a39e8d5.json) records the clean source commit, binary
+hash, invocation, per-peer log/application state, and response outcomes. This uses three
+actual peer processes and separate journals with controlled same-host HTTP relay faults.
+No inference traffic or model performance measurement is part of this increment.
+
+After B committed revision 1 and all peers applied it, 128 sequential fresh GET `/config`
+requests returned that revision without changing terms or adding entries. Journal byte
+counts remained A=620, B=550, C=620; each log stayed at two entries. All pending read counts
+were zero afterward. These are journal-length/log observations, not syscall traces or
+an inference/router throughput benchmark.
+
+B was then isolated while its client listener stayed alive. A/C elected A, committed
+revision 2, and served that newer revision. B still called itself leader but its read
+returned HTTP 504 instead of stale configuration; its isolated update also timed out
+without application. Healing, apply-time CAS, successful request-ID retries, and a full
+kill/restart remained correct in this sampled run. All peers ended at revision 3, with
+commit/applied indices both 11 and no pending reads. Followers refused fresh reads.
+
+GET now allocates a fresh term-scoped core read context after request arrival. The owner
+waits for distinct majority confirmation plus application through the captured committed
+index, then clones its machine snapshot. Current-term commit gating prevents a new leader
+from reading before re-establishing commitment. Old read-barrier commands remain replayable;
+PUT still commits/applies in log order and successful retry semantics are unchanged.
+
+Targeted tests cover 1,100 single-member HTTP reads with unchanged journal length/log,
+a confirmed read held behind local application, legacy barrier replay, ten network client
+cancellations exceeding the eight-context capacity, and live-read failure on higher-term
+leadership loss. Cancelled contexts are reclaimed by the owner; success and shutdown also
+release them. Runtime read waiters and core contexts remain bounded to eight each.
+
+Local `go test ./...`, `go vet ./...`, and `go build ./...` passed.
+[Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42409310084) passed formatting,
+vet, race tests, builds, gateway smoke checks, raw peer recovery, and the extended
+configuration read/partition/replay scenario. Local Windows race detection was not run.
+
+Limits: this removes read-driven growth, not writes/retries/conflicts/leader no-ops or the
+1024-entry/four-MiB log bound. No compaction, durable application checkpoint, gateway leader
+discovery, authentication/TLS, or multi-host/power-loss guarantee is added. A newly elected
+leader can temporarily return 503 before its current-term entry commits; a live isolated
+former leader's read can time out. The implementation uses fresh confirmations, not a
+leadership lease. The [walkthrough](learning/18-read-quorum.md) describes the failure trace
+and the next gateway-integration step. Earlier unresolved real-model timeouts are unchanged.
+
+## Historical read-confirmation core preparation
 
 The [next-increment plan](learning/18-read-quorum.md) defines a fresh majority-confirmed
 read protocol to replace per-read appends. The core now exposes `BeginRead`, `ReadReady`,
@@ -22,10 +77,10 @@ wrong-context replies, stale/unknown senders, fresh IDs for later reads, retrans
 restart/term fencing, explicit context release, context bounds, and no read acknowledgement
 after a failed higher-term persistence barrier. Core read operations leave the inspected
 log unchanged. The full local `go test ./...`, `go vet ./...`, and `go build ./...` passed.
-These are deterministic core checks using retained model storage, not a new process/network
-measurement. GET `/config` still uses committed journal barriers. HTTP/runtime integration,
+These were deterministic core checks using retained model storage, not a new process/network
+measurement. At that preparation step GET `/config` still used journal barriers. HTTP/runtime integration,
 applied-index gating, cancellation cleanup, and repeated-read journal-size evidence remain
-pending; no HTTP read-cost reduction is established by this preparation step.
+pending at that stage; the later integration and process evidence are recorded above.
 
 ## Replicated configuration application and read barriers
 
