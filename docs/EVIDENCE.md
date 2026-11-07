@@ -5,9 +5,69 @@ health, draining, and controller-snapshot freshness checks. Real CPU-model exper
 their limitations are recorded below. The serving controller has a durable single-writer
 configuration journal. Raft elections, replication, peer-process transport, and a replicated
 configuration API with fresh quorum-confirmed reads are implemented. Reads no longer append
-log entries. Gateway leader failover, write retention, checkpoints, durable scheduling, and
-conditional sharding remain
-outstanding. Historical entries describe their original increments rather than current status.
+log entries. Gateway controller-peer failover is implemented and checked with real CPU
+inference. Write retention, complete checkpoints, durable scheduling, and conditional
+sharding remain outstanding. Historical entries describe their original increments rather than current status.
+
+## Gateway controller failover with real CPU inference
+
+Source: clean commit `e39b0f91f1517ee3e5d7e193dbd358217777bae3`. Reproduce with installed
+pinned Windows assets:
+
+```powershell
+go build -o bin/gateway.exe ./cmd/gateway
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/check_controller_failover.py --output artifacts/controller-failover/run.json
+```
+
+The [raw run](results/controller-failover-e39b0f9.json) records the clean tree, source SHA,
+actual commands, executable hashes, model pins/checksum, processor/platform, streamed
+outputs, controller origins, applied revisions, expiry, and recovery observations. This
+used Windows amd64, Go 1.27.3, Python 3.12.7, 12 logical CPUs, and two llama.cpp engine
+threads. One real CPU SmolLM2-135M Q4_K_M worker ran under pinned llama.cpp b12110 alongside
+three actual Raft peers and the gateway. No worker replacement or mock inference response
+was used for this experiment; downloads and paid infrastructure were not involved.
+
+A initially supplied confirmed revision 1. After A was killed, B/C elected C, and the
+gateway switched its recorded source to C while reconfirming revision 1. The runner observed
+610 ms from initiating the kill through seeing the changed gateway source. This is one
+same-host trial, not a failover SLO or a latency benchmark. A drain committed through C
+became applied revision 2 and rejected new inference with HTTP 503. Resume revision 3
+restored generation. Real short streams completed before the failure, after failover,
+and after quorum recovery with finish reasons and `[DONE]` recorded.
+
+A real long generation (1536-token budget, `ignore_eos=true`) began before B was killed,
+leaving C without a majority. The gateway view expired at revision 3; its existing stream
+still held one reservation at expiry. Readiness returned 503. The stream subsequently
+finished normally with `finish_reason=length` and `[DONE]`; no engine error event was
+accepted by the checker. With the engine then idle and configuration still expired,
+new inference also returned 503. Restarting B from its journal restored quorum, let the
+gateway reconfirm revision 3, and allowed another complete real generation.
+
+Implementation: `-controllers` accepts 1-9 configured peer origins, exclusive with the
+legacy `-controller` option. Polls prefer the last successful source, fall back across
+configured origins on request/status/validation failure, and never follow redirects.
+One timeout budget is divided across the remaining candidates, avoiding a slow old leader
+monopolizing a cycle. Only an accepted snapshot refreshes the view, with expiry measured
+from that attempt's start. Diagnostic `controller_origin` updates with the applied snapshot.
+A failed cycle preserves the last valid view/revision/source and exposes its error.
+
+Go network tests cover a hung endpoint, follower status, successful-source preference,
+source changes, rollback rejection without freshness renewal, expiry, same-revision
+recovery, input bounds, and redirect refusal. Existing active-stream tests continue to
+pass. Local `go test ./...`, `go vet ./...`, `go build ./...`, and gateway executable smoke
+checks passed. [Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42410422086)
+passed formatting, vet, race tests, builds, gateway smoke checks, and both Raft/configuration
+process scenarios. CI's protocol/network checks are separate from this Windows real-model
+experiment; local race detection was not run.
+
+The [walkthrough](learning/19-controller-failover.md) gives the setup and failure trace.
+The list must refer to one replicated group with fresh-read semantics; cluster identity
+is not authenticated. The list and worker membership are fixed at gateway startup.
+Administrative writers still select a leader directly. There is one gateway/worker and
+one shared host/disk in this check, with no multi-host or power-loss claim. The write log
+still fills without retention/compaction; public snapshots omit successful request-ID
+recovery data. Earlier unresolved real-model timeout evidence remains unchanged.
 
 ## HTTP read quorums without per-read journal growth
 
