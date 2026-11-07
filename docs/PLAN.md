@@ -10,7 +10,8 @@ prefix affinity verified with real engines. A fixed-arrival experiment now compa
 policies at two offered rates with a changing hot document and explicit latency objectives.
 Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
 now includes peer-process replication, configuration application, successful request-ID replay,
-fresh quorum reads, and fixed-list gateway controller failover. Log retention/checkpoints, broader
+fresh quorum reads, and fixed-list gateway controller failover. Live checkpoint installation,
+log retention, broader
 workload comparisons, and milestones 7 through 9 remain outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
@@ -193,9 +194,14 @@ one bounded poll-cycle budget, successful-source preference, and unchanged view-
 expiration. A real CPU model check covers leader death, replicated drain/resume, quorum
 loss during an active stream, and same-revision recovery; see [controller failover](learning/19-controller-failover.md).
 
-Next: design and validate a complete application checkpoint containing configuration and
-successful request-ID results before log compaction/retention. Write/retry/conflict growth
-and leader no-ops still reach the log bound; public snapshots alone are insufficient.
+A versioned application checkpoint codec now preserves configuration and all retained
+successful request-ID results, with an offline file-backed checkpoint-plus-tail/full-replay
+comparison; see [application checkpoints](learning/20-application-checkpoints.md).
+
+Next: trusted, crash-safe checkpoint publication/recovery selection; then offset-aware log
+storage and lagging-peer snapshot installation before enabling networked compaction.
+Write/retry/conflict growth and leader no-ops still reach the existing log bound. Public
+snapshots alone remain insufficient; live serving recovery does not consume checkpoints yet.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded

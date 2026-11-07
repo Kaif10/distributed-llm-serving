@@ -7,7 +7,8 @@ SmolLM2-135M. Health probes, draining, and consumption of single-controller snap
 implemented. A separate `raftpeer -configuration` API now applies replicated updates and
 serves fresh quorum-confirmed reads after local application. Gateways can fail over reads
 across a configured list of controller peers while bounding view age. Write retention,
-complete checkpoints, and compaction remain pending. The drain discussion describes the fleet-wide target.
+durable checkpoint publication, live installation, and compaction remain pending. A complete
+application checkpoint codec is verified through offline journal/checkpoint recovery. The drain discussion describes the fleet-wide target.
 
 ```mermaid
 flowchart LR

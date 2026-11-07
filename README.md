@@ -25,8 +25,12 @@ Gateways can consume its drain snapshots for a fixed worker pool, report applied
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
 serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction; write retention, complete application checkpoints,
+log remains bounded without compaction; write retention, live checkpoint installation,
 and dynamic membership require further work.
+
+A versioned application checkpoint now preserves configuration plus successful request-ID
+history, verified with offline journal/checkpoint recovery. Durable publication, live Raft
+installation, and compaction remain pending.
 
 ## Start here
 
@@ -53,6 +57,7 @@ and dynamic membership require further work.
 - [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and the initial read contract.
 - [Read quorums](docs/learning/18-read-quorum.md): fresh reads without per-poll journal growth.
 - [Controller failover](docs/learning/19-controller-failover.md): bounded peer polling, stale-view expiry, and real-model recovery.
+- [Application checkpoints](docs/learning/20-application-checkpoints.md): preserve retry results before log retention.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation
