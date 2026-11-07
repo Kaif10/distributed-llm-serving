@@ -186,6 +186,13 @@ implemented by `raftpeer -configuration`; see [the configuration walkthrough](le
 Gateway leader discovery/failover, sustained read/log retention, and durable application
 checkpoints remain outstanding. Each read currently consumes a synced log entry.
 
+Next increment: [read quorum plan](learning/18-read-quorum.md). Its core protocol and
+targeted tests are implemented: distinct current-term majority confirmations, gated on
+a current-term commit. GET `/config` still uses log barriers. Next connect the runtime
+to the new protocol plus local application, and verify unchanged journals during repeated
+HTTP reads before gateway controller-peer discovery/failover. Retention for writes and
+durable application checkpoints follow separately.
+
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
 timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See

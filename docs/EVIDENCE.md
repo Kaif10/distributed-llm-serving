@@ -8,6 +8,25 @@ configuration API with committed read barriers are implemented. Gateway leader f
 sustained read/log retention, checkpoints, durable scheduling, and conditional sharding remain
 outstanding. Historical entries describe their original increments rather than current status.
 
+## Read-confirmation core preparation (HTTP integration pending)
+
+The [next-increment plan](learning/18-read-quorum.md) defines a fresh majority-confirmed
+read protocol to replace per-read appends. The core now exposes `BeginRead`, `ReadReady`,
+and `ForgetRead`, with current-term commit gating, term-scoped context IDs, distinct voter
+counting, heartbeat retransmission, and an eight-context bound. Higher-term leadership
+changes and pre-restart replies cannot validate an old read. Core readiness still requires
+the caller to wait for the captured committed prefix to be locally applied.
+
+`go test ./internal/raft -run Read -v` checks prior-term commit rejection, duplicate and
+wrong-context replies, stale/unknown senders, fresh IDs for later reads, retransmission,
+restart/term fencing, explicit context release, context bounds, and no read acknowledgement
+after a failed higher-term persistence barrier. Core read operations leave the inspected
+log unchanged. The full local `go test ./...`, `go vet ./...`, and `go build ./...` passed.
+These are deterministic core checks using retained model storage, not a new process/network
+measurement. GET `/config` still uses committed journal barriers. HTTP/runtime integration,
+applied-index gating, cancellation cleanup, and repeated-read journal-size evidence remain
+pending; no HTTP read-cost reduction is established by this preparation step.
+
 ## Replicated configuration application and read barriers
 
 Source: clean commit `e27279297cfca4e1bdac5e039f408b987aedcbcc`. Reproduce:

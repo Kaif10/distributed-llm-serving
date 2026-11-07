@@ -36,6 +36,7 @@ const (
 )
 
 type Message struct {
+	ReadID                                               uint64
 	PrevIndex, PrevTerm, LeaderCommit, Probe, MatchIndex uint64
 	Entries                                              []Entry
 	Success                                              bool
@@ -73,6 +74,8 @@ type Node struct {
 	batch                                                             int
 	next, match                                                       map[string]uint64
 	pending                                                           map[string]Message
+	reads                                                             map[uint64]*readState
+	readSequence                                                      uint64
 	id                                                                string
 	members                                                           []string
 	member                                                            map[string]bool
@@ -157,6 +160,7 @@ func (n *Node) heartbeats() []Message {
 	return messages
 }
 func (n *Node) elected() ([]Message, error) {
+	n.reads = nil
 	n.role = Leader
 	n.leader = n.id
 	n.heartbeatElapsed = 0
@@ -180,6 +184,7 @@ func (n *Node) elected() ([]Message, error) {
 	return n.heartbeats(), nil
 }
 func (n *Node) campaign() ([]Message, error) {
+	n.reads = nil
 	if n.hard.Term == ^uint64(0) {
 		n.failed = true
 		n.role = Follower
@@ -212,7 +217,7 @@ func (n *Node) Tick() ([]Message, error) {
 		n.heartbeatElapsed++
 		if n.heartbeatElapsed >= n.heartbeatTicks {
 			n.heartbeatElapsed = 0
-			return n.heartbeats(), nil
+			return append(n.heartbeats(), n.readMessages()...), nil
 		}
 		return nil, nil
 	}
@@ -226,7 +231,7 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	if n.failed {
 		return nil, ErrStorage
 	}
-	if m.Term == 0 || m.To != n.id || m.From == n.id || !n.member[m.From] || (m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat && m.Type != AppendEntries && m.Type != AppendResponse) {
+	if m.Term == 0 || m.To != n.id || m.From == n.id || !n.member[m.From] || (m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat && m.Type != AppendEntries && m.Type != AppendResponse && m.Type != ReadProbe && m.Type != ReadResponse) {
 		return nil, nil
 	}
 	if m.Term > n.hard.Term {
@@ -236,11 +241,12 @@ func (n *Node) Step(m Message) ([]Message, error) {
 		n.role = Follower
 		n.leader = ""
 		n.votes = nil
+		n.reads = nil
 	}
 	if n.replica && m.Type == Heartbeat {
 		return nil, nil
 	}
-	if !n.replica && (m.Type == AppendEntries || m.Type == AppendResponse) {
+	if !n.replica && (m.Type == AppendEntries || m.Type == AppendResponse || m.Type == ReadProbe || m.Type == ReadResponse) {
 		return nil, nil
 	}
 	if m.Type == RequestVote {
@@ -257,6 +263,9 @@ func (n *Node) Step(m Message) ([]Message, error) {
 		return []Message{{Type: VoteResponse, From: n.id, To: m.From, Term: n.hard.Term, Granted: grant}}, nil
 	}
 	if m.Term != n.hard.Term {
+		if n.replica && m.Type == ReadProbe {
+			return []Message{{Type: ReadResponse, From: n.id, To: m.From, Term: n.hard.Term, ReadID: m.ReadID}}, nil
+		}
 		if n.replica && m.Type == AppendEntries {
 			return []Message{{Type: AppendResponse, From: n.id, To: m.From, Term: n.hard.Term, Probe: m.Probe}}, nil
 		}
@@ -264,6 +273,13 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	}
 	if m.Type == AppendEntries {
 		return n.appendRequest(m)
+	}
+	if m.Type == ReadProbe {
+		return n.confirmRead(m), nil
+	}
+	if m.Type == ReadResponse {
+		n.receiveRead(m)
+		return nil, nil
 	}
 	if m.Type == AppendResponse {
 		return n.appendResponse(m)

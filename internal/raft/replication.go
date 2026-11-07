@@ -181,6 +181,7 @@ func (n *Node) appendRequest(m Message) ([]Message, error) {
 	n.role = Follower
 	n.leader = m.From
 	n.votes = nil
+	n.reads = nil
 	n.reset()
 	reply := Message{Type: AppendResponse, From: n.id, To: m.From, Term: n.hard.Term, Probe: m.Probe}
 	if m.PrevIndex > n.lastIndex || (m.PrevIndex > 0 && n.entries[m.PrevIndex-1].Term != m.PrevTerm) {
