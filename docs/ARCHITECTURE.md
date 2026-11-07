@@ -3,8 +3,10 @@
 This describes the target. The current implementation forwards streaming requests from one
 gateway to a statically configured worker pool, with per-worker local admission limits.
 Both policies have been checked against two pinned llama.cpp CPU inference servers running
-SmolLM2-135M. Active health probes and local in-memory draining are implemented; replicated
-configuration is planned. The drain discussion below describes that eventual fleet-wide target.
+SmolLM2-135M. Health probes, draining, and consumption of single-controller snapshots are
+implemented. A separate `raftpeer -configuration` API now applies replicated updates and
+serves committed read barriers. Gateway discovery across controller leaders and sustained
+read/log retention remain pending. The drain discussion describes the fleet-wide target.
 
 ```mermaid
 flowchart LR
@@ -29,7 +31,7 @@ configuration are separate milestones, so their coordination costs can be measur
 
 | State | Owner | Planned consistency |
 | --- | --- | --- |
-| Desired worker assignments and drain flags | Controller | Versioned CAS; linearizable after Raft integration |
+| Desired worker assignments and drain flags | Controller | Versioned CAS; replicated API orders updates and read barriers through quorum commit |
 | Routing configuration snapshot | Each gateway | May lag; bounded maximum age, revision exposed |
 | Worker health and in-flight observations | Gateway/worker | Approximate; may be stale |
 | Model KV cache | Inference engine | Local and evictable; never assumed durable |

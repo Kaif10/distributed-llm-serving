@@ -12,21 +12,25 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/Kaif10/inference-fleet/internal/control"
 	"github.com/Kaif10/inference-fleet/internal/raft"
 )
 
 type Snapshot struct {
-	Node         raft.Status  `json:"node"`
-	Commit       uint64       `json:"commit_index"`
-	Log          []raft.Entry `json:"log"`
-	Dropped      uint64       `json:"dropped_outbound"`
-	SendFailures int64        `json:"send_failures"`
+	Node          raft.Status       `json:"node"`
+	Commit        uint64            `json:"commit_index"`
+	Log           []raft.Entry      `json:"log"`
+	Dropped       uint64            `json:"dropped_outbound"`
+	SendFailures  int64             `json:"send_failures"`
+	Applied       uint64            `json:"applied_index,omitempty"`
+	Configuration *control.Snapshot `json:"configuration,omitempty"`
 }
 type result struct {
-	State       *Snapshot
-	Index, Term uint64
-	Err         string
-	Code        int
+	State         *Snapshot
+	Index, Term   uint64
+	Err           string
+	Code          int
+	Configuration *control.Snapshot
 }
 type event struct {
 	ctx     context.Context
@@ -49,6 +53,8 @@ type Host struct {
 	done         chan struct{}
 	sendFailures atomic.Int64
 	dropped      uint64
+	machine      *control.Machine
+	applied      uint64
 }
 
 // Node must not be accessed elsewhere after handing it to Run.
@@ -117,7 +123,11 @@ func (h *Host) Run(parent context.Context) error {
 			}
 		}
 	}
-	complete := func() {
+	complete := func() error {
+		applied, err := h.applyCommitted()
+		if err != nil {
+			return err
+		}
 		kept := pending[:0]
 		for _, w := range pending {
 			if w.ctx.Err() != nil {
@@ -126,7 +136,15 @@ func (h *Host) Run(parent context.Context) error {
 			if h.node.CommitIndex() >= w.index {
 				log := h.node.Log()
 				if log[w.index-1].Term == w.term {
-					w.reply <- result{Index: w.index, Term: w.term, Code: 200}
+					if h.machine != nil {
+						r, ok := applied[w.index]
+						if !ok {
+							return errors.New("missing applied command result")
+						}
+						w.reply <- r
+					} else {
+						w.reply <- result{Index: w.index, Term: w.term, Code: 200}
+					}
 					continue
 				}
 			}
@@ -137,6 +155,7 @@ func (h *Host) Run(parent context.Context) error {
 			kept = append(kept, w)
 		}
 		pending = kept
+		return nil
 	}
 	for {
 		select {
@@ -148,16 +167,29 @@ func (h *Host) Run(parent context.Context) error {
 				return err
 			}
 			emit(messages)
-			complete()
+			if err := complete(); err != nil {
+				return err
+			}
 		case e := <-h.events:
 			if e.ctx.Err() != nil {
 				continue
 			}
 			if e.status {
-				e.reply <- result{State: &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load()}, Code: 200}
+				state := &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load(), Applied: h.applied}
+				if h.machine != nil {
+					configuration := h.machine.Snapshot()
+					state.Configuration = &configuration
+				}
+				e.reply <- result{State: state, Code: 200}
 				continue
 			}
 			if e.message != nil {
+				if h.machine != nil {
+					if err := validateConfigurationEntries(e.message.Entries); err != nil {
+						e.reply <- result{Err: err.Error(), Code: 400}
+						continue
+					}
+				}
 				messages, err := h.node.Step(*e.message)
 				if errors.Is(err, raft.ErrStorage) {
 					return err
@@ -168,10 +200,14 @@ func (h *Host) Run(parent context.Context) error {
 					emit(messages)
 					e.reply <- result{Code: 204}
 				}
-				complete()
+				if err := complete(); err != nil {
+					return err
+				}
 				continue
 			}
-			complete()
+			if err := complete(); err != nil {
+				return err
+			}
 			if len(pending) >= 8 {
 				e.reply <- result{Err: "proposal waiters full", Code: 503}
 				continue
@@ -188,7 +224,9 @@ func (h *Host) Run(parent context.Context) error {
 			last := log[len(log)-1]
 			pending = append(pending, waiter{ctx: e.ctx, index: last.Index, term: last.Term, reply: e.reply})
 			emit(messages)
-			complete()
+			if err := complete(); err != nil {
+				return err
+			}
 		}
 	}
 }
@@ -228,6 +266,7 @@ func bounded(handler http.Handler) http.Handler {
 	})
 }
 func write(w http.ResponseWriter, response result) {
+	w.Header().Set("Cache-Control", "no-store")
 	if response.Err != "" {
 		http.Error(w, response.Err, response.Code)
 		return
@@ -237,8 +276,9 @@ func write(w http.ResponseWriter, response result) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Cache-Control", "no-store")
-	if response.State != nil {
+	if response.Configuration != nil {
+		json.NewEncoder(w).Encode(response.Configuration)
+	} else if response.State != nil {
 		json.NewEncoder(w).Encode(response.State)
 	} else {
 		json.NewEncoder(w).Encode(map[string]any{"committed": true, "index": response.Index, "term": response.Term})
@@ -276,6 +316,10 @@ func (h *Host) ClientHandler() http.Handler {
 		defer cancel()
 		write(w, h.call(ctx, event{status: true}))
 	})
+	if h.machine != nil {
+		h.configurationRoutes(mux)
+		return bounded(mux)
+	}
 	mux.HandleFunc("POST /propose", func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
 		data, err := io.ReadAll(r.Body)

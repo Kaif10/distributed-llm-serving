@@ -50,7 +50,7 @@ func result(e entry) Snapshot {
 }
 
 // prepare is read-only. Store uses it under its mutex to avoid journaling retries
-// and conflicts. A future replicated log must still evaluate CAS at apply time.
+// and conflicts. Replicated callers must still evaluate CAS at apply time.
 func (m *Machine) prepare(u Update) (entry, bool, error) {
 	if err := validate(u); err != nil {
 		return entry{}, false, err
@@ -90,6 +90,9 @@ func (m *Machine) Apply(u Update) (Snapshot, error) {
 func ValidateWorkers(workers []Worker) error {
 	return validate(Update{RequestID: "snapshot", Workers: workers})
 }
+
+// ValidateUpdate checks shape only. Revision and retry decisions belong at apply time.
+func ValidateUpdate(update Update) error { return validate(update) }
 func validate(u Update) error {
 	if !utf8.ValidString(u.RequestID) {
 		return fmt.Errorf("request ID must be valid UTF-8")

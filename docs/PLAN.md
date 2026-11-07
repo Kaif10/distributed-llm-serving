@@ -8,7 +8,10 @@ implemented and verified through real process failures and recovery. Milestone 4
 real-model cache measurement harness, existing-policy baselines, and capacity-bounded
 prefix affinity verified with real engines. A fixed-arrival experiment now compares both
 policies at two offered rates with a changing hot document and explicit latency objectives.
-Broader workload comparisons and milestones 5 through 9 remain planned. CPU checks establish
+Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
+now includes peer-process replication, configuration application, successful request-ID replay,
+and committed read barriers. Gateway leader failover, log retention/checkpoints, broader
+workload comparisons, and milestones 7 through 9 remain outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
 The mixed-cost increment adds short/long prompts and output budgets, direct per-worker
@@ -154,8 +157,8 @@ CAS, request-ID retries, exclusive ownership, and process-crash recovery. See
 [the controller walkthrough](learning/11-durable-configuration.md). Snapshot consumption,
 applied revisions, and stale-view expiration are now implemented for a fixed worker pool;
 see [applied configuration](learning/12-applied-configuration.md). Dynamic membership remains
-a follow-up. The next Raft preparation step separates deterministic state-machine decisions
-from journal I/O and transport.
+a follow-up. Deterministic state-machine decisions are now separated from journal I/O and
+transport and reused in the replicated configuration API below.
 
 
 Introduce a small control API for model-to-worker assignments and drain state. Use versioned
@@ -178,22 +181,23 @@ correlated responses, current-term quorum commit, and committed configuration re
 [the replication walkthrough](learning/15-raft-replication.md). Bounded loopback HTTP
 transport and raw quorum-commit acknowledgements now run in separate peer processes;
 see [the process walkthrough](learning/16-raft-processes.md). Configuration-machine
-application, request-ID retries, fresh reads, checkpoints, and serving-controller
-replication remain outstanding.
+application, successful request-ID retries/replay, and committed read barriers are now
+implemented by `raftpeer -configuration`; see [the configuration walkthrough](learning/17-replicated-configuration.md).
+Gateway leader discovery/failover, sustained read/log retention, and durable application
+checkpoints remain outstanding. Each read currently consumes a synced log entry.
 
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
 timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See
 [the election walkthrough](learning/14-raft-elections.md). Replicated entries and quorum
-commit are implemented by the later slices above; distributed reads and controller
-integration remain outstanding.
+commit are implemented by the later slices above, including the configuration read contract.
 
 
 Preparation increment complete: [deterministic configuration machine](learning/13-state-machine.md)
 is separated from journal I/O, with replay, apply-time CAS, ownership, and compatibility checks.
-The recovered journal now requires a sync barrier before serving retries. No Raft protocol is
-integrated with the controller yet. Election, replication, and process transport are
-implemented in isolation; the next step is the application commit/apply and read contract.
+The recovered single-writer journal requires a sync barrier before serving retries. The
+replicated configuration API reuses this machine with a separate Raft journal and recovery
+contract; `cmd/controller` retains its single-writer behavior.
 
 
 Purpose: administrative changes should survive a controller failure and have one committed

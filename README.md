@@ -13,18 +13,19 @@ tests cover cancellation, deadlines, and worker failures; a separate local-engin
 slot release on disconnect and records a small sequential latency baseline. A two-engine CPU
 experiment checks routing and overload against real models. Active health probes exclude
 unavailable workers, and a separate local admin API drains assignments while streams finish.
-Real-model experiments cover drain, worker process loss, and recovery. Serving-controller replication remains
-planned. A repeated-document experiment measures real prefix-cache reuse against disabled
+Real-model experiments cover drain, worker process loss, and recovery. A separate replicated
+configuration API now supports committed updates and quorum-backed reads; gateway discovery
+across controller leaders remains planned. A repeated-document experiment measures real prefix-cache reuse against disabled
 caching and the existing routing policies; its evidence includes an unresolved timeout from
 an interrupted run. No production usage is claimed. The operational problem still
 needs validation with a real application workload.
 
 A durable controller persists desired configuration with CAS and idempotent retries.
 Gateways can consume its drain snapshots for a fixed worker pool, report applied revisions,
-and reject new work when their confirmed view expires. An isolated fixed-membership Raft
-implementation now runs in separate local processes with durable logs and quorum-commit
-acknowledgements. Connecting it to the serving controller and dynamic membership remain
-future work.
+and reject new work when their confirmed view expires. A fixed-membership Raft group now
+applies configuration updates, replays successful request-ID results after restart, and
+serves reads through committed barriers. It has a bounded log without compaction; sustained
+polling, gateway leader failover, and dynamic membership require further work.
 
 ## Start here
 
@@ -48,6 +49,7 @@ future work.
 - [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
 - [Raft log replication](docs/learning/15-raft-replication.md): durable proposals, conflict repair, and quorum commit.
 - [Raft peer processes](docs/learning/16-raft-processes.md): bounded HTTP transport, leader loss, and journal recovery.
+- [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and stale-leader read protection.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation
@@ -87,7 +89,7 @@ Application -> gateway -> inference servers running real model weights
                   |
                   +-- local view of versioned fleet configuration
                                       ^
-                           replicated control plane (later)
+                           replicated control plane (gateway failover pending)
 ```
 
 Start with static configuration and one backend. Add multiple workers, bounded admission,

@@ -1,5 +1,5 @@
-// Command raftpeer runs an isolated, fixed-membership Raft journal over loopback HTTP.
-// It is not the serving controller API.
+// Command raftpeer runs a fixed-membership Raft journal over loopback HTTP.
+// Configuration mode applies committed fleet updates; raw mode is a protocol demo.
 package main
 
 import (
@@ -28,10 +28,12 @@ func main() {
 	peers := flag.String("peers", "", "fixed IDs and loopback origins: a=http://127.0.0.1:19201,b=http://127.0.0.1:19202")
 	client := flag.String("client-listen", "127.0.0.1:19301", "separate loopback proposal/diagnostic address")
 	journal := flag.String("journal", "", "exclusive durable journal path")
+	configuration := flag.Bool("configuration", false, "serve replicated GET/PUT /config instead of raw proposals; use fresh configuration-only journals")
+	peerListen := flag.String("peer-listen", "", "optional loopback bind address behind a test relay; defaults to local advertised origin")
 	flag.Parse()
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-	if err := run(ctx, *id, *peers, *client, *journal); err != nil {
+	if err := run(ctx, *id, *peers, *client, *journal, *configuration, *peerListen); err != nil {
 		slog.Error("raft peer stopped", "error", err)
 		os.Exit(1)
 	}
@@ -66,7 +68,7 @@ func members(local, spec string) (map[string]string, error) {
 	return peers, nil
 }
 
-func run(parent context.Context, id, spec, address, path string) error {
+func run(parent context.Context, id, spec, address, path string, configuration bool, peerBind string) error {
 	peers, err := members(id, spec)
 	if err != nil {
 		return err
@@ -96,7 +98,13 @@ func run(parent context.Context, id, spec, address, path string) error {
 		return err
 	}
 	origin, _ := url.Parse(peers[id])
-	peerListener, err := net.Listen("tcp", origin.Host)
+	if peerBind == "" {
+		peerBind = origin.Host
+	}
+	if !loopback(peerBind) {
+		return fmt.Errorf("peer bind requires loopback address")
+	}
+	peerListener, err := net.Listen("tcp", peerBind)
 	if err != nil {
 		return err
 	}
@@ -109,6 +117,12 @@ func run(parent context.Context, id, spec, address, path string) error {
 	ctx, cancel := context.WithCancel(parent)
 	defer cancel()
 	host := raftnet.New(node, peers)
+	if configuration {
+		host, err = raftnet.NewConfiguration(node, peers)
+		if err != nil {
+			return err
+		}
+	}
 	server := func(handler http.Handler) *http.Server {
 		return &http.Server{Handler: handler, ReadHeaderTimeout: 2 * time.Second, ReadTimeout: 6 * time.Second, WriteTimeout: 8 * time.Second, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 << 10, BaseContext: func(net.Listener) context.Context { return ctx }}
 	}

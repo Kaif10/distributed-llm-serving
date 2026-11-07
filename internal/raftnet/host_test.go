@@ -14,7 +14,7 @@ import (
 	"github.com/Kaif10/inference-fleet/internal/raft"
 )
 
-func start(t *testing.T, members []string) (*Host, *httptest.Server, *httptest.Server) {
+func start(t *testing.T, members []string, configuration ...bool) (*Host, *httptest.Server, *httptest.Server) {
 	t.Helper()
 	store, err := raft.OpenStorage(filepath.Join(t.TempDir(), "peer.wal"))
 	if err != nil {
@@ -29,6 +29,12 @@ func start(t *testing.T, members []string) (*Host, *httptest.Server, *httptest.S
 		peers[id] = "http://127.0.0.1:1"
 	}
 	h := New(node, peers)
+	if len(configuration) > 0 && configuration[0] {
+		h, err = NewConfiguration(node, peers)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan error, 1)
 	go func() { done <- h.Run(ctx) }()
