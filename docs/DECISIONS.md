@@ -1,5 +1,40 @@
 # Decisions
 
+## 008: Finish recovery integration before expanding scope
+
+The product remains reliable routing across model replicas. Each added mechanism needs
+an observable failure or a measured constraint, a simpler alternative, and a reproducible
+check of the resulting behavior.
+
+| Mechanism | Failure or constraint addressed | Current evidence/boundary |
+| --- | --- | --- |
+| Bounded admission and streaming cancellation | Overload and abandoned requests consume worker capacity | Real CPU-engine admission and cancellation checks |
+| Durable desired configuration and successful request IDs | Restart loses administrative changes; uncertain retries repeat them | Journal recovery, CAS, and original retry-result checks |
+| Replicated configuration, fresh reads, gateway peer fallback | A controller dies or an isolated old leader cannot confirm current state | Real peer failures/partitions and a real-model gateway failover run |
+| Checkpoint codec and publication journal | Future prefix removal must retain configuration and successful retry history | Offline recovery and process-kill tests; live integration and log trimming remain pending |
+
+Custom consensus and checkpoint internals are an explicit educational investment. They
+add implementation and maintenance cost; their existence does not establish that an
+operational deployment should replace an established implementation. Same-host correctness
+checks do not establish multi-host resilience or large-scale inference capacity.
+
+The next bounded change is controller-owned checkpoint capture and recovery while retaining
+the full Raft log. Completion requires an actual controller restart to recover the same
+configuration and historical retry results as full replay, reject invalid boundaries, and
+preserve gateway freshness behavior. Do not add another independent subsystem as a substitute
+for closing this integration loop.
+
+Before extending retention or claiming a capacity improvement, record the current limits
+and the failure being removed. Prototype bounds are resource guardrails, not evidence of
+customer demand or a production bottleneck. Checkpoint publication remains capped and
+compaction is not implemented; preserve those limitations in status and evidence.
+
+After this recovery path is explainable end to end, use workload/capacity measurements and
+selected multi-machine checks to decide the next investment. Durable scheduling requires
+an actual offline workload; sharding requires its stated bottleneck gate. Dynamic membership,
+deployment machinery, or additional scheduling policies do not enter merely to broaden the
+architecture. Validation with an external application workload/user remains outstanding.
+
 ## 007: Explicit prefix hints with capacity-bounded affinity
 
 Use a client-supplied X-Prefix-Key label and SHA-256 rendezvous hashing over worker origins

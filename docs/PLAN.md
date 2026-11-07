@@ -208,6 +208,12 @@ while retaining the full Raft log. Offset-aware log storage, lagging-peer snapsh
 and publication-journal rollover follow before continuous networked compaction. Write growth
 still reaches the existing log bound; live serving recovery does not consume checkpoints yet.
 
+Scope gate: finish the controller recovery integration before adding independent subsystems.
+Require a real restart comparison against full replay, preserved historical retry results,
+invalid-boundary rejection, and unchanged gateway freshness behavior. Keep one short request/
+failure walkthrough for the complete path. Measure limits before claiming capacity benefits;
+see [decision 008](DECISIONS.md#008-finish-recovery-integration-before-expanding-scope).
+
 
 Election slice implemented in isolation: fixed membership, persisted terms/votes, seeded
 timeouts, majority elections, log-tail vote checks, and partition/restart scenarios. See
