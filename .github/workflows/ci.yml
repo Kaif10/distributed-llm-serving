@@ -28,3 +28,4 @@ jobs:
       - run: python3 scripts/raft_process_check.py bin/raftpeer --output artifacts/raft-process/ci.json
       - run: python3 scripts/replicated_config_check.py bin/raftpeer --output artifacts/replicated-config/ci.json
       - run: python3 scripts/replicated_config_check.py bin/raftpeer --checkpoints --output artifacts/replicated-config/checkpoint-ci.json
+      - run: python3 scripts/check_controller_capacity.py bin/raftpeer --profile quick --output artifacts/controller-capacity/ci.json

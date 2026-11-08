@@ -209,7 +209,14 @@ application-image hashes; a real-model run checks gateway expiry and service res
 a checkpoint-backed peer restart. Invalid boundaries/history fail closed. The full Raft log
 is retained for verification; see [controller checkpoint recovery](learning/22-controller-checkpoint-recovery.md).
 
-Next: measure the current write/capacity and recovery limits before extending retention.
+The controller capacity runner now compares full/checkpoint recovery and reproduces entry
+and payload-byte exhaustion; see [controller capacity](learning/23-controller-capacity.md).
+Entry-full restart cannot append a leader no-op even with a checkpoint; acknowledged data
+retention does not imply service availability. Full-image WAL growth is recorded separately.
+
+Next: safe retained-prefix storage tied to durable checkpoints, followed by peer installation
+and bounded checkpoint-journal rollover. Preserve successful retry history and validate the
+complete path before recording the final demo.
 Offset-aware log storage, lagging-peer snapshot installation, and publication-journal rollover
 remain prerequisites for continuous networked compaction. No log prefix is removed yet.
 
