@@ -12,6 +12,63 @@ selects complete images after recovery sync. Configuration peers can opt into ow
 and checkpoint-plus-suffix recovery verified against full replay. Write retention, snapshot
 transfer, scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
 
+## Controller write bounds, journal growth, and paired recovery
+
+Source: clean commit `1841704c6e88c922013edfff626b1df968b2b530`. Reproduce:
+
+```powershell
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/check_controller_capacity.py bin/raftpeer.exe --output artifacts/controller-capacity/1841704.json
+```
+
+Pass `--go <executable>` when needed. The [full raw run](results/controller-capacity-1841704.json)
+records source/tree state, executable hash, Go 1.27.3, Windows amd64/Python 3.12.7, CPU/platform,
+commands, every write response/latency, file sizes, restart outcomes, and process logs.
+This used actual single-member Raft processes and synced local journals. Requests were
+sequential closed-loop administrative updates; no inference workers or network quorum were
+measured. Desired-worker records in the payload test are synthetic configuration data.
+
+| Exhaustion workload | Successful updates | Log entries | Command payload bytes | Raft journal bytes |
+| --- | ---: | ---: | ---: | ---: |
+| One worker per update | 1023 | 1024 | 174,759 | 136,677,327 |
+| 128 workers per update | 179 | 180 | 4,188,022 | 503,110,888 |
+
+The next update returned 503 with the matching entry-count or four-MiB error. Fresh reads
+continued in the running leader, but an identical successful-request retry also returned
+503 because this API logs retries. Checkpoint capture succeeded at both limits without
+removing entries. After an abrupt stop and restart, both full-replay and checkpoint-backed
+entry-full variants failed to become ready: the required current-term no-op could not fit.
+Both payload-full variants recovered fresh reads because the no-op adds no command bytes
+and entry capacity remained. Read-only CRC-framed inspection confirmed every acknowledged
+log entry was retained in all restarted variants, including those unable to serve.
+
+The small-command journal grew from 545,287 bytes at 64 updates to 2,155,608 at 128,
+8,582,296 at 256, 34,264,344 at 512, and 136,677,327 at 1023. Full-log image appends
+amplify physical journal growth; the bounded live log is not a lifetime WAL size bound.
+
+Recovery used three paired trials from copies of one 128-update journal, alternating
+variant order. Every checkpoint/full-replay pair produced the same complete application
+image and returned historical retry revision 1. Median first-observed status readiness
+was 518.164 ms for full replay and 512.696 ms for checkpoint mode. Median first fresh
+configuration read was 769.774 ms and 893.051 ms respectively. These include process startup,
+request polling and scheduling; fresh reads include randomized elections. OS caching was
+not controlled. Three samples do not establish a speedup, slowdown, or production latency
+objective. The checkpoint path still replays the retained prefix for verification.
+
+The full run passed with those expected capacity failures; passing the experiment does
+not mean service remained available at exhaustion. [Linux CI](https://github.com/Kaif10/inference-fleet/actions/runs/42494811274)
+passed the existing race/process checks and the new quick recovery profile. CI does not run
+this full exhaustion workload. No Go service implementation changed in this increment.
+Successful experiment files are removed after recording; unexpected failures retain their
+files for inspection. Earlier model measurements/timeouts remain unchanged.
+
+Decision: safe retained-prefix storage is justified by the observed availability and disk
+cost, not by a throughput or customer-demand claim. Raising the bound or reserving a single
+no-op slot only defers failure. Offset-aware storage, trusted checkpoint installation,
+lagging-peer recovery, and bounded publication retention must preserve acknowledged state
+and retry semantics. The [walkthrough](learning/23-controller-capacity.md) explains the workload,
+measurement limits, and remaining finite application-state budget.
+
 ## Controller-owned checkpoint capture and confirmed-prefix recovery
 
 Source: clean commit `6590ecd06e69471a53aed268c1e527ab4a858d19`. Reproduce:

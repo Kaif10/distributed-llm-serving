@@ -1,0 +1,6727 @@
+{
+  "source_commit": "1841704c6e88c922013edfff626b1df968b2b530",
+  "working_tree": "",
+  "binary_sha256": "1fe5d90a778b80f5d1b896fba15a2ee24084b34fa4579af5d87b89067bf7ee49",
+  "go_version": "D:\\inference-fleet\\bin\\raftpeer.exe: go1.27.3",
+  "command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "scripts/check_controller_capacity.py",
+    "bin/raftpeer.exe",
+    "--go",
+    "C:\\Users\\kaifk\\AppData\\Local\\inference-fleet\\toolchains\\go1.27.3\\go\\bin\\go.exe",
+    "--output",
+    "artifacts/controller-capacity/1841704.json"
+  ],
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "logical_cpus": 12,
+  "profile": "full",
+  "scope": "real single-member Raft processes, local synced journals, closed-loop admin writes; no inference",
+  "commands": [
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57275",
+      "-client-listen",
+      "127.0.0.1:57276",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-template\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-template\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57466",
+      "-client-listen",
+      "127.0.0.1:57467",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-0-full\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-0-full\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57501",
+      "-client-listen",
+      "127.0.0.1:57502",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-0-checkpoint\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-0-checkpoint\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57538",
+      "-client-listen",
+      "127.0.0.1:57539",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-1-checkpoint\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-1-checkpoint\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:49684",
+      "-client-listen",
+      "127.0.0.1:49685",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-1-full\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-1-full\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:49717",
+      "-client-listen",
+      "127.0.0.1:49718",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-2-full\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-2-full\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:49762",
+      "-client-listen",
+      "127.0.0.1:49763",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-2-checkpoint\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\recovery-2-checkpoint\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:49799",
+      "-client-listen",
+      "127.0.0.1:49800",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:50927",
+      "-client-listen",
+      "127.0.0.1:50928",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count-restart-full\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count-restart-full\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:50960",
+      "-client-listen",
+      "127.0.0.1:50961",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count-restart-checkpoint\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\entry-count-restart-checkpoint\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:53296",
+      "-client-listen",
+      "127.0.0.1:53297",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:53505",
+      "-client-listen",
+      "127.0.0.1:53506",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes-restart-full\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes-restart-full\\checkpoint.wal"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:53520",
+      "-client-listen",
+      "127.0.0.1:53521",
+      "-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes-restart-checkpoint\\raft.wal",
+      "-checkpoint-group",
+      "capacity-check",
+      "-checkpoint-journal",
+      "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl\\payload-bytes-restart-checkpoint\\checkpoint.wal"
+    ]
+  ],
+  "recovery": [
+    {
+      "trial": 0,
+      "mode": "full",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 518.164,
+      "fresh_read_ready_ms": 769.774,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "recovery_pending": false,
+          "recovery_verified": false,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    },
+    {
+      "trial": 0,
+      "mode": "checkpoint",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 521.27,
+      "fresh_read_ready_ms": 912.98,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "published": {
+            "generation": 1,
+            "identity": {
+              "group": "capacity-check",
+              "member": "a"
+            },
+            "position": {
+              "index": 129,
+              "term": 1
+            },
+            "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+          },
+          "recovery_pending": true,
+          "recovery_verified": true,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "capacity-check",
+            "member": "a"
+          },
+          "position": {
+            "index": 129,
+            "term": 1
+          },
+          "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+        },
+        "recovery_pending": false,
+        "recovery_verified": true,
+        "recovery_index": 129
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    },
+    {
+      "trial": 1,
+      "mode": "checkpoint",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 512.696,
+      "fresh_read_ready_ms": 606.859,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "published": {
+            "generation": 1,
+            "identity": {
+              "group": "capacity-check",
+              "member": "a"
+            },
+            "position": {
+              "index": 129,
+              "term": 1
+            },
+            "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+          },
+          "recovery_pending": true,
+          "recovery_verified": true,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "capacity-check",
+            "member": "a"
+          },
+          "position": {
+            "index": 129,
+            "term": 1
+          },
+          "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+        },
+        "recovery_pending": false,
+        "recovery_verified": true,
+        "recovery_index": 129
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    },
+    {
+      "trial": 1,
+      "mode": "full",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 516.769,
+      "fresh_read_ready_ms": 724.864,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "recovery_pending": false,
+          "recovery_verified": false,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    },
+    {
+      "trial": 2,
+      "mode": "full",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 522.51,
+      "fresh_read_ready_ms": 933.078,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "recovery_pending": false,
+          "recovery_verified": false,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    },
+    {
+      "trial": 2,
+      "mode": "checkpoint",
+      "updates": 128,
+      "journal_bytes_before": 2155608,
+      "fresh_read": true,
+      "listener_ready_ms": 511.587,
+      "fresh_read_ready_ms": 893.051,
+      "initial_status": {
+        "term": 1,
+        "commit_index": 0,
+        "applied_index": 0,
+        "checkpoint": {
+          "published": {
+            "generation": 1,
+            "identity": {
+              "group": "capacity-check",
+              "member": "a"
+            },
+            "position": {
+              "index": 129,
+              "term": 1
+            },
+            "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+          },
+          "recovery_pending": true,
+          "recovery_verified": true,
+          "recovery_index": 0
+        }
+      },
+      "applied_revision": 128,
+      "checkpoint_status": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "capacity-check",
+            "member": "a"
+          },
+          "position": {
+            "index": 129,
+            "term": 1
+          },
+          "sha256": "bd682986da228527a2195253b302b0d2e6677113a5d09e6dc21acec8908b1e2f"
+        },
+        "recovery_pending": false,
+        "recovery_verified": true,
+        "recovery_index": 129
+      },
+      "complete_image_sha256": "57a48b20bcc612acc3104877b928edd8fe6e904b51bf3f2ed39fb78e1a36e886",
+      "historical_retry_revision": 1
+    }
+  ],
+  "limits": [
+    {
+      "kind": "entry-count",
+      "workers_per_update": 1,
+      "acknowledged_updates": 1023,
+      "log_entries": 1024,
+      "command_payload_bytes": 174759,
+      "journal_bytes": 136677327,
+      "journal_records": 1025,
+      "samples": [
+        {
+          "acknowledged_updates": 1,
+          "journal_bytes": 550
+        },
+        {
+          "acknowledged_updates": 64,
+          "journal_bytes": 545287
+        },
+        {
+          "acknowledged_updates": 128,
+          "journal_bytes": 2155608
+        },
+        {
+          "acknowledged_updates": 256,
+          "journal_bytes": 8582296
+        },
+        {
+          "acknowledged_updates": 512,
+          "journal_bytes": 34264344
+        },
+        {
+          "acknowledged_updates": 1023,
+          "journal_bytes": 136677327
+        }
+      ],
+      "writes": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "latency_ms": 19.168
+        },
+        {
+          "attempt": 2,
+          "status": 200,
+          "latency_ms": 3.945
+        },
+        {
+          "attempt": 3,
+          "status": 200,
+          "latency_ms": 2.915
+        },
+        {
+          "attempt": 4,
+          "status": 200,
+          "latency_ms": 2.443
+        },
+        {
+          "attempt": 5,
+          "status": 200,
+          "latency_ms": 2.467
+        },
+        {
+          "attempt": 6,
+          "status": 200,
+          "latency_ms": 16.859
+        },
+        {
+          "attempt": 7,
+          "status": 200,
+          "latency_ms": 2.627
+        },
+        {
+          "attempt": 8,
+          "status": 200,
+          "latency_ms": 2.523
+        },
+        {
+          "attempt": 9,
+          "status": 200,
+          "latency_ms": 2.266
+        },
+        {
+          "attempt": 10,
+          "status": 200,
+          "latency_ms": 2.222
+        },
+        {
+          "attempt": 11,
+          "status": 200,
+          "latency_ms": 2.2
+        },
+        {
+          "attempt": 12,
+          "status": 200,
+          "latency_ms": 20.241
+        },
+        {
+          "attempt": 13,
+          "status": 200,
+          "latency_ms": 2.992
+        },
+        {
+          "attempt": 14,
+          "status": 200,
+          "latency_ms": 2.627
+        },
+        {
+          "attempt": 15,
+          "status": 200,
+          "latency_ms": 2.731
+        },
+        {
+          "attempt": 16,
+          "status": 200,
+          "latency_ms": 2.854
+        },
+        {
+          "attempt": 17,
+          "status": 200,
+          "latency_ms": 3.259
+        },
+        {
+          "attempt": 18,
+          "status": 200,
+          "latency_ms": 2.92
+        },
+        {
+          "attempt": 19,
+          "status": 200,
+          "latency_ms": 2.673
+        },
+        {
+          "attempt": 20,
+          "status": 200,
+          "latency_ms": 2.467
+        },
+        {
+          "attempt": 21,
+          "status": 200,
+          "latency_ms": 2.644
+        },
+        {
+          "attempt": 22,
+          "status": 200,
+          "latency_ms": 2.46
+        },
+        {
+          "attempt": 23,
+          "status": 200,
+          "latency_ms": 2.301
+        },
+        {
+          "attempt": 24,
+          "status": 200,
+          "latency_ms": 2.104
+        },
+        {
+          "attempt": 25,
+          "status": 200,
+          "latency_ms": 2.175
+        },
+        {
+          "attempt": 26,
+          "status": 200,
+          "latency_ms": 2.239
+        },
+        {
+          "attempt": 27,
+          "status": 200,
+          "latency_ms": 2.077
+        },
+        {
+          "attempt": 28,
+          "status": 200,
+          "latency_ms": 2.314
+        },
+        {
+          "attempt": 29,
+          "status": 200,
+          "latency_ms": 2.408
+        },
+        {
+          "attempt": 30,
+          "status": 200,
+          "latency_ms": 2.357
+        },
+        {
+          "attempt": 31,
+          "status": 200,
+          "latency_ms": 2.073
+        },
+        {
+          "attempt": 32,
+          "status": 200,
+          "latency_ms": 2.186
+        },
+        {
+          "attempt": 33,
+          "status": 200,
+          "latency_ms": 2.113
+        },
+        {
+          "attempt": 34,
+          "status": 200,
+          "latency_ms": 2.181
+        },
+        {
+          "attempt": 35,
+          "status": 200,
+          "latency_ms": 2.322
+        },
+        {
+          "attempt": 36,
+          "status": 200,
+          "latency_ms": 2.163
+        },
+        {
+          "attempt": 37,
+          "status": 200,
+          "latency_ms": 2.018
+        },
+        {
+          "attempt": 38,
+          "status": 200,
+          "latency_ms": 2.318
+        },
+        {
+          "attempt": 39,
+          "status": 200,
+          "latency_ms": 5.483
+        },
+        {
+          "attempt": 40,
+          "status": 200,
+          "latency_ms": 1.979
+        },
+        {
+          "attempt": 41,
+          "status": 200,
+          "latency_ms": 1.698
+        },
+        {
+          "attempt": 42,
+          "status": 200,
+          "latency_ms": 1.718
+        },
+        {
+          "attempt": 43,
+          "status": 200,
+          "latency_ms": 1.854
+        },
+        {
+          "attempt": 44,
+          "status": 200,
+          "latency_ms": 1.91
+        },
+        {
+          "attempt": 45,
+          "status": 200,
+          "latency_ms": 2.212
+        },
+        {
+          "attempt": 46,
+          "status": 200,
+          "latency_ms": 1.837
+        },
+        {
+          "attempt": 47,
+          "status": 200,
+          "latency_ms": 1.727
+        },
+        {
+          "attempt": 48,
+          "status": 200,
+          "latency_ms": 1.766
+        },
+        {
+          "attempt": 49,
+          "status": 200,
+          "latency_ms": 1.753
+        },
+        {
+          "attempt": 50,
+          "status": 200,
+          "latency_ms": 1.726
+        },
+        {
+          "attempt": 51,
+          "status": 200,
+          "latency_ms": 1.533
+        },
+        {
+          "attempt": 52,
+          "status": 200,
+          "latency_ms": 15.378
+        },
+        {
+          "attempt": 53,
+          "status": 200,
+          "latency_ms": 3.051
+        },
+        {
+          "attempt": 54,
+          "status": 200,
+          "latency_ms": 3.101
+        },
+        {
+          "attempt": 55,
+          "status": 200,
+          "latency_ms": 2.492
+        },
+        {
+          "attempt": 56,
+          "status": 200,
+          "latency_ms": 2.368
+        },
+        {
+          "attempt": 57,
+          "status": 200,
+          "latency_ms": 20.782
+        },
+        {
+          "attempt": 58,
+          "status": 200,
+          "latency_ms": 3.384
+        },
+        {
+          "attempt": 59,
+          "status": 200,
+          "latency_ms": 3.274
+        },
+        {
+          "attempt": 60,
+          "status": 200,
+          "latency_ms": 2.899
+        },
+        {
+          "attempt": 61,
+          "status": 200,
+          "latency_ms": 3.208
+        },
+        {
+          "attempt": 62,
+          "status": 200,
+          "latency_ms": 3.332
+        },
+        {
+          "attempt": 63,
+          "status": 200,
+          "latency_ms": 14.745
+        },
+        {
+          "attempt": 64,
+          "status": 200,
+          "latency_ms": 4.045
+        },
+        {
+          "attempt": 65,
+          "status": 200,
+          "latency_ms": 27.296
+        },
+        {
+          "attempt": 66,
+          "status": 200,
+          "latency_ms": 3.281
+        },
+        {
+          "attempt": 67,
+          "status": 200,
+          "latency_ms": 3.758
+        },
+        {
+          "attempt": 68,
+          "status": 200,
+          "latency_ms": 3.87
+        },
+        {
+          "attempt": 69,
+          "status": 200,
+          "latency_ms": 2.945
+        },
+        {
+          "attempt": 70,
+          "status": 200,
+          "latency_ms": 16.557
+        },
+        {
+          "attempt": 71,
+          "status": 200,
+          "latency_ms": 2.931
+        },
+        {
+          "attempt": 72,
+          "status": 200,
+          "latency_ms": 3.461
+        },
+        {
+          "attempt": 73,
+          "status": 200,
+          "latency_ms": 2.697
+        },
+        {
+          "attempt": 74,
+          "status": 200,
+          "latency_ms": 3.297
+        },
+        {
+          "attempt": 75,
+          "status": 200,
+          "latency_ms": 2.753
+        },
+        {
+          "attempt": 76,
+          "status": 200,
+          "latency_ms": 3.1
+        },
+        {
+          "attempt": 77,
+          "status": 200,
+          "latency_ms": 2.685
+        },
+        {
+          "attempt": 78,
+          "status": 200,
+          "latency_ms": 2.544
+        },
+        {
+          "attempt": 79,
+          "status": 200,
+          "latency_ms": 2.361
+        },
+        {
+          "attempt": 80,
+          "status": 200,
+          "latency_ms": 2.408
+        },
+        {
+          "attempt": 81,
+          "status": 200,
+          "latency_ms": 1.9
+        },
+        {
+          "attempt": 82,
+          "status": 200,
+          "latency_ms": 2.29
+        },
+        {
+          "attempt": 83,
+          "status": 200,
+          "latency_ms": 2.179
+        },
+        {
+          "attempt": 84,
+          "status": 200,
+          "latency_ms": 2.098
+        },
+        {
+          "attempt": 85,
+          "status": 200,
+          "latency_ms": 2.099
+        },
+        {
+          "attempt": 86,
+          "status": 200,
+          "latency_ms": 22.223
+        },
+        {
+          "attempt": 87,
+          "status": 200,
+          "latency_ms": 19.574
+        },
+        {
+          "attempt": 88,
+          "status": 200,
+          "latency_ms": 2.999
+        },
+        {
+          "attempt": 89,
+          "status": 200,
+          "latency_ms": 25.165
+        },
+        {
+          "attempt": 90,
+          "status": 200,
+          "latency_ms": 3.631
+        },
+        {
+          "attempt": 91,
+          "status": 200,
+          "latency_ms": 3.855
+        },
+        {
+          "attempt": 92,
+          "status": 200,
+          "latency_ms": 4.139
+        },
+        {
+          "attempt": 93,
+          "status": 200,
+          "latency_ms": 3.228
+        },
+        {
+          "attempt": 94,
+          "status": 200,
+          "latency_ms": 3.127
+        },
+        {
+          "attempt": 95,
+          "status": 200,
+          "latency_ms": 2.933
+        },
+        {
+          "attempt": 96,
+          "status": 200,
+          "latency_ms": 2.791
+        },
+        {
+          "attempt": 97,
+          "status": 200,
+          "latency_ms": 2.779
+        },
+        {
+          "attempt": 98,
+          "status": 200,
+          "latency_ms": 2.672
+        },
+        {
+          "attempt": 99,
+          "status": 200,
+          "latency_ms": 2.47
+        },
+        {
+          "attempt": 100,
+          "status": 200,
+          "latency_ms": 2.26
+        },
+        {
+          "attempt": 101,
+          "status": 200,
+          "latency_ms": 25.867
+        },
+        {
+          "attempt": 102,
+          "status": 200,
+          "latency_ms": 2.257
+        },
+        {
+          "attempt": 103,
+          "status": 200,
+          "latency_ms": 13.61
+        },
+        {
+          "attempt": 104,
+          "status": 200,
+          "latency_ms": 2.432
+        },
+        {
+          "attempt": 105,
+          "status": 200,
+          "latency_ms": 2.376
+        },
+        {
+          "attempt": 106,
+          "status": 200,
+          "latency_ms": 3.338
+        },
+        {
+          "attempt": 107,
+          "status": 200,
+          "latency_ms": 2.351
+        },
+        {
+          "attempt": 108,
+          "status": 200,
+          "latency_ms": 2.339
+        },
+        {
+          "attempt": 109,
+          "status": 200,
+          "latency_ms": 17.168
+        },
+        {
+          "attempt": 110,
+          "status": 200,
+          "latency_ms": 2.02
+        },
+        {
+          "attempt": 111,
+          "status": 200,
+          "latency_ms": 1.852
+        },
+        {
+          "attempt": 112,
+          "status": 200,
+          "latency_ms": 1.667
+        },
+        {
+          "attempt": 113,
+          "status": 200,
+          "latency_ms": 1.568
+        },
+        {
+          "attempt": 114,
+          "status": 200,
+          "latency_ms": 24.78
+        },
+        {
+          "attempt": 115,
+          "status": 200,
+          "latency_ms": 2.474
+        },
+        {
+          "attempt": 116,
+          "status": 200,
+          "latency_ms": 2.223
+        },
+        {
+          "attempt": 117,
+          "status": 200,
+          "latency_ms": 2.136
+        },
+        {
+          "attempt": 118,
+          "status": 200,
+          "latency_ms": 2.598
+        },
+        {
+          "attempt": 119,
+          "status": 200,
+          "latency_ms": 2.254
+        },
+        {
+          "attempt": 120,
+          "status": 200,
+          "latency_ms": 1.988
+        },
+        {
+          "attempt": 121,
+          "status": 200,
+          "latency_ms": 1.868
+        },
+        {
+          "attempt": 122,
+          "status": 200,
+          "latency_ms": 1.892
+        },
+        {
+          "attempt": 123,
+          "status": 200,
+          "latency_ms": 2.018
+        },
+        {
+          "attempt": 124,
+          "status": 200,
+          "latency_ms": 1.895
+        },
+        {
+          "attempt": 125,
+          "status": 200,
+          "latency_ms": 1.943
+        },
+        {
+          "attempt": 126,
+          "status": 200,
+          "latency_ms": 2.341
+        },
+        {
+          "attempt": 127,
+          "status": 200,
+          "latency_ms": 2.509
+        },
+        {
+          "attempt": 128,
+          "status": 200,
+          "latency_ms": 2.257
+        },
+        {
+          "attempt": 129,
+          "status": 200,
+          "latency_ms": 2.07
+        },
+        {
+          "attempt": 130,
+          "status": 200,
+          "latency_ms": 1.98
+        },
+        {
+          "attempt": 131,
+          "status": 200,
+          "latency_ms": 2.03
+        },
+        {
+          "attempt": 132,
+          "status": 200,
+          "latency_ms": 1.949
+        },
+        {
+          "attempt": 133,
+          "status": 200,
+          "latency_ms": 1.978
+        },
+        {
+          "attempt": 134,
+          "status": 200,
+          "latency_ms": 2.042
+        },
+        {
+          "attempt": 135,
+          "status": 200,
+          "latency_ms": 2.638
+        },
+        {
+          "attempt": 136,
+          "status": 200,
+          "latency_ms": 2.103
+        },
+        {
+          "attempt": 137,
+          "status": 200,
+          "latency_ms": 1.698
+        },
+        {
+          "attempt": 138,
+          "status": 200,
+          "latency_ms": 1.797
+        },
+        {
+          "attempt": 139,
+          "status": 200,
+          "latency_ms": 1.887
+        },
+        {
+          "attempt": 140,
+          "status": 200,
+          "latency_ms": 1.967
+        },
+        {
+          "attempt": 141,
+          "status": 200,
+          "latency_ms": 1.941
+        },
+        {
+          "attempt": 142,
+          "status": 200,
+          "latency_ms": 2.037
+        },
+        {
+          "attempt": 143,
+          "status": 200,
+          "latency_ms": 3.151
+        },
+        {
+          "attempt": 144,
+          "status": 200,
+          "latency_ms": 1.829
+        },
+        {
+          "attempt": 145,
+          "status": 200,
+          "latency_ms": 1.774
+        },
+        {
+          "attempt": 146,
+          "status": 200,
+          "latency_ms": 2.103
+        },
+        {
+          "attempt": 147,
+          "status": 200,
+          "latency_ms": 1.669
+        },
+        {
+          "attempt": 148,
+          "status": 200,
+          "latency_ms": 28.509
+        },
+        {
+          "attempt": 149,
+          "status": 200,
+          "latency_ms": 27.787
+        },
+        {
+          "attempt": 150,
+          "status": 200,
+          "latency_ms": 15.603
+        },
+        {
+          "attempt": 151,
+          "status": 200,
+          "latency_ms": 3.871
+        },
+        {
+          "attempt": 152,
+          "status": 200,
+          "latency_ms": 27.936
+        },
+        {
+          "attempt": 153,
+          "status": 200,
+          "latency_ms": 3.687
+        },
+        {
+          "attempt": 154,
+          "status": 200,
+          "latency_ms": 27.266
+        },
+        {
+          "attempt": 155,
+          "status": 200,
+          "latency_ms": 16.492
+        },
+        {
+          "attempt": 156,
+          "status": 200,
+          "latency_ms": 3.415
+        },
+        {
+          "attempt": 157,
+          "status": 200,
+          "latency_ms": 28.485
+        },
+        {
+          "attempt": 158,
+          "status": 200,
+          "latency_ms": 3.331
+        },
+        {
+          "attempt": 159,
+          "status": 200,
+          "latency_ms": 4.478
+        },
+        {
+          "attempt": 160,
+          "status": 200,
+          "latency_ms": 3.067
+        },
+        {
+          "attempt": 161,
+          "status": 200,
+          "latency_ms": 3.297
+        },
+        {
+          "attempt": 162,
+          "status": 200,
+          "latency_ms": 16.141
+        },
+        {
+          "attempt": 163,
+          "status": 200,
+          "latency_ms": 3.3
+        },
+        {
+          "attempt": 164,
+          "status": 200,
+          "latency_ms": 3.665
+        },
+        {
+          "attempt": 165,
+          "status": 200,
+          "latency_ms": 4.264
+        },
+        {
+          "attempt": 166,
+          "status": 200,
+          "latency_ms": 3.238
+        },
+        {
+          "attempt": 167,
+          "status": 200,
+          "latency_ms": 2.962
+        },
+        {
+          "attempt": 168,
+          "status": 200,
+          "latency_ms": 2.744
+        },
+        {
+          "attempt": 169,
+          "status": 200,
+          "latency_ms": 2.982
+        },
+        {
+          "attempt": 170,
+          "status": 200,
+          "latency_ms": 25.737
+        },
+        {
+          "attempt": 171,
+          "status": 200,
+          "latency_ms": 3.898
+        },
+        {
+          "attempt": 172,
+          "status": 200,
+          "latency_ms": 3.738
+        },
+        {
+          "attempt": 173,
+          "status": 200,
+          "latency_ms": 3.76
+        },
+        {
+          "attempt": 174,
+          "status": 200,
+          "latency_ms": 2.46
+        },
+        {
+          "attempt": 175,
+          "status": 200,
+          "latency_ms": 2.364
+        },
+        {
+          "attempt": 176,
+          "status": 200,
+          "latency_ms": 2.414
+        },
+        {
+          "attempt": 177,
+          "status": 200,
+          "latency_ms": 2.231
+        },
+        {
+          "attempt": 178,
+          "status": 200,
+          "latency_ms": 2.447
+        },
+        {
+          "attempt": 179,
+          "status": 200,
+          "latency_ms": 2.313
+        },
+        {
+          "attempt": 180,
+          "status": 200,
+          "latency_ms": 2.278
+        },
+        {
+          "attempt": 181,
+          "status": 200,
+          "latency_ms": 2.319
+        },
+        {
+          "attempt": 182,
+          "status": 200,
+          "latency_ms": 3.033
+        },
+        {
+          "attempt": 183,
+          "status": 200,
+          "latency_ms": 2.121
+        },
+        {
+          "attempt": 184,
+          "status": 200,
+          "latency_ms": 21.829
+        },
+        {
+          "attempt": 185,
+          "status": 200,
+          "latency_ms": 2.415
+        },
+        {
+          "attempt": 186,
+          "status": 200,
+          "latency_ms": 1.958
+        },
+        {
+          "attempt": 187,
+          "status": 200,
+          "latency_ms": 1.733
+        },
+        {
+          "attempt": 188,
+          "status": 200,
+          "latency_ms": 2.08
+        },
+        {
+          "attempt": 189,
+          "status": 200,
+          "latency_ms": 2.176
+        },
+        {
+          "attempt": 190,
+          "status": 200,
+          "latency_ms": 2.487
+        },
+        {
+          "attempt": 191,
+          "status": 200,
+          "latency_ms": 2.057
+        },
+        {
+          "attempt": 192,
+          "status": 200,
+          "latency_ms": 2.773
+        },
+        {
+          "attempt": 193,
+          "status": 200,
+          "latency_ms": 2.268
+        },
+        {
+          "attempt": 194,
+          "status": 200,
+          "latency_ms": 2.053
+        },
+        {
+          "attempt": 195,
+          "status": 200,
+          "latency_ms": 2.181
+        },
+        {
+          "attempt": 196,
+          "status": 200,
+          "latency_ms": 2.081
+        },
+        {
+          "attempt": 197,
+          "status": 200,
+          "latency_ms": 2.74
+        },
+        {
+          "attempt": 198,
+          "status": 200,
+          "latency_ms": 17.118
+        },
+        {
+          "attempt": 199,
+          "status": 200,
+          "latency_ms": 15.231
+        },
+        {
+          "attempt": 200,
+          "status": 200,
+          "latency_ms": 2.139
+        },
+        {
+          "attempt": 201,
+          "status": 200,
+          "latency_ms": 2.075
+        },
+        {
+          "attempt": 202,
+          "status": 200,
+          "latency_ms": 2.209
+        },
+        {
+          "attempt": 203,
+          "status": 200,
+          "latency_ms": 2.078
+        },
+        {
+          "attempt": 204,
+          "status": 200,
+          "latency_ms": 1.932
+        },
+        {
+          "attempt": 205,
+          "status": 200,
+          "latency_ms": 20.421
+        },
+        {
+          "attempt": 206,
+          "status": 200,
+          "latency_ms": 1.924
+        },
+        {
+          "attempt": 207,
+          "status": 200,
+          "latency_ms": 2.025
+        },
+        {
+          "attempt": 208,
+          "status": 200,
+          "latency_ms": 2.248
+        },
+        {
+          "attempt": 209,
+          "status": 200,
+          "latency_ms": 25.322
+        },
+        {
+          "attempt": 210,
+          "status": 200,
+          "latency_ms": 2.255
+        },
+        {
+          "attempt": 211,
+          "status": 200,
+          "latency_ms": 13.417
+        },
+        {
+          "attempt": 212,
+          "status": 200,
+          "latency_ms": 1.956
+        },
+        {
+          "attempt": 213,
+          "status": 200,
+          "latency_ms": 1.9
+        },
+        {
+          "attempt": 214,
+          "status": 200,
+          "latency_ms": 2.747
+        },
+        {
+          "attempt": 215,
+          "status": 200,
+          "latency_ms": 2.007
+        },
+        {
+          "attempt": 216,
+          "status": 200,
+          "latency_ms": 1.911
+        },
+        {
+          "attempt": 217,
+          "status": 200,
+          "latency_ms": 2.471
+        },
+        {
+          "attempt": 218,
+          "status": 200,
+          "latency_ms": 2.178
+        },
+        {
+          "attempt": 219,
+          "status": 200,
+          "latency_ms": 1.796
+        },
+        {
+          "attempt": 220,
+          "status": 200,
+          "latency_ms": 13.803
+        },
+        {
+          "attempt": 221,
+          "status": 200,
+          "latency_ms": 2.653
+        },
+        {
+          "attempt": 222,
+          "status": 200,
+          "latency_ms": 2.325
+        },
+        {
+          "attempt": 223,
+          "status": 200,
+          "latency_ms": 1.929
+        },
+        {
+          "attempt": 224,
+          "status": 200,
+          "latency_ms": 2.172
+        },
+        {
+          "attempt": 225,
+          "status": 200,
+          "latency_ms": 2.517
+        },
+        {
+          "attempt": 226,
+          "status": 200,
+          "latency_ms": 1.901
+        },
+        {
+          "attempt": 227,
+          "status": 200,
+          "latency_ms": 1.981
+        },
+        {
+          "attempt": 228,
+          "status": 200,
+          "latency_ms": 2.282
+        },
+        {
+          "attempt": 229,
+          "status": 200,
+          "latency_ms": 3.015
+        },
+        {
+          "attempt": 230,
+          "status": 200,
+          "latency_ms": 2.389
+        },
+        {
+          "attempt": 231,
+          "status": 200,
+          "latency_ms": 1.963
+        },
+        {
+          "attempt": 232,
+          "status": 200,
+          "latency_ms": 2.641
+        },
+        {
+          "attempt": 233,
+          "status": 200,
+          "latency_ms": 2.227
+        },
+        {
+          "attempt": 234,
+          "status": 200,
+          "latency_ms": 2.788
+        },
+        {
+          "attempt": 235,
+          "status": 200,
+          "latency_ms": 2.265
+        },
+        {
+          "attempt": 236,
+          "status": 200,
+          "latency_ms": 2.459
+        },
+        {
+          "attempt": 237,
+          "status": 200,
+          "latency_ms": 2.527
+        },
+        {
+          "attempt": 238,
+          "status": 200,
+          "latency_ms": 1.874
+        },
+        {
+          "attempt": 239,
+          "status": 200,
+          "latency_ms": 2.662
+        },
+        {
+          "attempt": 240,
+          "status": 200,
+          "latency_ms": 2.332
+        },
+        {
+          "attempt": 241,
+          "status": 200,
+          "latency_ms": 2.633
+        },
+        {
+          "attempt": 242,
+          "status": 200,
+          "latency_ms": 11.998
+        },
+        {
+          "attempt": 243,
+          "status": 200,
+          "latency_ms": 2.001
+        },
+        {
+          "attempt": 244,
+          "status": 200,
+          "latency_ms": 1.924
+        },
+        {
+          "attempt": 245,
+          "status": 200,
+          "latency_ms": 29.474
+        },
+        {
+          "attempt": 246,
+          "status": 200,
+          "latency_ms": 4.005
+        },
+        {
+          "attempt": 247,
+          "status": 200,
+          "latency_ms": 2.94
+        },
+        {
+          "attempt": 248,
+          "status": 200,
+          "latency_ms": 3.448
+        },
+        {
+          "attempt": 249,
+          "status": 200,
+          "latency_ms": 3.679
+        },
+        {
+          "attempt": 250,
+          "status": 200,
+          "latency_ms": 3.046
+        },
+        {
+          "attempt": 251,
+          "status": 200,
+          "latency_ms": 2.069
+        },
+        {
+          "attempt": 252,
+          "status": 200,
+          "latency_ms": 27.851
+        },
+        {
+          "attempt": 253,
+          "status": 200,
+          "latency_ms": 4.251
+        },
+        {
+          "attempt": 254,
+          "status": 200,
+          "latency_ms": 28.171
+        },
+        {
+          "attempt": 255,
+          "status": 200,
+          "latency_ms": 15.892
+        },
+        {
+          "attempt": 256,
+          "status": 200,
+          "latency_ms": 3.554
+        },
+        {
+          "attempt": 257,
+          "status": 200,
+          "latency_ms": 27.358
+        },
+        {
+          "attempt": 258,
+          "status": 200,
+          "latency_ms": 18.014
+        },
+        {
+          "attempt": 259,
+          "status": 200,
+          "latency_ms": 4.424
+        },
+        {
+          "attempt": 260,
+          "status": 200,
+          "latency_ms": 4.828
+        },
+        {
+          "attempt": 261,
+          "status": 200,
+          "latency_ms": 3.602
+        },
+        {
+          "attempt": 262,
+          "status": 200,
+          "latency_ms": 15.972
+        },
+        {
+          "attempt": 263,
+          "status": 200,
+          "latency_ms": 3.889
+        },
+        {
+          "attempt": 264,
+          "status": 200,
+          "latency_ms": 4.756
+        },
+        {
+          "attempt": 265,
+          "status": 200,
+          "latency_ms": 3.645
+        },
+        {
+          "attempt": 266,
+          "status": 200,
+          "latency_ms": 2.971
+        },
+        {
+          "attempt": 267,
+          "status": 200,
+          "latency_ms": 13.989
+        },
+        {
+          "attempt": 268,
+          "status": 200,
+          "latency_ms": 4.74
+        },
+        {
+          "attempt": 269,
+          "status": 200,
+          "latency_ms": 3.398
+        },
+        {
+          "attempt": 270,
+          "status": 200,
+          "latency_ms": 2.694
+        },
+        {
+          "attempt": 271,
+          "status": 200,
+          "latency_ms": 2.401
+        },
+        {
+          "attempt": 272,
+          "status": 200,
+          "latency_ms": 19.173
+        },
+        {
+          "attempt": 273,
+          "status": 200,
+          "latency_ms": 7.721
+        },
+        {
+          "attempt": 274,
+          "status": 200,
+          "latency_ms": 4.672
+        },
+        {
+          "attempt": 275,
+          "status": 200,
+          "latency_ms": 4.519
+        },
+        {
+          "attempt": 276,
+          "status": 200,
+          "latency_ms": 2.901
+        },
+        {
+          "attempt": 277,
+          "status": 200,
+          "latency_ms": 3.768
+        },
+        {
+          "attempt": 278,
+          "status": 200,
+          "latency_ms": 3.228
+        },
+        {
+          "attempt": 279,
+          "status": 200,
+          "latency_ms": 3.071
+        },
+        {
+          "attempt": 280,
+          "status": 200,
+          "latency_ms": 2.365
+        },
+        {
+          "attempt": 281,
+          "status": 200,
+          "latency_ms": 2.491
+        },
+        {
+          "attempt": 282,
+          "status": 200,
+          "latency_ms": 2.991
+        },
+        {
+          "attempt": 283,
+          "status": 200,
+          "latency_ms": 2.004
+        },
+        {
+          "attempt": 284,
+          "status": 200,
+          "latency_ms": 2.278
+        },
+        {
+          "attempt": 285,
+          "status": 200,
+          "latency_ms": 1.853
+        },
+        {
+          "attempt": 286,
+          "status": 200,
+          "latency_ms": 2.048
+        },
+        {
+          "attempt": 287,
+          "status": 200,
+          "latency_ms": 1.887
+        },
+        {
+          "attempt": 288,
+          "status": 200,
+          "latency_ms": 1.748
+        },
+        {
+          "attempt": 289,
+          "status": 200,
+          "latency_ms": 2.134
+        },
+        {
+          "attempt": 290,
+          "status": 200,
+          "latency_ms": 1.853
+        },
+        {
+          "attempt": 291,
+          "status": 200,
+          "latency_ms": 21.518
+        },
+        {
+          "attempt": 292,
+          "status": 200,
+          "latency_ms": 2.535
+        },
+        {
+          "attempt": 293,
+          "status": 200,
+          "latency_ms": 2.01
+        },
+        {
+          "attempt": 294,
+          "status": 200,
+          "latency_ms": 2.064
+        },
+        {
+          "attempt": 295,
+          "status": 200,
+          "latency_ms": 2.255
+        },
+        {
+          "attempt": 296,
+          "status": 200,
+          "latency_ms": 2.0
+        },
+        {
+          "attempt": 297,
+          "status": 200,
+          "latency_ms": 1.98
+        },
+        {
+          "attempt": 298,
+          "status": 200,
+          "latency_ms": 2.952
+        },
+        {
+          "attempt": 299,
+          "status": 200,
+          "latency_ms": 2.151
+        },
+        {
+          "attempt": 300,
+          "status": 200,
+          "latency_ms": 2.254
+        },
+        {
+          "attempt": 301,
+          "status": 200,
+          "latency_ms": 1.839
+        },
+        {
+          "attempt": 302,
+          "status": 200,
+          "latency_ms": 2.039
+        },
+        {
+          "attempt": 303,
+          "status": 200,
+          "latency_ms": 1.971
+        },
+        {
+          "attempt": 304,
+          "status": 200,
+          "latency_ms": 1.977
+        },
+        {
+          "attempt": 305,
+          "status": 200,
+          "latency_ms": 2.49
+        },
+        {
+          "attempt": 306,
+          "status": 200,
+          "latency_ms": 2.538
+        },
+        {
+          "attempt": 307,
+          "status": 200,
+          "latency_ms": 2.081
+        },
+        {
+          "attempt": 308,
+          "status": 200,
+          "latency_ms": 1.961
+        },
+        {
+          "attempt": 309,
+          "status": 200,
+          "latency_ms": 1.866
+        },
+        {
+          "attempt": 310,
+          "status": 200,
+          "latency_ms": 2.403
+        },
+        {
+          "attempt": 311,
+          "status": 200,
+          "latency_ms": 2.047
+        },
+        {
+          "attempt": 312,
+          "status": 200,
+          "latency_ms": 2.314
+        },
+        {
+          "attempt": 313,
+          "status": 200,
+          "latency_ms": 2.171
+        },
+        {
+          "attempt": 314,
+          "status": 200,
+          "latency_ms": 2.845
+        },
+        {
+          "attempt": 315,
+          "status": 200,
+          "latency_ms": 1.907
+        },
+        {
+          "attempt": 316,
+          "status": 200,
+          "latency_ms": 2.178
+        },
+        {
+          "attempt": 317,
+          "status": 200,
+          "latency_ms": 1.976
+        },
+        {
+          "attempt": 318,
+          "status": 200,
+          "latency_ms": 2.754
+        },
+        {
+          "attempt": 319,
+          "status": 200,
+          "latency_ms": 2.917
+        },
+        {
+          "attempt": 320,
+          "status": 200,
+          "latency_ms": 4.691
+        },
+        {
+          "attempt": 321,
+          "status": 200,
+          "latency_ms": 2.619
+        },
+        {
+          "attempt": 322,
+          "status": 200,
+          "latency_ms": 1.826
+        },
+        {
+          "attempt": 323,
+          "status": 200,
+          "latency_ms": 1.982
+        },
+        {
+          "attempt": 324,
+          "status": 200,
+          "latency_ms": 2.372
+        },
+        {
+          "attempt": 325,
+          "status": 200,
+          "latency_ms": 1.965
+        },
+        {
+          "attempt": 326,
+          "status": 200,
+          "latency_ms": 2.87
+        },
+        {
+          "attempt": 327,
+          "status": 200,
+          "latency_ms": 2.358
+        },
+        {
+          "attempt": 328,
+          "status": 200,
+          "latency_ms": 1.96
+        },
+        {
+          "attempt": 329,
+          "status": 200,
+          "latency_ms": 2.115
+        },
+        {
+          "attempt": 330,
+          "status": 200,
+          "latency_ms": 2.799
+        },
+        {
+          "attempt": 331,
+          "status": 200,
+          "latency_ms": 16.953
+        },
+        {
+          "attempt": 332,
+          "status": 200,
+          "latency_ms": 16.275
+        },
+        {
+          "attempt": 333,
+          "status": 200,
+          "latency_ms": 2.806
+        },
+        {
+          "attempt": 334,
+          "status": 200,
+          "latency_ms": 2.763
+        },
+        {
+          "attempt": 335,
+          "status": 200,
+          "latency_ms": 2.512
+        },
+        {
+          "attempt": 336,
+          "status": 200,
+          "latency_ms": 25.573
+        },
+        {
+          "attempt": 337,
+          "status": 200,
+          "latency_ms": 3.551
+        },
+        {
+          "attempt": 338,
+          "status": 200,
+          "latency_ms": 3.745
+        },
+        {
+          "attempt": 339,
+          "status": 200,
+          "latency_ms": 3.564
+        },
+        {
+          "attempt": 340,
+          "status": 200,
+          "latency_ms": 3.89
+        },
+        {
+          "attempt": 341,
+          "status": 200,
+          "latency_ms": 3.112
+        },
+        {
+          "attempt": 342,
+          "status": 200,
+          "latency_ms": 3.066
+        },
+        {
+          "attempt": 343,
+          "status": 200,
+          "latency_ms": 3.892
+        },
+        {
+          "attempt": 344,
+          "status": 200,
+          "latency_ms": 2.889
+        },
+        {
+          "attempt": 345,
+          "status": 200,
+          "latency_ms": 2.503
+        },
+        {
+          "attempt": 346,
+          "status": 200,
+          "latency_ms": 3.072
+        },
+        {
+          "attempt": 347,
+          "status": 200,
+          "latency_ms": 2.738
+        },
+        {
+          "attempt": 348,
+          "status": 200,
+          "latency_ms": 3.181
+        },
+        {
+          "attempt": 349,
+          "status": 200,
+          "latency_ms": 20.067
+        },
+        {
+          "attempt": 350,
+          "status": 200,
+          "latency_ms": 3.008
+        },
+        {
+          "attempt": 351,
+          "status": 200,
+          "latency_ms": 2.897
+        },
+        {
+          "attempt": 352,
+          "status": 200,
+          "latency_ms": 3.474
+        },
+        {
+          "attempt": 353,
+          "status": 200,
+          "latency_ms": 2.701
+        },
+        {
+          "attempt": 354,
+          "status": 200,
+          "latency_ms": 2.981
+        },
+        {
+          "attempt": 355,
+          "status": 200,
+          "latency_ms": 2.291
+        },
+        {
+          "attempt": 356,
+          "status": 200,
+          "latency_ms": 2.333
+        },
+        {
+          "attempt": 357,
+          "status": 200,
+          "latency_ms": 2.93
+        },
+        {
+          "attempt": 358,
+          "status": 200,
+          "latency_ms": 2.951
+        },
+        {
+          "attempt": 359,
+          "status": 200,
+          "latency_ms": 3.396
+        },
+        {
+          "attempt": 360,
+          "status": 200,
+          "latency_ms": 2.39
+        },
+        {
+          "attempt": 361,
+          "status": 200,
+          "latency_ms": 2.103
+        },
+        {
+          "attempt": 362,
+          "status": 200,
+          "latency_ms": 2.505
+        },
+        {
+          "attempt": 363,
+          "status": 200,
+          "latency_ms": 1.915
+        },
+        {
+          "attempt": 364,
+          "status": 200,
+          "latency_ms": 2.329
+        },
+        {
+          "attempt": 365,
+          "status": 200,
+          "latency_ms": 1.931
+        },
+        {
+          "attempt": 366,
+          "status": 200,
+          "latency_ms": 2.478
+        },
+        {
+          "attempt": 367,
+          "status": 200,
+          "latency_ms": 1.893
+        },
+        {
+          "attempt": 368,
+          "status": 200,
+          "latency_ms": 1.7
+        },
+        {
+          "attempt": 369,
+          "status": 200,
+          "latency_ms": 2.084
+        },
+        {
+          "attempt": 370,
+          "status": 200,
+          "latency_ms": 1.786
+        },
+        {
+          "attempt": 371,
+          "status": 200,
+          "latency_ms": 1.976
+        },
+        {
+          "attempt": 372,
+          "status": 200,
+          "latency_ms": 1.985
+        },
+        {
+          "attempt": 373,
+          "status": 200,
+          "latency_ms": 1.907
+        },
+        {
+          "attempt": 374,
+          "status": 200,
+          "latency_ms": 2.599
+        },
+        {
+          "attempt": 375,
+          "status": 200,
+          "latency_ms": 1.962
+        },
+        {
+          "attempt": 376,
+          "status": 200,
+          "latency_ms": 2.267
+        },
+        {
+          "attempt": 377,
+          "status": 200,
+          "latency_ms": 1.995
+        },
+        {
+          "attempt": 378,
+          "status": 200,
+          "latency_ms": 2.315
+        },
+        {
+          "attempt": 379,
+          "status": 200,
+          "latency_ms": 1.889
+        },
+        {
+          "attempt": 380,
+          "status": 200,
+          "latency_ms": 2.507
+        },
+        {
+          "attempt": 381,
+          "status": 200,
+          "latency_ms": 2.845
+        },
+        {
+          "attempt": 382,
+          "status": 200,
+          "latency_ms": 3.169
+        },
+        {
+          "attempt": 383,
+          "status": 200,
+          "latency_ms": 1.901
+        },
+        {
+          "attempt": 384,
+          "status": 200,
+          "latency_ms": 1.893
+        },
+        {
+          "attempt": 385,
+          "status": 200,
+          "latency_ms": 2.52
+        },
+        {
+          "attempt": 386,
+          "status": 200,
+          "latency_ms": 1.849
+        },
+        {
+          "attempt": 387,
+          "status": 200,
+          "latency_ms": 2.484
+        },
+        {
+          "attempt": 388,
+          "status": 200,
+          "latency_ms": 1.717
+        },
+        {
+          "attempt": 389,
+          "status": 200,
+          "latency_ms": 2.949
+        },
+        {
+          "attempt": 390,
+          "status": 200,
+          "latency_ms": 1.918
+        },
+        {
+          "attempt": 391,
+          "status": 200,
+          "latency_ms": 2.264
+        },
+        {
+          "attempt": 392,
+          "status": 200,
+          "latency_ms": 1.832
+        },
+        {
+          "attempt": 393,
+          "status": 200,
+          "latency_ms": 1.869
+        },
+        {
+          "attempt": 394,
+          "status": 200,
+          "latency_ms": 2.151
+        },
+        {
+          "attempt": 395,
+          "status": 200,
+          "latency_ms": 2.082
+        },
+        {
+          "attempt": 396,
+          "status": 200,
+          "latency_ms": 3.563
+        },
+        {
+          "attempt": 397,
+          "status": 200,
+          "latency_ms": 27.467
+        },
+        {
+          "attempt": 398,
+          "status": 200,
+          "latency_ms": 3.189
+        },
+        {
+          "attempt": 399,
+          "status": 200,
+          "latency_ms": 3.629
+        },
+        {
+          "attempt": 400,
+          "status": 200,
+          "latency_ms": 25.537
+        },
+        {
+          "attempt": 401,
+          "status": 200,
+          "latency_ms": 5.157
+        },
+        {
+          "attempt": 402,
+          "status": 200,
+          "latency_ms": 4.692
+        },
+        {
+          "attempt": 403,
+          "status": 200,
+          "latency_ms": 3.743
+        },
+        {
+          "attempt": 404,
+          "status": 200,
+          "latency_ms": 18.387
+        },
+        {
+          "attempt": 405,
+          "status": 200,
+          "latency_ms": 3.469
+        },
+        {
+          "attempt": 406,
+          "status": 200,
+          "latency_ms": 4.023
+        },
+        {
+          "attempt": 407,
+          "status": 200,
+          "latency_ms": 5.167
+        },
+        {
+          "attempt": 408,
+          "status": 200,
+          "latency_ms": 3.516
+        },
+        {
+          "attempt": 409,
+          "status": 200,
+          "latency_ms": 4.162
+        },
+        {
+          "attempt": 410,
+          "status": 200,
+          "latency_ms": 3.442
+        },
+        {
+          "attempt": 411,
+          "status": 200,
+          "latency_ms": 4.167
+        },
+        {
+          "attempt": 412,
+          "status": 200,
+          "latency_ms": 2.846
+        },
+        {
+          "attempt": 413,
+          "status": 200,
+          "latency_ms": 29.939
+        },
+        {
+          "attempt": 414,
+          "status": 200,
+          "latency_ms": 5.041
+        },
+        {
+          "attempt": 415,
+          "status": 200,
+          "latency_ms": 4.245
+        },
+        {
+          "attempt": 416,
+          "status": 200,
+          "latency_ms": 22.821
+        },
+        {
+          "attempt": 417,
+          "status": 200,
+          "latency_ms": 3.954
+        },
+        {
+          "attempt": 418,
+          "status": 200,
+          "latency_ms": 3.75
+        },
+        {
+          "attempt": 419,
+          "status": 200,
+          "latency_ms": 3.8
+        },
+        {
+          "attempt": 420,
+          "status": 200,
+          "latency_ms": 5.327
+        },
+        {
+          "attempt": 421,
+          "status": 200,
+          "latency_ms": 4.156
+        },
+        {
+          "attempt": 422,
+          "status": 200,
+          "latency_ms": 3.025
+        },
+        {
+          "attempt": 423,
+          "status": 200,
+          "latency_ms": 3.582
+        },
+        {
+          "attempt": 424,
+          "status": 200,
+          "latency_ms": 3.211
+        },
+        {
+          "attempt": 425,
+          "status": 200,
+          "latency_ms": 29.313
+        },
+        {
+          "attempt": 426,
+          "status": 200,
+          "latency_ms": 2.617
+        },
+        {
+          "attempt": 427,
+          "status": 200,
+          "latency_ms": 31.016
+        },
+        {
+          "attempt": 428,
+          "status": 200,
+          "latency_ms": 4.136
+        },
+        {
+          "attempt": 429,
+          "status": 200,
+          "latency_ms": 27.54
+        },
+        {
+          "attempt": 430,
+          "status": 200,
+          "latency_ms": 4.531
+        },
+        {
+          "attempt": 431,
+          "status": 200,
+          "latency_ms": 4.876
+        },
+        {
+          "attempt": 432,
+          "status": 200,
+          "latency_ms": 3.622
+        },
+        {
+          "attempt": 433,
+          "status": 200,
+          "latency_ms": 16.396
+        },
+        {
+          "attempt": 434,
+          "status": 200,
+          "latency_ms": 5.863
+        },
+        {
+          "attempt": 435,
+          "status": 200,
+          "latency_ms": 3.564
+        },
+        {
+          "attempt": 436,
+          "status": 200,
+          "latency_ms": 23.914
+        },
+        {
+          "attempt": 437,
+          "status": 200,
+          "latency_ms": 3.944
+        },
+        {
+          "attempt": 438,
+          "status": 200,
+          "latency_ms": 4.796
+        },
+        {
+          "attempt": 439,
+          "status": 200,
+          "latency_ms": 3.865
+        },
+        {
+          "attempt": 440,
+          "status": 200,
+          "latency_ms": 4.77
+        },
+        {
+          "attempt": 441,
+          "status": 200,
+          "latency_ms": 26.236
+        },
+        {
+          "attempt": 442,
+          "status": 200,
+          "latency_ms": 4.666
+        },
+        {
+          "attempt": 443,
+          "status": 200,
+          "latency_ms": 3.812
+        },
+        {
+          "attempt": 444,
+          "status": 200,
+          "latency_ms": 3.135
+        },
+        {
+          "attempt": 445,
+          "status": 200,
+          "latency_ms": 20.437
+        },
+        {
+          "attempt": 446,
+          "status": 200,
+          "latency_ms": 16.001
+        },
+        {
+          "attempt": 447,
+          "status": 200,
+          "latency_ms": 3.451
+        },
+        {
+          "attempt": 448,
+          "status": 200,
+          "latency_ms": 30.172
+        },
+        {
+          "attempt": 449,
+          "status": 200,
+          "latency_ms": 4.18
+        },
+        {
+          "attempt": 450,
+          "status": 200,
+          "latency_ms": 4.504
+        },
+        {
+          "attempt": 451,
+          "status": 200,
+          "latency_ms": 3.751
+        },
+        {
+          "attempt": 452,
+          "status": 200,
+          "latency_ms": 2.948
+        },
+        {
+          "attempt": 453,
+          "status": 200,
+          "latency_ms": 2.896
+        },
+        {
+          "attempt": 454,
+          "status": 200,
+          "latency_ms": 2.47
+        },
+        {
+          "attempt": 455,
+          "status": 200,
+          "latency_ms": 23.34
+        },
+        {
+          "attempt": 456,
+          "status": 200,
+          "latency_ms": 4.965
+        },
+        {
+          "attempt": 457,
+          "status": 200,
+          "latency_ms": 3.294
+        },
+        {
+          "attempt": 458,
+          "status": 200,
+          "latency_ms": 24.14
+        },
+        {
+          "attempt": 459,
+          "status": 200,
+          "latency_ms": 8.41
+        },
+        {
+          "attempt": 460,
+          "status": 200,
+          "latency_ms": 4.047
+        },
+        {
+          "attempt": 461,
+          "status": 200,
+          "latency_ms": 5.446
+        },
+        {
+          "attempt": 462,
+          "status": 200,
+          "latency_ms": 4.115
+        },
+        {
+          "attempt": 463,
+          "status": 200,
+          "latency_ms": 4.671
+        },
+        {
+          "attempt": 464,
+          "status": 200,
+          "latency_ms": 4.262
+        },
+        {
+          "attempt": 465,
+          "status": 200,
+          "latency_ms": 2.889
+        },
+        {
+          "attempt": 466,
+          "status": 200,
+          "latency_ms": 30.108
+        },
+        {
+          "attempt": 467,
+          "status": 200,
+          "latency_ms": 5.673
+        },
+        {
+          "attempt": 468,
+          "status": 200,
+          "latency_ms": 3.702
+        },
+        {
+          "attempt": 469,
+          "status": 200,
+          "latency_ms": 3.418
+        },
+        {
+          "attempt": 470,
+          "status": 200,
+          "latency_ms": 3.231
+        },
+        {
+          "attempt": 471,
+          "status": 200,
+          "latency_ms": 2.787
+        },
+        {
+          "attempt": 472,
+          "status": 200,
+          "latency_ms": 1.974
+        },
+        {
+          "attempt": 473,
+          "status": 200,
+          "latency_ms": 2.318
+        },
+        {
+          "attempt": 474,
+          "status": 200,
+          "latency_ms": 2.367
+        },
+        {
+          "attempt": 475,
+          "status": 200,
+          "latency_ms": 2.695
+        },
+        {
+          "attempt": 476,
+          "status": 200,
+          "latency_ms": 2.654
+        },
+        {
+          "attempt": 477,
+          "status": 200,
+          "latency_ms": 2.079
+        },
+        {
+          "attempt": 478,
+          "status": 200,
+          "latency_ms": 2.56
+        },
+        {
+          "attempt": 479,
+          "status": 200,
+          "latency_ms": 1.838
+        },
+        {
+          "attempt": 480,
+          "status": 200,
+          "latency_ms": 2.167
+        },
+        {
+          "attempt": 481,
+          "status": 200,
+          "latency_ms": 2.272
+        },
+        {
+          "attempt": 482,
+          "status": 200,
+          "latency_ms": 2.014
+        },
+        {
+          "attempt": 483,
+          "status": 200,
+          "latency_ms": 2.054
+        },
+        {
+          "attempt": 484,
+          "status": 200,
+          "latency_ms": 1.871
+        },
+        {
+          "attempt": 485,
+          "status": 200,
+          "latency_ms": 2.645
+        },
+        {
+          "attempt": 486,
+          "status": 200,
+          "latency_ms": 2.802
+        },
+        {
+          "attempt": 487,
+          "status": 200,
+          "latency_ms": 2.365
+        },
+        {
+          "attempt": 488,
+          "status": 200,
+          "latency_ms": 2.169
+        },
+        {
+          "attempt": 489,
+          "status": 200,
+          "latency_ms": 15.011
+        },
+        {
+          "attempt": 490,
+          "status": 200,
+          "latency_ms": 3.369
+        },
+        {
+          "attempt": 491,
+          "status": 200,
+          "latency_ms": 2.627
+        },
+        {
+          "attempt": 492,
+          "status": 200,
+          "latency_ms": 3.09
+        },
+        {
+          "attempt": 493,
+          "status": 200,
+          "latency_ms": 2.498
+        },
+        {
+          "attempt": 494,
+          "status": 200,
+          "latency_ms": 2.448
+        },
+        {
+          "attempt": 495,
+          "status": 200,
+          "latency_ms": 2.253
+        },
+        {
+          "attempt": 496,
+          "status": 200,
+          "latency_ms": 2.981
+        },
+        {
+          "attempt": 497,
+          "status": 200,
+          "latency_ms": 5.324
+        },
+        {
+          "attempt": 498,
+          "status": 200,
+          "latency_ms": 24.046
+        },
+        {
+          "attempt": 499,
+          "status": 200,
+          "latency_ms": 4.182
+        },
+        {
+          "attempt": 500,
+          "status": 200,
+          "latency_ms": 4.162
+        },
+        {
+          "attempt": 501,
+          "status": 200,
+          "latency_ms": 3.726
+        },
+        {
+          "attempt": 502,
+          "status": 200,
+          "latency_ms": 3.486
+        },
+        {
+          "attempt": 503,
+          "status": 200,
+          "latency_ms": 2.954
+        },
+        {
+          "attempt": 504,
+          "status": 200,
+          "latency_ms": 3.596
+        },
+        {
+          "attempt": 505,
+          "status": 200,
+          "latency_ms": 2.694
+        },
+        {
+          "attempt": 506,
+          "status": 200,
+          "latency_ms": 3.814
+        },
+        {
+          "attempt": 507,
+          "status": 200,
+          "latency_ms": 3.525
+        },
+        {
+          "attempt": 508,
+          "status": 200,
+          "latency_ms": 30.528
+        },
+        {
+          "attempt": 509,
+          "status": 200,
+          "latency_ms": 3.92
+        },
+        {
+          "attempt": 510,
+          "status": 200,
+          "latency_ms": 3.285
+        },
+        {
+          "attempt": 511,
+          "status": 200,
+          "latency_ms": 3.818
+        },
+        {
+          "attempt": 512,
+          "status": 200,
+          "latency_ms": 3.436
+        },
+        {
+          "attempt": 513,
+          "status": 200,
+          "latency_ms": 2.519
+        },
+        {
+          "attempt": 514,
+          "status": 200,
+          "latency_ms": 2.923
+        },
+        {
+          "attempt": 515,
+          "status": 200,
+          "latency_ms": 3.706
+        },
+        {
+          "attempt": 516,
+          "status": 200,
+          "latency_ms": 3.065
+        },
+        {
+          "attempt": 517,
+          "status": 200,
+          "latency_ms": 19.711
+        },
+        {
+          "attempt": 518,
+          "status": 200,
+          "latency_ms": 4.134
+        },
+        {
+          "attempt": 519,
+          "status": 200,
+          "latency_ms": 4.179
+        },
+        {
+          "attempt": 520,
+          "status": 200,
+          "latency_ms": 4.18
+        },
+        {
+          "attempt": 521,
+          "status": 200,
+          "latency_ms": 4.214
+        },
+        {
+          "attempt": 522,
+          "status": 200,
+          "latency_ms": 3.391
+        },
+        {
+          "attempt": 523,
+          "status": 200,
+          "latency_ms": 3.597
+        },
+        {
+          "attempt": 524,
+          "status": 200,
+          "latency_ms": 2.95
+        },
+        {
+          "attempt": 525,
+          "status": 200,
+          "latency_ms": 3.329
+        },
+        {
+          "attempt": 526,
+          "status": 200,
+          "latency_ms": 2.629
+        },
+        {
+          "attempt": 527,
+          "status": 200,
+          "latency_ms": 3.215
+        },
+        {
+          "attempt": 528,
+          "status": 200,
+          "latency_ms": 2.714
+        },
+        {
+          "attempt": 529,
+          "status": 200,
+          "latency_ms": 2.353
+        },
+        {
+          "attempt": 530,
+          "status": 200,
+          "latency_ms": 2.56
+        },
+        {
+          "attempt": 531,
+          "status": 200,
+          "latency_ms": 2.006
+        },
+        {
+          "attempt": 532,
+          "status": 200,
+          "latency_ms": 1.79
+        },
+        {
+          "attempt": 533,
+          "status": 200,
+          "latency_ms": 6.428
+        },
+        {
+          "attempt": 534,
+          "status": 200,
+          "latency_ms": 2.591
+        },
+        {
+          "attempt": 535,
+          "status": 200,
+          "latency_ms": 2.372
+        },
+        {
+          "attempt": 536,
+          "status": 200,
+          "latency_ms": 2.535
+        },
+        {
+          "attempt": 537,
+          "status": 200,
+          "latency_ms": 2.256
+        },
+        {
+          "attempt": 538,
+          "status": 200,
+          "latency_ms": 2.573
+        },
+        {
+          "attempt": 539,
+          "status": 200,
+          "latency_ms": 2.905
+        },
+        {
+          "attempt": 540,
+          "status": 200,
+          "latency_ms": 2.449
+        },
+        {
+          "attempt": 541,
+          "status": 200,
+          "latency_ms": 2.796
+        },
+        {
+          "attempt": 542,
+          "status": 200,
+          "latency_ms": 2.594
+        },
+        {
+          "attempt": 543,
+          "status": 200,
+          "latency_ms": 2.355
+        },
+        {
+          "attempt": 544,
+          "status": 200,
+          "latency_ms": 1.966
+        },
+        {
+          "attempt": 545,
+          "status": 200,
+          "latency_ms": 2.557
+        },
+        {
+          "attempt": 546,
+          "status": 200,
+          "latency_ms": 2.545
+        },
+        {
+          "attempt": 547,
+          "status": 200,
+          "latency_ms": 4.097
+        },
+        {
+          "attempt": 548,
+          "status": 200,
+          "latency_ms": 2.563
+        },
+        {
+          "attempt": 549,
+          "status": 200,
+          "latency_ms": 2.46
+        },
+        {
+          "attempt": 550,
+          "status": 200,
+          "latency_ms": 1.998
+        },
+        {
+          "attempt": 551,
+          "status": 200,
+          "latency_ms": 3.152
+        },
+        {
+          "attempt": 552,
+          "status": 200,
+          "latency_ms": 2.498
+        },
+        {
+          "attempt": 553,
+          "status": 200,
+          "latency_ms": 2.45
+        },
+        {
+          "attempt": 554,
+          "status": 200,
+          "latency_ms": 2.429
+        },
+        {
+          "attempt": 555,
+          "status": 200,
+          "latency_ms": 2.479
+        },
+        {
+          "attempt": 556,
+          "status": 200,
+          "latency_ms": 2.25
+        },
+        {
+          "attempt": 557,
+          "status": 200,
+          "latency_ms": 2.636
+        },
+        {
+          "attempt": 558,
+          "status": 200,
+          "latency_ms": 2.456
+        },
+        {
+          "attempt": 559,
+          "status": 200,
+          "latency_ms": 3.741
+        },
+        {
+          "attempt": 560,
+          "status": 200,
+          "latency_ms": 2.795
+        },
+        {
+          "attempt": 561,
+          "status": 200,
+          "latency_ms": 1.885
+        },
+        {
+          "attempt": 562,
+          "status": 200,
+          "latency_ms": 2.346
+        },
+        {
+          "attempt": 563,
+          "status": 200,
+          "latency_ms": 2.207
+        },
+        {
+          "attempt": 564,
+          "status": 200,
+          "latency_ms": 3.344
+        },
+        {
+          "attempt": 565,
+          "status": 200,
+          "latency_ms": 2.366
+        },
+        {
+          "attempt": 566,
+          "status": 200,
+          "latency_ms": 2.895
+        },
+        {
+          "attempt": 567,
+          "status": 200,
+          "latency_ms": 2.909
+        },
+        {
+          "attempt": 568,
+          "status": 200,
+          "latency_ms": 2.493
+        },
+        {
+          "attempt": 569,
+          "status": 200,
+          "latency_ms": 2.982
+        },
+        {
+          "attempt": 570,
+          "status": 200,
+          "latency_ms": 2.432
+        },
+        {
+          "attempt": 571,
+          "status": 200,
+          "latency_ms": 2.63
+        },
+        {
+          "attempt": 572,
+          "status": 200,
+          "latency_ms": 2.855
+        },
+        {
+          "attempt": 573,
+          "status": 200,
+          "latency_ms": 2.236
+        },
+        {
+          "attempt": 574,
+          "status": 200,
+          "latency_ms": 24.373
+        },
+        {
+          "attempt": 575,
+          "status": 200,
+          "latency_ms": 3.054
+        },
+        {
+          "attempt": 576,
+          "status": 200,
+          "latency_ms": 2.927
+        },
+        {
+          "attempt": 577,
+          "status": 200,
+          "latency_ms": 2.77
+        },
+        {
+          "attempt": 578,
+          "status": 200,
+          "latency_ms": 2.453
+        },
+        {
+          "attempt": 579,
+          "status": 200,
+          "latency_ms": 2.663
+        },
+        {
+          "attempt": 580,
+          "status": 200,
+          "latency_ms": 3.542
+        },
+        {
+          "attempt": 581,
+          "status": 200,
+          "latency_ms": 2.537
+        },
+        {
+          "attempt": 582,
+          "status": 200,
+          "latency_ms": 1.798
+        },
+        {
+          "attempt": 583,
+          "status": 200,
+          "latency_ms": 2.603
+        },
+        {
+          "attempt": 584,
+          "status": 200,
+          "latency_ms": 21.559
+        },
+        {
+          "attempt": 585,
+          "status": 200,
+          "latency_ms": 3.744
+        },
+        {
+          "attempt": 586,
+          "status": 200,
+          "latency_ms": 31.885
+        },
+        {
+          "attempt": 587,
+          "status": 200,
+          "latency_ms": 5.213
+        },
+        {
+          "attempt": 588,
+          "status": 200,
+          "latency_ms": 26.488
+        },
+        {
+          "attempt": 589,
+          "status": 200,
+          "latency_ms": 4.643
+        },
+        {
+          "attempt": 590,
+          "status": 200,
+          "latency_ms": 5.646
+        },
+        {
+          "attempt": 591,
+          "status": 200,
+          "latency_ms": 5.284
+        },
+        {
+          "attempt": 592,
+          "status": 200,
+          "latency_ms": 3.026
+        },
+        {
+          "attempt": 593,
+          "status": 200,
+          "latency_ms": 5.19
+        },
+        {
+          "attempt": 594,
+          "status": 200,
+          "latency_ms": 4.198
+        },
+        {
+          "attempt": 595,
+          "status": 200,
+          "latency_ms": 3.347
+        },
+        {
+          "attempt": 596,
+          "status": 200,
+          "latency_ms": 30.596
+        },
+        {
+          "attempt": 597,
+          "status": 200,
+          "latency_ms": 31.395
+        },
+        {
+          "attempt": 598,
+          "status": 200,
+          "latency_ms": 6.277
+        },
+        {
+          "attempt": 599,
+          "status": 200,
+          "latency_ms": 3.693
+        },
+        {
+          "attempt": 600,
+          "status": 200,
+          "latency_ms": 20.329
+        },
+        {
+          "attempt": 601,
+          "status": 200,
+          "latency_ms": 15.425
+        },
+        {
+          "attempt": 602,
+          "status": 200,
+          "latency_ms": 4.003
+        },
+        {
+          "attempt": 603,
+          "status": 200,
+          "latency_ms": 3.414
+        },
+        {
+          "attempt": 604,
+          "status": 200,
+          "latency_ms": 23.763
+        },
+        {
+          "attempt": 605,
+          "status": 200,
+          "latency_ms": 4.942
+        },
+        {
+          "attempt": 606,
+          "status": 200,
+          "latency_ms": 5.469
+        },
+        {
+          "attempt": 607,
+          "status": 200,
+          "latency_ms": 20.609
+        },
+        {
+          "attempt": 608,
+          "status": 200,
+          "latency_ms": 3.089
+        },
+        {
+          "attempt": 609,
+          "status": 200,
+          "latency_ms": 3.679
+        },
+        {
+          "attempt": 610,
+          "status": 200,
+          "latency_ms": 3.097
+        },
+        {
+          "attempt": 611,
+          "status": 200,
+          "latency_ms": 2.438
+        },
+        {
+          "attempt": 612,
+          "status": 200,
+          "latency_ms": 18.687
+        },
+        {
+          "attempt": 613,
+          "status": 200,
+          "latency_ms": 5.583
+        },
+        {
+          "attempt": 614,
+          "status": 200,
+          "latency_ms": 3.71
+        },
+        {
+          "attempt": 615,
+          "status": 200,
+          "latency_ms": 4.584
+        },
+        {
+          "attempt": 616,
+          "status": 200,
+          "latency_ms": 3.743
+        },
+        {
+          "attempt": 617,
+          "status": 200,
+          "latency_ms": 3.357
+        },
+        {
+          "attempt": 618,
+          "status": 200,
+          "latency_ms": 26.903
+        },
+        {
+          "attempt": 619,
+          "status": 200,
+          "latency_ms": 4.751
+        },
+        {
+          "attempt": 620,
+          "status": 200,
+          "latency_ms": 4.593
+        },
+        {
+          "attempt": 621,
+          "status": 200,
+          "latency_ms": 21.499
+        },
+        {
+          "attempt": 622,
+          "status": 200,
+          "latency_ms": 4.798
+        },
+        {
+          "attempt": 623,
+          "status": 200,
+          "latency_ms": 6.881
+        },
+        {
+          "attempt": 624,
+          "status": 200,
+          "latency_ms": 5.038
+        },
+        {
+          "attempt": 625,
+          "status": 200,
+          "latency_ms": 3.996
+        },
+        {
+          "attempt": 626,
+          "status": 200,
+          "latency_ms": 3.758
+        },
+        {
+          "attempt": 627,
+          "status": 200,
+          "latency_ms": 2.983
+        },
+        {
+          "attempt": 628,
+          "status": 200,
+          "latency_ms": 4.391
+        },
+        {
+          "attempt": 629,
+          "status": 200,
+          "latency_ms": 3.657
+        },
+        {
+          "attempt": 630,
+          "status": 200,
+          "latency_ms": 3.127
+        },
+        {
+          "attempt": 631,
+          "status": 200,
+          "latency_ms": 23.01
+        },
+        {
+          "attempt": 632,
+          "status": 200,
+          "latency_ms": 5.629
+        },
+        {
+          "attempt": 633,
+          "status": 200,
+          "latency_ms": 3.819
+        },
+        {
+          "attempt": 634,
+          "status": 200,
+          "latency_ms": 3.922
+        },
+        {
+          "attempt": 635,
+          "status": 200,
+          "latency_ms": 3.902
+        },
+        {
+          "attempt": 636,
+          "status": 200,
+          "latency_ms": 13.765
+        },
+        {
+          "attempt": 637,
+          "status": 200,
+          "latency_ms": 3.335
+        },
+        {
+          "attempt": 638,
+          "status": 200,
+          "latency_ms": 3.65
+        },
+        {
+          "attempt": 639,
+          "status": 200,
+          "latency_ms": 3.327
+        },
+        {
+          "attempt": 640,
+          "status": 200,
+          "latency_ms": 2.597
+        },
+        {
+          "attempt": 641,
+          "status": 200,
+          "latency_ms": 2.639
+        },
+        {
+          "attempt": 642,
+          "status": 200,
+          "latency_ms": 2.448
+        },
+        {
+          "attempt": 643,
+          "status": 200,
+          "latency_ms": 2.62
+        },
+        {
+          "attempt": 644,
+          "status": 200,
+          "latency_ms": 2.327
+        },
+        {
+          "attempt": 645,
+          "status": 200,
+          "latency_ms": 2.681
+        },
+        {
+          "attempt": 646,
+          "status": 200,
+          "latency_ms": 2.676
+        },
+        {
+          "attempt": 647,
+          "status": 200,
+          "latency_ms": 2.48
+        },
+        {
+          "attempt": 648,
+          "status": 200,
+          "latency_ms": 3.344
+        },
+        {
+          "attempt": 649,
+          "status": 200,
+          "latency_ms": 2.418
+        },
+        {
+          "attempt": 650,
+          "status": 200,
+          "latency_ms": 2.476
+        },
+        {
+          "attempt": 651,
+          "status": 200,
+          "latency_ms": 3.101
+        },
+        {
+          "attempt": 652,
+          "status": 200,
+          "latency_ms": 3.073
+        },
+        {
+          "attempt": 653,
+          "status": 200,
+          "latency_ms": 2.523
+        },
+        {
+          "attempt": 654,
+          "status": 200,
+          "latency_ms": 2.783
+        },
+        {
+          "attempt": 655,
+          "status": 200,
+          "latency_ms": 24.71
+        },
+        {
+          "attempt": 656,
+          "status": 200,
+          "latency_ms": 2.804
+        },
+        {
+          "attempt": 657,
+          "status": 200,
+          "latency_ms": 2.914
+        },
+        {
+          "attempt": 658,
+          "status": 200,
+          "latency_ms": 2.606
+        },
+        {
+          "attempt": 659,
+          "status": 200,
+          "latency_ms": 2.911
+        },
+        {
+          "attempt": 660,
+          "status": 200,
+          "latency_ms": 2.835
+        },
+        {
+          "attempt": 661,
+          "status": 200,
+          "latency_ms": 2.651
+        },
+        {
+          "attempt": 662,
+          "status": 200,
+          "latency_ms": 2.123
+        },
+        {
+          "attempt": 663,
+          "status": 200,
+          "latency_ms": 1.925
+        },
+        {
+          "attempt": 664,
+          "status": 200,
+          "latency_ms": 2.712
+        },
+        {
+          "attempt": 665,
+          "status": 200,
+          "latency_ms": 2.487
+        },
+        {
+          "attempt": 666,
+          "status": 200,
+          "latency_ms": 2.562
+        },
+        {
+          "attempt": 667,
+          "status": 200,
+          "latency_ms": 18.791
+        },
+        {
+          "attempt": 668,
+          "status": 200,
+          "latency_ms": 4.098
+        },
+        {
+          "attempt": 669,
+          "status": 200,
+          "latency_ms": 3.93
+        },
+        {
+          "attempt": 670,
+          "status": 200,
+          "latency_ms": 3.223
+        },
+        {
+          "attempt": 671,
+          "status": 200,
+          "latency_ms": 3.94
+        },
+        {
+          "attempt": 672,
+          "status": 200,
+          "latency_ms": 3.991
+        },
+        {
+          "attempt": 673,
+          "status": 200,
+          "latency_ms": 3.483
+        },
+        {
+          "attempt": 674,
+          "status": 200,
+          "latency_ms": 27.05
+        },
+        {
+          "attempt": 675,
+          "status": 200,
+          "latency_ms": 4.778
+        },
+        {
+          "attempt": 676,
+          "status": 200,
+          "latency_ms": 3.51
+        },
+        {
+          "attempt": 677,
+          "status": 200,
+          "latency_ms": 4.57
+        },
+        {
+          "attempt": 678,
+          "status": 200,
+          "latency_ms": 4.242
+        },
+        {
+          "attempt": 679,
+          "status": 200,
+          "latency_ms": 3.607
+        },
+        {
+          "attempt": 680,
+          "status": 200,
+          "latency_ms": 3.768
+        },
+        {
+          "attempt": 681,
+          "status": 200,
+          "latency_ms": 3.71
+        },
+        {
+          "attempt": 682,
+          "status": 200,
+          "latency_ms": 15.057
+        },
+        {
+          "attempt": 683,
+          "status": 200,
+          "latency_ms": 2.971
+        },
+        {
+          "attempt": 684,
+          "status": 200,
+          "latency_ms": 3.411
+        },
+        {
+          "attempt": 685,
+          "status": 200,
+          "latency_ms": 25.922
+        },
+        {
+          "attempt": 686,
+          "status": 200,
+          "latency_ms": 3.593
+        },
+        {
+          "attempt": 687,
+          "status": 200,
+          "latency_ms": 3.831
+        },
+        {
+          "attempt": 688,
+          "status": 200,
+          "latency_ms": 3.462
+        },
+        {
+          "attempt": 689,
+          "status": 200,
+          "latency_ms": 3.277
+        },
+        {
+          "attempt": 690,
+          "status": 200,
+          "latency_ms": 17.473
+        },
+        {
+          "attempt": 691,
+          "status": 200,
+          "latency_ms": 4.323
+        },
+        {
+          "attempt": 692,
+          "status": 200,
+          "latency_ms": 4.238
+        },
+        {
+          "attempt": 693,
+          "status": 200,
+          "latency_ms": 3.588
+        },
+        {
+          "attempt": 694,
+          "status": 200,
+          "latency_ms": 3.507
+        },
+        {
+          "attempt": 695,
+          "status": 200,
+          "latency_ms": 14.715
+        },
+        {
+          "attempt": 696,
+          "status": 200,
+          "latency_ms": 4.277
+        },
+        {
+          "attempt": 697,
+          "status": 200,
+          "latency_ms": 3.236
+        },
+        {
+          "attempt": 698,
+          "status": 200,
+          "latency_ms": 4.185
+        },
+        {
+          "attempt": 699,
+          "status": 200,
+          "latency_ms": 3.54
+        },
+        {
+          "attempt": 700,
+          "status": 200,
+          "latency_ms": 3.206
+        },
+        {
+          "attempt": 701,
+          "status": 200,
+          "latency_ms": 3.055
+        },
+        {
+          "attempt": 702,
+          "status": 200,
+          "latency_ms": 3.072
+        },
+        {
+          "attempt": 703,
+          "status": 200,
+          "latency_ms": 2.313
+        },
+        {
+          "attempt": 704,
+          "status": 200,
+          "latency_ms": 21.429
+        },
+        {
+          "attempt": 705,
+          "status": 200,
+          "latency_ms": 5.423
+        },
+        {
+          "attempt": 706,
+          "status": 200,
+          "latency_ms": 5.972
+        },
+        {
+          "attempt": 707,
+          "status": 200,
+          "latency_ms": 3.696
+        },
+        {
+          "attempt": 708,
+          "status": 200,
+          "latency_ms": 30.915
+        },
+        {
+          "attempt": 709,
+          "status": 200,
+          "latency_ms": 4.59
+        },
+        {
+          "attempt": 710,
+          "status": 200,
+          "latency_ms": 4.611
+        },
+        {
+          "attempt": 711,
+          "status": 200,
+          "latency_ms": 3.393
+        },
+        {
+          "attempt": 712,
+          "status": 200,
+          "latency_ms": 18.964
+        },
+        {
+          "attempt": 713,
+          "status": 200,
+          "latency_ms": 5.573
+        },
+        {
+          "attempt": 714,
+          "status": 200,
+          "latency_ms": 26.103
+        },
+        {
+          "attempt": 715,
+          "status": 200,
+          "latency_ms": 5.847
+        },
+        {
+          "attempt": 716,
+          "status": 200,
+          "latency_ms": 5.015
+        },
+        {
+          "attempt": 717,
+          "status": 200,
+          "latency_ms": 5.121
+        },
+        {
+          "attempt": 718,
+          "status": 200,
+          "latency_ms": 7.476
+        },
+        {
+          "attempt": 719,
+          "status": 200,
+          "latency_ms": 4.656
+        },
+        {
+          "attempt": 720,
+          "status": 200,
+          "latency_ms": 3.556
+        },
+        {
+          "attempt": 721,
+          "status": 200,
+          "latency_ms": 3.665
+        },
+        {
+          "attempt": 722,
+          "status": 200,
+          "latency_ms": 26.249
+        },
+        {
+          "attempt": 723,
+          "status": 200,
+          "latency_ms": 4.716
+        },
+        {
+          "attempt": 724,
+          "status": 200,
+          "latency_ms": 4.28
+        },
+        {
+          "attempt": 725,
+          "status": 200,
+          "latency_ms": 4.367
+        },
+        {
+          "attempt": 726,
+          "status": 200,
+          "latency_ms": 3.233
+        },
+        {
+          "attempt": 727,
+          "status": 200,
+          "latency_ms": 2.706
+        },
+        {
+          "attempt": 728,
+          "status": 200,
+          "latency_ms": 3.466
+        },
+        {
+          "attempt": 729,
+          "status": 200,
+          "latency_ms": 3.124
+        },
+        {
+          "attempt": 730,
+          "status": 200,
+          "latency_ms": 2.8
+        },
+        {
+          "attempt": 731,
+          "status": 200,
+          "latency_ms": 2.321
+        },
+        {
+          "attempt": 732,
+          "status": 200,
+          "latency_ms": 2.836
+        },
+        {
+          "attempt": 733,
+          "status": 200,
+          "latency_ms": 2.921
+        },
+        {
+          "attempt": 734,
+          "status": 200,
+          "latency_ms": 2.871
+        },
+        {
+          "attempt": 735,
+          "status": 200,
+          "latency_ms": 3.46
+        },
+        {
+          "attempt": 736,
+          "status": 200,
+          "latency_ms": 16.002
+        },
+        {
+          "attempt": 737,
+          "status": 200,
+          "latency_ms": 3.493
+        },
+        {
+          "attempt": 738,
+          "status": 200,
+          "latency_ms": 2.943
+        },
+        {
+          "attempt": 739,
+          "status": 200,
+          "latency_ms": 2.608
+        },
+        {
+          "attempt": 740,
+          "status": 200,
+          "latency_ms": 3.353
+        },
+        {
+          "attempt": 741,
+          "status": 200,
+          "latency_ms": 3.199
+        },
+        {
+          "attempt": 742,
+          "status": 200,
+          "latency_ms": 3.23
+        },
+        {
+          "attempt": 743,
+          "status": 200,
+          "latency_ms": 5.864
+        },
+        {
+          "attempt": 744,
+          "status": 200,
+          "latency_ms": 2.889
+        },
+        {
+          "attempt": 745,
+          "status": 200,
+          "latency_ms": 3.378
+        },
+        {
+          "attempt": 746,
+          "status": 200,
+          "latency_ms": 2.508
+        },
+        {
+          "attempt": 747,
+          "status": 200,
+          "latency_ms": 2.675
+        },
+        {
+          "attempt": 748,
+          "status": 200,
+          "latency_ms": 2.695
+        },
+        {
+          "attempt": 749,
+          "status": 200,
+          "latency_ms": 2.477
+        },
+        {
+          "attempt": 750,
+          "status": 200,
+          "latency_ms": 3.555
+        },
+        {
+          "attempt": 751,
+          "status": 200,
+          "latency_ms": 3.906
+        },
+        {
+          "attempt": 752,
+          "status": 200,
+          "latency_ms": 3.418
+        },
+        {
+          "attempt": 753,
+          "status": 200,
+          "latency_ms": 3.231
+        },
+        {
+          "attempt": 754,
+          "status": 200,
+          "latency_ms": 22.599
+        },
+        {
+          "attempt": 755,
+          "status": 200,
+          "latency_ms": 18.21
+        },
+        {
+          "attempt": 756,
+          "status": 200,
+          "latency_ms": 31.317
+        },
+        {
+          "attempt": 757,
+          "status": 200,
+          "latency_ms": 32.919
+        },
+        {
+          "attempt": 758,
+          "status": 200,
+          "latency_ms": 6.736
+        },
+        {
+          "attempt": 759,
+          "status": 200,
+          "latency_ms": 23.368
+        },
+        {
+          "attempt": 760,
+          "status": 200,
+          "latency_ms": 5.66
+        },
+        {
+          "attempt": 761,
+          "status": 200,
+          "latency_ms": 6.251
+        },
+        {
+          "attempt": 762,
+          "status": 200,
+          "latency_ms": 5.566
+        },
+        {
+          "attempt": 763,
+          "status": 200,
+          "latency_ms": 3.627
+        },
+        {
+          "attempt": 764,
+          "status": 200,
+          "latency_ms": 2.995
+        },
+        {
+          "attempt": 765,
+          "status": 200,
+          "latency_ms": 3.958
+        },
+        {
+          "attempt": 766,
+          "status": 200,
+          "latency_ms": 2.977
+        },
+        {
+          "attempt": 767,
+          "status": 200,
+          "latency_ms": 30.377
+        },
+        {
+          "attempt": 768,
+          "status": 200,
+          "latency_ms": 15.446
+        },
+        {
+          "attempt": 769,
+          "status": 200,
+          "latency_ms": 18.483
+        },
+        {
+          "attempt": 770,
+          "status": 200,
+          "latency_ms": 4.375
+        },
+        {
+          "attempt": 771,
+          "status": 200,
+          "latency_ms": 3.91
+        },
+        {
+          "attempt": 772,
+          "status": 200,
+          "latency_ms": 3.196
+        },
+        {
+          "attempt": 773,
+          "status": 200,
+          "latency_ms": 16.152
+        },
+        {
+          "attempt": 774,
+          "status": 200,
+          "latency_ms": 4.421
+        },
+        {
+          "attempt": 775,
+          "status": 200,
+          "latency_ms": 3.38
+        },
+        {
+          "attempt": 776,
+          "status": 200,
+          "latency_ms": 4.646
+        },
+        {
+          "attempt": 777,
+          "status": 200,
+          "latency_ms": 4.538
+        },
+        {
+          "attempt": 778,
+          "status": 200,
+          "latency_ms": 3.292
+        },
+        {
+          "attempt": 779,
+          "status": 200,
+          "latency_ms": 3.546
+        },
+        {
+          "attempt": 780,
+          "status": 200,
+          "latency_ms": 4.14
+        },
+        {
+          "attempt": 781,
+          "status": 200,
+          "latency_ms": 17.718
+        },
+        {
+          "attempt": 782,
+          "status": 200,
+          "latency_ms": 16.189
+        },
+        {
+          "attempt": 783,
+          "status": 200,
+          "latency_ms": 14.514
+        },
+        {
+          "attempt": 784,
+          "status": 200,
+          "latency_ms": 19.209
+        },
+        {
+          "attempt": 785,
+          "status": 200,
+          "latency_ms": 31.754
+        },
+        {
+          "attempt": 786,
+          "status": 200,
+          "latency_ms": 5.752
+        },
+        {
+          "attempt": 787,
+          "status": 200,
+          "latency_ms": 5.811
+        },
+        {
+          "attempt": 788,
+          "status": 200,
+          "latency_ms": 20.492
+        },
+        {
+          "attempt": 789,
+          "status": 200,
+          "latency_ms": 4.817
+        },
+        {
+          "attempt": 790,
+          "status": 200,
+          "latency_ms": 4.52
+        },
+        {
+          "attempt": 791,
+          "status": 200,
+          "latency_ms": 17.593
+        },
+        {
+          "attempt": 792,
+          "status": 200,
+          "latency_ms": 19.977
+        },
+        {
+          "attempt": 793,
+          "status": 200,
+          "latency_ms": 6.259
+        },
+        {
+          "attempt": 794,
+          "status": 200,
+          "latency_ms": 23.599
+        },
+        {
+          "attempt": 795,
+          "status": 200,
+          "latency_ms": 21.159
+        },
+        {
+          "attempt": 796,
+          "status": 200,
+          "latency_ms": 6.343
+        },
+        {
+          "attempt": 797,
+          "status": 200,
+          "latency_ms": 3.967
+        },
+        {
+          "attempt": 798,
+          "status": 200,
+          "latency_ms": 32.118
+        },
+        {
+          "attempt": 799,
+          "status": 200,
+          "latency_ms": 30.712
+        },
+        {
+          "attempt": 800,
+          "status": 200,
+          "latency_ms": 31.551
+        },
+        {
+          "attempt": 801,
+          "status": 200,
+          "latency_ms": 15.64
+        },
+        {
+          "attempt": 802,
+          "status": 200,
+          "latency_ms": 17.316
+        },
+        {
+          "attempt": 803,
+          "status": 200,
+          "latency_ms": 31.306
+        },
+        {
+          "attempt": 804,
+          "status": 200,
+          "latency_ms": 4.42
+        },
+        {
+          "attempt": 805,
+          "status": 200,
+          "latency_ms": 3.282
+        },
+        {
+          "attempt": 806,
+          "status": 200,
+          "latency_ms": 22.777
+        },
+        {
+          "attempt": 807,
+          "status": 200,
+          "latency_ms": 5.104
+        },
+        {
+          "attempt": 808,
+          "status": 200,
+          "latency_ms": 26.919
+        },
+        {
+          "attempt": 809,
+          "status": 200,
+          "latency_ms": 4.631
+        },
+        {
+          "attempt": 810,
+          "status": 200,
+          "latency_ms": 30.157
+        },
+        {
+          "attempt": 811,
+          "status": 200,
+          "latency_ms": 6.599
+        },
+        {
+          "attempt": 812,
+          "status": 200,
+          "latency_ms": 5.973
+        },
+        {
+          "attempt": 813,
+          "status": 200,
+          "latency_ms": 4.867
+        },
+        {
+          "attempt": 814,
+          "status": 200,
+          "latency_ms": 4.19
+        },
+        {
+          "attempt": 815,
+          "status": 200,
+          "latency_ms": 5.808
+        },
+        {
+          "attempt": 816,
+          "status": 200,
+          "latency_ms": 3.715
+        },
+        {
+          "attempt": 817,
+          "status": 200,
+          "latency_ms": 3.654
+        },
+        {
+          "attempt": 818,
+          "status": 200,
+          "latency_ms": 24.226
+        },
+        {
+          "attempt": 819,
+          "status": 200,
+          "latency_ms": 4.754
+        },
+        {
+          "attempt": 820,
+          "status": 200,
+          "latency_ms": 23.295
+        },
+        {
+          "attempt": 821,
+          "status": 200,
+          "latency_ms": 4.076
+        },
+        {
+          "attempt": 822,
+          "status": 200,
+          "latency_ms": 3.181
+        },
+        {
+          "attempt": 823,
+          "status": 200,
+          "latency_ms": 3.319
+        },
+        {
+          "attempt": 824,
+          "status": 200,
+          "latency_ms": 3.458
+        },
+        {
+          "attempt": 825,
+          "status": 200,
+          "latency_ms": 16.906
+        },
+        {
+          "attempt": 826,
+          "status": 200,
+          "latency_ms": 2.935
+        },
+        {
+          "attempt": 827,
+          "status": 200,
+          "latency_ms": 2.877
+        },
+        {
+          "attempt": 828,
+          "status": 200,
+          "latency_ms": 3.006
+        },
+        {
+          "attempt": 829,
+          "status": 200,
+          "latency_ms": 2.654
+        },
+        {
+          "attempt": 830,
+          "status": 200,
+          "latency_ms": 2.949
+        },
+        {
+          "attempt": 831,
+          "status": 200,
+          "latency_ms": 18.449
+        },
+        {
+          "attempt": 832,
+          "status": 200,
+          "latency_ms": 13.647
+        },
+        {
+          "attempt": 833,
+          "status": 200,
+          "latency_ms": 18.576
+        },
+        {
+          "attempt": 834,
+          "status": 200,
+          "latency_ms": 17.316
+        },
+        {
+          "attempt": 835,
+          "status": 200,
+          "latency_ms": 8.816
+        },
+        {
+          "attempt": 836,
+          "status": 200,
+          "latency_ms": 22.855
+        },
+        {
+          "attempt": 837,
+          "status": 200,
+          "latency_ms": 31.412
+        },
+        {
+          "attempt": 838,
+          "status": 200,
+          "latency_ms": 6.404
+        },
+        {
+          "attempt": 839,
+          "status": 200,
+          "latency_ms": 4.884
+        },
+        {
+          "attempt": 840,
+          "status": 200,
+          "latency_ms": 5.654
+        },
+        {
+          "attempt": 841,
+          "status": 200,
+          "latency_ms": 5.09
+        },
+        {
+          "attempt": 842,
+          "status": 200,
+          "latency_ms": 24.249
+        },
+        {
+          "attempt": 843,
+          "status": 200,
+          "latency_ms": 5.155
+        },
+        {
+          "attempt": 844,
+          "status": 200,
+          "latency_ms": 5.684
+        },
+        {
+          "attempt": 845,
+          "status": 200,
+          "latency_ms": 5.579
+        },
+        {
+          "attempt": 846,
+          "status": 200,
+          "latency_ms": 29.809
+        },
+        {
+          "attempt": 847,
+          "status": 200,
+          "latency_ms": 6.411
+        },
+        {
+          "attempt": 848,
+          "status": 200,
+          "latency_ms": 6.219
+        },
+        {
+          "attempt": 849,
+          "status": 200,
+          "latency_ms": 21.471
+        },
+        {
+          "attempt": 850,
+          "status": 200,
+          "latency_ms": 5.568
+        },
+        {
+          "attempt": 851,
+          "status": 200,
+          "latency_ms": 3.706
+        },
+        {
+          "attempt": 852,
+          "status": 200,
+          "latency_ms": 18.433
+        },
+        {
+          "attempt": 853,
+          "status": 200,
+          "latency_ms": 18.406
+        },
+        {
+          "attempt": 854,
+          "status": 200,
+          "latency_ms": 6.418
+        },
+        {
+          "attempt": 855,
+          "status": 200,
+          "latency_ms": 23.931
+        },
+        {
+          "attempt": 856,
+          "status": 200,
+          "latency_ms": 7.605
+        },
+        {
+          "attempt": 857,
+          "status": 200,
+          "latency_ms": 23.722
+        },
+        {
+          "attempt": 858,
+          "status": 200,
+          "latency_ms": 28.203
+        },
+        {
+          "attempt": 859,
+          "status": 200,
+          "latency_ms": 3.907
+        },
+        {
+          "attempt": 860,
+          "status": 200,
+          "latency_ms": 29.823
+        },
+        {
+          "attempt": 861,
+          "status": 200,
+          "latency_ms": 4.267
+        },
+        {
+          "attempt": 862,
+          "status": 200,
+          "latency_ms": 4.88
+        },
+        {
+          "attempt": 863,
+          "status": 200,
+          "latency_ms": 3.431
+        },
+        {
+          "attempt": 864,
+          "status": 200,
+          "latency_ms": 3.586
+        },
+        {
+          "attempt": 865,
+          "status": 200,
+          "latency_ms": 3.539
+        },
+        {
+          "attempt": 866,
+          "status": 200,
+          "latency_ms": 29.049
+        },
+        {
+          "attempt": 867,
+          "status": 200,
+          "latency_ms": 4.868
+        },
+        {
+          "attempt": 868,
+          "status": 200,
+          "latency_ms": 5.317
+        },
+        {
+          "attempt": 869,
+          "status": 200,
+          "latency_ms": 3.841
+        },
+        {
+          "attempt": 870,
+          "status": 200,
+          "latency_ms": 3.855
+        },
+        {
+          "attempt": 871,
+          "status": 200,
+          "latency_ms": 3.554
+        },
+        {
+          "attempt": 872,
+          "status": 200,
+          "latency_ms": 2.882
+        },
+        {
+          "attempt": 873,
+          "status": 200,
+          "latency_ms": 3.046
+        },
+        {
+          "attempt": 874,
+          "status": 200,
+          "latency_ms": 3.396
+        },
+        {
+          "attempt": 875,
+          "status": 200,
+          "latency_ms": 29.828
+        },
+        {
+          "attempt": 876,
+          "status": 200,
+          "latency_ms": 3.884
+        },
+        {
+          "attempt": 877,
+          "status": 200,
+          "latency_ms": 8.856
+        },
+        {
+          "attempt": 878,
+          "status": 200,
+          "latency_ms": 18.942
+        },
+        {
+          "attempt": 879,
+          "status": 200,
+          "latency_ms": 5.957
+        },
+        {
+          "attempt": 880,
+          "status": 200,
+          "latency_ms": 25.704
+        },
+        {
+          "attempt": 881,
+          "status": 200,
+          "latency_ms": 4.967
+        },
+        {
+          "attempt": 882,
+          "status": 200,
+          "latency_ms": 4.736
+        },
+        {
+          "attempt": 883,
+          "status": 200,
+          "latency_ms": 23.338
+        },
+        {
+          "attempt": 884,
+          "status": 200,
+          "latency_ms": 31.909
+        },
+        {
+          "attempt": 885,
+          "status": 200,
+          "latency_ms": 7.206
+        },
+        {
+          "attempt": 886,
+          "status": 200,
+          "latency_ms": 6.707
+        },
+        {
+          "attempt": 887,
+          "status": 200,
+          "latency_ms": 31.443
+        },
+        {
+          "attempt": 888,
+          "status": 200,
+          "latency_ms": 32.35
+        },
+        {
+          "attempt": 889,
+          "status": 200,
+          "latency_ms": 6.234
+        },
+        {
+          "attempt": 890,
+          "status": 200,
+          "latency_ms": 26.235
+        },
+        {
+          "attempt": 891,
+          "status": 200,
+          "latency_ms": 7.082
+        },
+        {
+          "attempt": 892,
+          "status": 200,
+          "latency_ms": 7.169
+        },
+        {
+          "attempt": 893,
+          "status": 200,
+          "latency_ms": 32.707
+        },
+        {
+          "attempt": 894,
+          "status": 200,
+          "latency_ms": 7.137
+        },
+        {
+          "attempt": 895,
+          "status": 200,
+          "latency_ms": 6.996
+        },
+        {
+          "attempt": 896,
+          "status": 200,
+          "latency_ms": 7.102
+        },
+        {
+          "attempt": 897,
+          "status": 200,
+          "latency_ms": 4.954
+        },
+        {
+          "attempt": 898,
+          "status": 200,
+          "latency_ms": 4.856
+        },
+        {
+          "attempt": 899,
+          "status": 200,
+          "latency_ms": 29.013
+        },
+        {
+          "attempt": 900,
+          "status": 200,
+          "latency_ms": 4.89
+        },
+        {
+          "attempt": 901,
+          "status": 200,
+          "latency_ms": 3.711
+        },
+        {
+          "attempt": 902,
+          "status": 200,
+          "latency_ms": 25.366
+        },
+        {
+          "attempt": 903,
+          "status": 200,
+          "latency_ms": 6.939
+        },
+        {
+          "attempt": 904,
+          "status": 200,
+          "latency_ms": 4.862
+        },
+        {
+          "attempt": 905,
+          "status": 200,
+          "latency_ms": 4.633
+        },
+        {
+          "attempt": 906,
+          "status": 200,
+          "latency_ms": 6.385
+        },
+        {
+          "attempt": 907,
+          "status": 200,
+          "latency_ms": 4.794
+        },
+        {
+          "attempt": 908,
+          "status": 200,
+          "latency_ms": 20.987
+        },
+        {
+          "attempt": 909,
+          "status": 200,
+          "latency_ms": 4.438
+        },
+        {
+          "attempt": 910,
+          "status": 200,
+          "latency_ms": 26.666
+        },
+        {
+          "attempt": 911,
+          "status": 200,
+          "latency_ms": 5.724
+        },
+        {
+          "attempt": 912,
+          "status": 200,
+          "latency_ms": 25.441
+        },
+        {
+          "attempt": 913,
+          "status": 200,
+          "latency_ms": 33.357
+        },
+        {
+          "attempt": 914,
+          "status": 200,
+          "latency_ms": 29.401
+        },
+        {
+          "attempt": 915,
+          "status": 200,
+          "latency_ms": 6.756
+        },
+        {
+          "attempt": 916,
+          "status": 200,
+          "latency_ms": 26.279
+        },
+        {
+          "attempt": 917,
+          "status": 200,
+          "latency_ms": 6.69
+        },
+        {
+          "attempt": 918,
+          "status": 200,
+          "latency_ms": 6.386
+        },
+        {
+          "attempt": 919,
+          "status": 200,
+          "latency_ms": 5.342
+        },
+        {
+          "attempt": 920,
+          "status": 200,
+          "latency_ms": 25.116
+        },
+        {
+          "attempt": 921,
+          "status": 200,
+          "latency_ms": 5.479
+        },
+        {
+          "attempt": 922,
+          "status": 200,
+          "latency_ms": 6.735
+        },
+        {
+          "attempt": 923,
+          "status": 200,
+          "latency_ms": 4.67
+        },
+        {
+          "attempt": 924,
+          "status": 200,
+          "latency_ms": 4.182
+        },
+        {
+          "attempt": 925,
+          "status": 200,
+          "latency_ms": 3.72
+        },
+        {
+          "attempt": 926,
+          "status": 200,
+          "latency_ms": 3.566
+        },
+        {
+          "attempt": 927,
+          "status": 200,
+          "latency_ms": 7.485
+        },
+        {
+          "attempt": 928,
+          "status": 200,
+          "latency_ms": 3.679
+        },
+        {
+          "attempt": 929,
+          "status": 200,
+          "latency_ms": 2.818
+        },
+        {
+          "attempt": 930,
+          "status": 200,
+          "latency_ms": 19.837
+        },
+        {
+          "attempt": 931,
+          "status": 200,
+          "latency_ms": 17.656
+        },
+        {
+          "attempt": 932,
+          "status": 200,
+          "latency_ms": 6.524
+        },
+        {
+          "attempt": 933,
+          "status": 200,
+          "latency_ms": 5.743
+        },
+        {
+          "attempt": 934,
+          "status": 200,
+          "latency_ms": 3.827
+        },
+        {
+          "attempt": 935,
+          "status": 200,
+          "latency_ms": 3.892
+        },
+        {
+          "attempt": 936,
+          "status": 200,
+          "latency_ms": 4.257
+        },
+        {
+          "attempt": 937,
+          "status": 200,
+          "latency_ms": 3.175
+        },
+        {
+          "attempt": 938,
+          "status": 200,
+          "latency_ms": 3.327
+        },
+        {
+          "attempt": 939,
+          "status": 200,
+          "latency_ms": 2.909
+        },
+        {
+          "attempt": 940,
+          "status": 200,
+          "latency_ms": 3.353
+        },
+        {
+          "attempt": 941,
+          "status": 200,
+          "latency_ms": 2.764
+        },
+        {
+          "attempt": 942,
+          "status": 200,
+          "latency_ms": 3.949
+        },
+        {
+          "attempt": 943,
+          "status": 200,
+          "latency_ms": 4.182
+        },
+        {
+          "attempt": 944,
+          "status": 200,
+          "latency_ms": 2.775
+        },
+        {
+          "attempt": 945,
+          "status": 200,
+          "latency_ms": 3.152
+        },
+        {
+          "attempt": 946,
+          "status": 200,
+          "latency_ms": 3.769
+        },
+        {
+          "attempt": 947,
+          "status": 200,
+          "latency_ms": 3.563
+        },
+        {
+          "attempt": 948,
+          "status": 200,
+          "latency_ms": 2.852
+        },
+        {
+          "attempt": 949,
+          "status": 200,
+          "latency_ms": 3.634
+        },
+        {
+          "attempt": 950,
+          "status": 200,
+          "latency_ms": 3.142
+        },
+        {
+          "attempt": 951,
+          "status": 200,
+          "latency_ms": 3.507
+        },
+        {
+          "attempt": 952,
+          "status": 200,
+          "latency_ms": 3.244
+        },
+        {
+          "attempt": 953,
+          "status": 200,
+          "latency_ms": 3.067
+        },
+        {
+          "attempt": 954,
+          "status": 200,
+          "latency_ms": 25.431
+        },
+        {
+          "attempt": 955,
+          "status": 200,
+          "latency_ms": 5.675
+        },
+        {
+          "attempt": 956,
+          "status": 200,
+          "latency_ms": 4.452
+        },
+        {
+          "attempt": 957,
+          "status": 200,
+          "latency_ms": 4.485
+        },
+        {
+          "attempt": 958,
+          "status": 200,
+          "latency_ms": 17.496
+        },
+        {
+          "attempt": 959,
+          "status": 200,
+          "latency_ms": 5.746
+        },
+        {
+          "attempt": 960,
+          "status": 200,
+          "latency_ms": 4.287
+        },
+        {
+          "attempt": 961,
+          "status": 200,
+          "latency_ms": 4.442
+        },
+        {
+          "attempt": 962,
+          "status": 200,
+          "latency_ms": 5.457
+        },
+        {
+          "attempt": 963,
+          "status": 200,
+          "latency_ms": 3.917
+        },
+        {
+          "attempt": 964,
+          "status": 200,
+          "latency_ms": 20.659
+        },
+        {
+          "attempt": 965,
+          "status": 200,
+          "latency_ms": 4.331
+        },
+        {
+          "attempt": 966,
+          "status": 200,
+          "latency_ms": 3.812
+        },
+        {
+          "attempt": 967,
+          "status": 200,
+          "latency_ms": 26.296
+        },
+        {
+          "attempt": 968,
+          "status": 200,
+          "latency_ms": 5.052
+        },
+        {
+          "attempt": 969,
+          "status": 200,
+          "latency_ms": 5.182
+        },
+        {
+          "attempt": 970,
+          "status": 200,
+          "latency_ms": 4.0
+        },
+        {
+          "attempt": 971,
+          "status": 200,
+          "latency_ms": 3.34
+        },
+        {
+          "attempt": 972,
+          "status": 200,
+          "latency_ms": 3.691
+        },
+        {
+          "attempt": 973,
+          "status": 200,
+          "latency_ms": 3.301
+        },
+        {
+          "attempt": 974,
+          "status": 200,
+          "latency_ms": 2.729
+        },
+        {
+          "attempt": 975,
+          "status": 200,
+          "latency_ms": 3.115
+        },
+        {
+          "attempt": 976,
+          "status": 200,
+          "latency_ms": 3.717
+        },
+        {
+          "attempt": 977,
+          "status": 200,
+          "latency_ms": 3.386
+        },
+        {
+          "attempt": 978,
+          "status": 200,
+          "latency_ms": 3.159
+        },
+        {
+          "attempt": 979,
+          "status": 200,
+          "latency_ms": 3.249
+        },
+        {
+          "attempt": 980,
+          "status": 200,
+          "latency_ms": 14.203
+        },
+        {
+          "attempt": 981,
+          "status": 200,
+          "latency_ms": 17.603
+        },
+        {
+          "attempt": 982,
+          "status": 200,
+          "latency_ms": 4.773
+        },
+        {
+          "attempt": 983,
+          "status": 200,
+          "latency_ms": 5.972
+        },
+        {
+          "attempt": 984,
+          "status": 200,
+          "latency_ms": 4.722
+        },
+        {
+          "attempt": 985,
+          "status": 200,
+          "latency_ms": 3.628
+        },
+        {
+          "attempt": 986,
+          "status": 200,
+          "latency_ms": 31.352
+        },
+        {
+          "attempt": 987,
+          "status": 200,
+          "latency_ms": 5.698
+        },
+        {
+          "attempt": 988,
+          "status": 200,
+          "latency_ms": 6.503
+        },
+        {
+          "attempt": 989,
+          "status": 200,
+          "latency_ms": 5.639
+        },
+        {
+          "attempt": 990,
+          "status": 200,
+          "latency_ms": 3.55
+        },
+        {
+          "attempt": 991,
+          "status": 200,
+          "latency_ms": 4.568
+        },
+        {
+          "attempt": 992,
+          "status": 200,
+          "latency_ms": 3.847
+        },
+        {
+          "attempt": 993,
+          "status": 200,
+          "latency_ms": 2.967
+        },
+        {
+          "attempt": 994,
+          "status": 200,
+          "latency_ms": 25.426
+        },
+        {
+          "attempt": 995,
+          "status": 200,
+          "latency_ms": 3.866
+        },
+        {
+          "attempt": 996,
+          "status": 200,
+          "latency_ms": 5.366
+        },
+        {
+          "attempt": 997,
+          "status": 200,
+          "latency_ms": 3.895
+        },
+        {
+          "attempt": 998,
+          "status": 200,
+          "latency_ms": 3.866
+        },
+        {
+          "attempt": 999,
+          "status": 200,
+          "latency_ms": 32.453
+        },
+        {
+          "attempt": 1000,
+          "status": 200,
+          "latency_ms": 6.119
+        },
+        {
+          "attempt": 1001,
+          "status": 200,
+          "latency_ms": 7.553
+        },
+        {
+          "attempt": 1002,
+          "status": 200,
+          "latency_ms": 15.777
+        },
+        {
+          "attempt": 1003,
+          "status": 200,
+          "latency_ms": 17.618
+        },
+        {
+          "attempt": 1004,
+          "status": 200,
+          "latency_ms": 5.835
+        },
+        {
+          "attempt": 1005,
+          "status": 200,
+          "latency_ms": 26.709
+        },
+        {
+          "attempt": 1006,
+          "status": 200,
+          "latency_ms": 30.933
+        },
+        {
+          "attempt": 1007,
+          "status": 200,
+          "latency_ms": 5.89
+        },
+        {
+          "attempt": 1008,
+          "status": 200,
+          "latency_ms": 5.875
+        },
+        {
+          "attempt": 1009,
+          "status": 200,
+          "latency_ms": 5.747
+        },
+        {
+          "attempt": 1010,
+          "status": 200,
+          "latency_ms": 4.716
+        },
+        {
+          "attempt": 1011,
+          "status": 200,
+          "latency_ms": 4.406
+        },
+        {
+          "attempt": 1012,
+          "status": 200,
+          "latency_ms": 3.628
+        },
+        {
+          "attempt": 1013,
+          "status": 200,
+          "latency_ms": 3.79
+        },
+        {
+          "attempt": 1014,
+          "status": 200,
+          "latency_ms": 6.113
+        },
+        {
+          "attempt": 1015,
+          "status": 200,
+          "latency_ms": 21.17
+        },
+        {
+          "attempt": 1016,
+          "status": 200,
+          "latency_ms": 6.524
+        },
+        {
+          "attempt": 1017,
+          "status": 200,
+          "latency_ms": 5.12
+        },
+        {
+          "attempt": 1018,
+          "status": 200,
+          "latency_ms": 4.683
+        },
+        {
+          "attempt": 1019,
+          "status": 200,
+          "latency_ms": 3.484
+        },
+        {
+          "attempt": 1020,
+          "status": 200,
+          "latency_ms": 3.972
+        },
+        {
+          "attempt": 1021,
+          "status": 200,
+          "latency_ms": 3.616
+        },
+        {
+          "attempt": 1022,
+          "status": 200,
+          "latency_ms": 3.34
+        },
+        {
+          "attempt": 1023,
+          "status": 200,
+          "latency_ms": 3.253
+        },
+        {
+          "attempt": 1024,
+          "status": 503,
+          "latency_ms": 1.23
+        }
+      ],
+      "first_rejection": "log exceeds 1024 entries\n",
+      "historical_retry_at_capacity": {
+        "status": 503,
+        "body": "log exceeds 1024 entries\n"
+      },
+      "checkpoint": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "capacity-check",
+            "member": "a"
+          },
+          "position": {
+            "index": 1024,
+            "term": 1
+          },
+          "sha256": "4b55c1a3b7050b7cf8a1f6116cd256fcf29fdb530392b6c221667f4faf96dd86"
+        },
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      },
+      "restart": [
+        {
+          "mode": "full",
+          "fresh_read": false,
+          "exit_code": 1,
+          "listener_ready_ms": 1046.131,
+          "initial_status": {
+            "term": 1,
+            "commit_index": 0,
+            "applied_index": 0,
+            "checkpoint": {
+              "recovery_pending": false,
+              "recovery_verified": false,
+              "recovery_index": 0
+            }
+          },
+          "log": "2026/11/08 15:26:35 INFO raft peer listening id=a peer=127.0.0.1:50927 client=127.0.0.1:50928\n2026/11/08 15:26:35 ERROR raft peer stopped error=\"log exceeds 1024 entries\"\n",
+          "retained_acknowledged_prefix": true,
+          "restored_checkpoint_index": null
+        },
+        {
+          "mode": "checkpoint",
+          "fresh_read": false,
+          "exit_code": 1,
+          "listener_ready_ms": 1041.528,
+          "initial_status": {
+            "term": 1,
+            "commit_index": 0,
+            "applied_index": 0,
+            "checkpoint": {
+              "published": {
+                "generation": 1,
+                "identity": {
+                  "group": "capacity-check",
+                  "member": "a"
+                },
+                "position": {
+                  "index": 1024,
+                  "term": 1
+                },
+                "sha256": "4b55c1a3b7050b7cf8a1f6116cd256fcf29fdb530392b6c221667f4faf96dd86"
+              },
+              "recovery_pending": true,
+              "recovery_verified": true,
+              "recovery_index": 0
+            }
+          },
+          "log": "2026/11/08 15:26:39 INFO raft peer listening id=a peer=127.0.0.1:50960 client=127.0.0.1:50961\n2026/11/08 15:26:39 ERROR raft peer stopped error=\"log exceeds 1024 entries\"\n",
+          "retained_acknowledged_prefix": true,
+          "restored_checkpoint_index": null
+        }
+      ]
+    },
+    {
+      "kind": "payload-bytes",
+      "workers_per_update": 128,
+      "acknowledged_updates": 179,
+      "log_entries": 180,
+      "command_payload_bytes": 4188022,
+      "journal_bytes": 503110888,
+      "journal_records": 181,
+      "samples": [
+        {
+          "acknowledged_updates": 1,
+          "journal_bytes": 31518
+        },
+        {
+          "acknowledged_updates": 64,
+          "journal_bytes": 64958727
+        },
+        {
+          "acknowledged_updates": 128,
+          "journal_bytes": 257829040
+        }
+      ],
+      "writes": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "latency_ms": 5.57
+        },
+        {
+          "attempt": 2,
+          "status": 200,
+          "latency_ms": 4.486
+        },
+        {
+          "attempt": 3,
+          "status": 200,
+          "latency_ms": 6.001
+        },
+        {
+          "attempt": 4,
+          "status": 200,
+          "latency_ms": 3.528
+        },
+        {
+          "attempt": 5,
+          "status": 200,
+          "latency_ms": 4.874
+        },
+        {
+          "attempt": 6,
+          "status": 200,
+          "latency_ms": 18.288
+        },
+        {
+          "attempt": 7,
+          "status": 200,
+          "latency_ms": 5.348
+        },
+        {
+          "attempt": 8,
+          "status": 200,
+          "latency_ms": 3.507
+        },
+        {
+          "attempt": 9,
+          "status": 200,
+          "latency_ms": 29.154
+        },
+        {
+          "attempt": 10,
+          "status": 200,
+          "latency_ms": 6.203
+        },
+        {
+          "attempt": 11,
+          "status": 200,
+          "latency_ms": 6.01
+        },
+        {
+          "attempt": 12,
+          "status": 200,
+          "latency_ms": 6.097
+        },
+        {
+          "attempt": 13,
+          "status": 200,
+          "latency_ms": 23.835
+        },
+        {
+          "attempt": 14,
+          "status": 200,
+          "latency_ms": 30.576
+        },
+        {
+          "attempt": 15,
+          "status": 200,
+          "latency_ms": 8.536
+        },
+        {
+          "attempt": 16,
+          "status": 200,
+          "latency_ms": 6.181
+        },
+        {
+          "attempt": 17,
+          "status": 200,
+          "latency_ms": 32.762
+        },
+        {
+          "attempt": 18,
+          "status": 200,
+          "latency_ms": 33.558
+        },
+        {
+          "attempt": 19,
+          "status": 200,
+          "latency_ms": 10.88
+        },
+        {
+          "attempt": 20,
+          "status": 200,
+          "latency_ms": 20.43
+        },
+        {
+          "attempt": 21,
+          "status": 200,
+          "latency_ms": 32.365
+        },
+        {
+          "attempt": 22,
+          "status": 200,
+          "latency_ms": 31.745
+        },
+        {
+          "attempt": 23,
+          "status": 200,
+          "latency_ms": 8.867
+        },
+        {
+          "attempt": 24,
+          "status": 200,
+          "latency_ms": 6.374
+        },
+        {
+          "attempt": 25,
+          "status": 200,
+          "latency_ms": 6.805
+        },
+        {
+          "attempt": 26,
+          "status": 200,
+          "latency_ms": 20.994
+        },
+        {
+          "attempt": 27,
+          "status": 200,
+          "latency_ms": 7.593
+        },
+        {
+          "attempt": 28,
+          "status": 200,
+          "latency_ms": 6.965
+        },
+        {
+          "attempt": 29,
+          "status": 200,
+          "latency_ms": 9.14
+        },
+        {
+          "attempt": 30,
+          "status": 200,
+          "latency_ms": 9.96
+        },
+        {
+          "attempt": 31,
+          "status": 200,
+          "latency_ms": 6.059
+        },
+        {
+          "attempt": 32,
+          "status": 200,
+          "latency_ms": 7.546
+        },
+        {
+          "attempt": 33,
+          "status": 200,
+          "latency_ms": 7.174
+        },
+        {
+          "attempt": 34,
+          "status": 200,
+          "latency_ms": 8.096
+        },
+        {
+          "attempt": 35,
+          "status": 200,
+          "latency_ms": 7.683
+        },
+        {
+          "attempt": 36,
+          "status": 200,
+          "latency_ms": 9.775
+        },
+        {
+          "attempt": 37,
+          "status": 200,
+          "latency_ms": 5.7
+        },
+        {
+          "attempt": 38,
+          "status": 200,
+          "latency_ms": 23.812
+        },
+        {
+          "attempt": 39,
+          "status": 200,
+          "latency_ms": 10.332
+        },
+        {
+          "attempt": 40,
+          "status": 200,
+          "latency_ms": 7.621
+        },
+        {
+          "attempt": 41,
+          "status": 200,
+          "latency_ms": 9.996
+        },
+        {
+          "attempt": 42,
+          "status": 200,
+          "latency_ms": 5.904
+        },
+        {
+          "attempt": 43,
+          "status": 200,
+          "latency_ms": 9.637
+        },
+        {
+          "attempt": 44,
+          "status": 200,
+          "latency_ms": 7.432
+        },
+        {
+          "attempt": 45,
+          "status": 200,
+          "latency_ms": 10.235
+        },
+        {
+          "attempt": 46,
+          "status": 200,
+          "latency_ms": 7.882
+        },
+        {
+          "attempt": 47,
+          "status": 200,
+          "latency_ms": 8.157
+        },
+        {
+          "attempt": 48,
+          "status": 200,
+          "latency_ms": 8.397
+        },
+        {
+          "attempt": 49,
+          "status": 200,
+          "latency_ms": 10.262
+        },
+        {
+          "attempt": 50,
+          "status": 200,
+          "latency_ms": 11.476
+        },
+        {
+          "attempt": 51,
+          "status": 200,
+          "latency_ms": 6.6
+        },
+        {
+          "attempt": 52,
+          "status": 200,
+          "latency_ms": 9.364
+        },
+        {
+          "attempt": 53,
+          "status": 200,
+          "latency_ms": 9.42
+        },
+        {
+          "attempt": 54,
+          "status": 200,
+          "latency_ms": 16.582
+        },
+        {
+          "attempt": 55,
+          "status": 200,
+          "latency_ms": 10.894
+        },
+        {
+          "attempt": 56,
+          "status": 200,
+          "latency_ms": 22.923
+        },
+        {
+          "attempt": 57,
+          "status": 200,
+          "latency_ms": 29.603
+        },
+        {
+          "attempt": 58,
+          "status": 200,
+          "latency_ms": 32.477
+        },
+        {
+          "attempt": 59,
+          "status": 200,
+          "latency_ms": 29.515
+        },
+        {
+          "attempt": 60,
+          "status": 200,
+          "latency_ms": 80.339
+        },
+        {
+          "attempt": 61,
+          "status": 200,
+          "latency_ms": 54.218
+        },
+        {
+          "attempt": 62,
+          "status": 200,
+          "latency_ms": 51.044
+        },
+        {
+          "attempt": 63,
+          "status": 200,
+          "latency_ms": 42.247
+        },
+        {
+          "attempt": 64,
+          "status": 200,
+          "latency_ms": 27.404
+        },
+        {
+          "attempt": 65,
+          "status": 200,
+          "latency_ms": 33.703
+        },
+        {
+          "attempt": 66,
+          "status": 200,
+          "latency_ms": 32.144
+        },
+        {
+          "attempt": 67,
+          "status": 200,
+          "latency_ms": 27.011
+        },
+        {
+          "attempt": 68,
+          "status": 200,
+          "latency_ms": 35.023
+        },
+        {
+          "attempt": 69,
+          "status": 200,
+          "latency_ms": 15.256
+        },
+        {
+          "attempt": 70,
+          "status": 200,
+          "latency_ms": 30.521
+        },
+        {
+          "attempt": 71,
+          "status": 200,
+          "latency_ms": 12.025
+        },
+        {
+          "attempt": 72,
+          "status": 200,
+          "latency_ms": 10.629
+        },
+        {
+          "attempt": 73,
+          "status": 200,
+          "latency_ms": 10.179
+        },
+        {
+          "attempt": 74,
+          "status": 200,
+          "latency_ms": 9.167
+        },
+        {
+          "attempt": 75,
+          "status": 200,
+          "latency_ms": 12.192
+        },
+        {
+          "attempt": 76,
+          "status": 200,
+          "latency_ms": 10.041
+        },
+        {
+          "attempt": 77,
+          "status": 200,
+          "latency_ms": 11.009
+        },
+        {
+          "attempt": 78,
+          "status": 200,
+          "latency_ms": 11.613
+        },
+        {
+          "attempt": 79,
+          "status": 200,
+          "latency_ms": 11.871
+        },
+        {
+          "attempt": 80,
+          "status": 200,
+          "latency_ms": 11.408
+        },
+        {
+          "attempt": 81,
+          "status": 200,
+          "latency_ms": 8.99
+        },
+        {
+          "attempt": 82,
+          "status": 200,
+          "latency_ms": 30.982
+        },
+        {
+          "attempt": 83,
+          "status": 200,
+          "latency_ms": 10.883
+        },
+        {
+          "attempt": 84,
+          "status": 200,
+          "latency_ms": 13.282
+        },
+        {
+          "attempt": 85,
+          "status": 200,
+          "latency_ms": 12.758
+        },
+        {
+          "attempt": 86,
+          "status": 200,
+          "latency_ms": 40.693
+        },
+        {
+          "attempt": 87,
+          "status": 200,
+          "latency_ms": 12.519
+        },
+        {
+          "attempt": 88,
+          "status": 200,
+          "latency_ms": 13.094
+        },
+        {
+          "attempt": 89,
+          "status": 200,
+          "latency_ms": 11.366
+        },
+        {
+          "attempt": 90,
+          "status": 200,
+          "latency_ms": 11.768
+        },
+        {
+          "attempt": 91,
+          "status": 200,
+          "latency_ms": 12.776
+        },
+        {
+          "attempt": 92,
+          "status": 200,
+          "latency_ms": 12.385
+        },
+        {
+          "attempt": 93,
+          "status": 200,
+          "latency_ms": 12.125
+        },
+        {
+          "attempt": 94,
+          "status": 200,
+          "latency_ms": 14.162
+        },
+        {
+          "attempt": 95,
+          "status": 200,
+          "latency_ms": 14.773
+        },
+        {
+          "attempt": 96,
+          "status": 200,
+          "latency_ms": 12.618
+        },
+        {
+          "attempt": 97,
+          "status": 200,
+          "latency_ms": 14.616
+        },
+        {
+          "attempt": 98,
+          "status": 200,
+          "latency_ms": 10.272
+        },
+        {
+          "attempt": 99,
+          "status": 200,
+          "latency_ms": 13.848
+        },
+        {
+          "attempt": 100,
+          "status": 200,
+          "latency_ms": 32.647
+        },
+        {
+          "attempt": 101,
+          "status": 200,
+          "latency_ms": 15.494
+        },
+        {
+          "attempt": 102,
+          "status": 200,
+          "latency_ms": 15.709
+        },
+        {
+          "attempt": 103,
+          "status": 200,
+          "latency_ms": 15.955
+        },
+        {
+          "attempt": 104,
+          "status": 200,
+          "latency_ms": 14.837
+        },
+        {
+          "attempt": 105,
+          "status": 200,
+          "latency_ms": 14.716
+        },
+        {
+          "attempt": 106,
+          "status": 200,
+          "latency_ms": 14.553
+        },
+        {
+          "attempt": 107,
+          "status": 200,
+          "latency_ms": 10.827
+        },
+        {
+          "attempt": 108,
+          "status": 200,
+          "latency_ms": 40.613
+        },
+        {
+          "attempt": 109,
+          "status": 200,
+          "latency_ms": 52.998
+        },
+        {
+          "attempt": 110,
+          "status": 200,
+          "latency_ms": 13.012
+        },
+        {
+          "attempt": 111,
+          "status": 200,
+          "latency_ms": 15.363
+        },
+        {
+          "attempt": 112,
+          "status": 200,
+          "latency_ms": 15.602
+        },
+        {
+          "attempt": 113,
+          "status": 200,
+          "latency_ms": 17.453
+        },
+        {
+          "attempt": 114,
+          "status": 200,
+          "latency_ms": 16.78
+        },
+        {
+          "attempt": 115,
+          "status": 200,
+          "latency_ms": 33.662
+        },
+        {
+          "attempt": 116,
+          "status": 200,
+          "latency_ms": 16.606
+        },
+        {
+          "attempt": 117,
+          "status": 200,
+          "latency_ms": 31.45
+        },
+        {
+          "attempt": 118,
+          "status": 200,
+          "latency_ms": 16.447
+        },
+        {
+          "attempt": 119,
+          "status": 200,
+          "latency_ms": 31.296
+        },
+        {
+          "attempt": 120,
+          "status": 200,
+          "latency_ms": 15.339
+        },
+        {
+          "attempt": 121,
+          "status": 200,
+          "latency_ms": 15.135
+        },
+        {
+          "attempt": 122,
+          "status": 200,
+          "latency_ms": 15.431
+        },
+        {
+          "attempt": 123,
+          "status": 200,
+          "latency_ms": 33.176
+        },
+        {
+          "attempt": 124,
+          "status": 200,
+          "latency_ms": 17.378
+        },
+        {
+          "attempt": 125,
+          "status": 200,
+          "latency_ms": 15.544
+        },
+        {
+          "attempt": 126,
+          "status": 200,
+          "latency_ms": 12.334
+        },
+        {
+          "attempt": 127,
+          "status": 200,
+          "latency_ms": 29.073
+        },
+        {
+          "attempt": 128,
+          "status": 200,
+          "latency_ms": 19.285
+        },
+        {
+          "attempt": 129,
+          "status": 200,
+          "latency_ms": 18.418
+        },
+        {
+          "attempt": 130,
+          "status": 200,
+          "latency_ms": 17.388
+        },
+        {
+          "attempt": 131,
+          "status": 200,
+          "latency_ms": 15.918
+        },
+        {
+          "attempt": 132,
+          "status": 200,
+          "latency_ms": 39.62
+        },
+        {
+          "attempt": 133,
+          "status": 200,
+          "latency_ms": 14.472
+        },
+        {
+          "attempt": 134,
+          "status": 200,
+          "latency_ms": 16.347
+        },
+        {
+          "attempt": 135,
+          "status": 200,
+          "latency_ms": 15.165
+        },
+        {
+          "attempt": 136,
+          "status": 200,
+          "latency_ms": 16.618
+        },
+        {
+          "attempt": 137,
+          "status": 200,
+          "latency_ms": 16.925
+        },
+        {
+          "attempt": 138,
+          "status": 200,
+          "latency_ms": 19.022
+        },
+        {
+          "attempt": 139,
+          "status": 200,
+          "latency_ms": 21.133
+        },
+        {
+          "attempt": 140,
+          "status": 200,
+          "latency_ms": 33.195
+        },
+        {
+          "attempt": 141,
+          "status": 200,
+          "latency_ms": 32.14
+        },
+        {
+          "attempt": 142,
+          "status": 200,
+          "latency_ms": 33.192
+        },
+        {
+          "attempt": 143,
+          "status": 200,
+          "latency_ms": 53.398
+        },
+        {
+          "attempt": 144,
+          "status": 200,
+          "latency_ms": 23.138
+        },
+        {
+          "attempt": 145,
+          "status": 200,
+          "latency_ms": 34.144
+        },
+        {
+          "attempt": 146,
+          "status": 200,
+          "latency_ms": 21.69
+        },
+        {
+          "attempt": 147,
+          "status": 200,
+          "latency_ms": 38.848
+        },
+        {
+          "attempt": 148,
+          "status": 200,
+          "latency_ms": 17.506
+        },
+        {
+          "attempt": 149,
+          "status": 200,
+          "latency_ms": 19.429
+        },
+        {
+          "attempt": 150,
+          "status": 200,
+          "latency_ms": 20.464
+        },
+        {
+          "attempt": 151,
+          "status": 200,
+          "latency_ms": 19.524
+        },
+        {
+          "attempt": 152,
+          "status": 200,
+          "latency_ms": 18.954
+        },
+        {
+          "attempt": 153,
+          "status": 200,
+          "latency_ms": 18.657
+        },
+        {
+          "attempt": 154,
+          "status": 200,
+          "latency_ms": 37.389
+        },
+        {
+          "attempt": 155,
+          "status": 200,
+          "latency_ms": 19.449
+        },
+        {
+          "attempt": 156,
+          "status": 200,
+          "latency_ms": 52.514
+        },
+        {
+          "attempt": 157,
+          "status": 200,
+          "latency_ms": 21.897
+        },
+        {
+          "attempt": 158,
+          "status": 200,
+          "latency_ms": 23.416
+        },
+        {
+          "attempt": 159,
+          "status": 200,
+          "latency_ms": 20.325
+        },
+        {
+          "attempt": 160,
+          "status": 200,
+          "latency_ms": 34.423
+        },
+        {
+          "attempt": 161,
+          "status": 200,
+          "latency_ms": 58.198
+        },
+        {
+          "attempt": 162,
+          "status": 200,
+          "latency_ms": 16.716
+        },
+        {
+          "attempt": 163,
+          "status": 200,
+          "latency_ms": 21.558
+        },
+        {
+          "attempt": 164,
+          "status": 200,
+          "latency_ms": 23.295
+        },
+        {
+          "attempt": 165,
+          "status": 200,
+          "latency_ms": 19.693
+        },
+        {
+          "attempt": 166,
+          "status": 200,
+          "latency_ms": 53.1
+        },
+        {
+          "attempt": 167,
+          "status": 200,
+          "latency_ms": 23.601
+        },
+        {
+          "attempt": 168,
+          "status": 200,
+          "latency_ms": 21.369
+        },
+        {
+          "attempt": 169,
+          "status": 200,
+          "latency_ms": 44.505
+        },
+        {
+          "attempt": 170,
+          "status": 200,
+          "latency_ms": 52.452
+        },
+        {
+          "attempt": 171,
+          "status": 200,
+          "latency_ms": 21.411
+        },
+        {
+          "attempt": 172,
+          "status": 200,
+          "latency_ms": 22.482
+        },
+        {
+          "attempt": 173,
+          "status": 200,
+          "latency_ms": 22.85
+        },
+        {
+          "attempt": 174,
+          "status": 200,
+          "latency_ms": 22.005
+        },
+        {
+          "attempt": 175,
+          "status": 200,
+          "latency_ms": 22.905
+        },
+        {
+          "attempt": 176,
+          "status": 200,
+          "latency_ms": 19.832
+        },
+        {
+          "attempt": 177,
+          "status": 200,
+          "latency_ms": 52.628
+        },
+        {
+          "attempt": 178,
+          "status": 200,
+          "latency_ms": 23.977
+        },
+        {
+          "attempt": 179,
+          "status": 200,
+          "latency_ms": 22.241
+        },
+        {
+          "attempt": 180,
+          "status": 503,
+          "latency_ms": 2.426
+        }
+      ],
+      "first_rejection": "log exceeds four MiB\n",
+      "historical_retry_at_capacity": {
+        "status": 503,
+        "body": "log exceeds four MiB\n"
+      },
+      "checkpoint": {
+        "published": {
+          "generation": 1,
+          "identity": {
+            "group": "capacity-check",
+            "member": "a"
+          },
+          "position": {
+            "index": 180,
+            "term": 1
+          },
+          "sha256": "1b5906ee266f639b261afb9756e0a806b26fead8a0a4f62b830335ded17b6979"
+        },
+        "recovery_pending": false,
+        "recovery_verified": false,
+        "recovery_index": 0
+      },
+      "restart": [
+        {
+          "mode": "full",
+          "fresh_read": true,
+          "listener_ready_ms": 1594.844,
+          "fresh_read_ready_ms": 2019.028,
+          "initial_status": {
+            "term": 1,
+            "commit_index": 0,
+            "applied_index": 0,
+            "checkpoint": {
+              "recovery_pending": false,
+              "recovery_verified": false,
+              "recovery_index": 0
+            }
+          },
+          "retained_acknowledged_prefix": true,
+          "restored_checkpoint_index": 0
+        },
+        {
+          "mode": "checkpoint",
+          "fresh_read": true,
+          "listener_ready_ms": 1591.59,
+          "fresh_read_ready_ms": 2273.842,
+          "initial_status": {
+            "term": 1,
+            "commit_index": 0,
+            "applied_index": 0,
+            "checkpoint": {
+              "published": {
+                "generation": 1,
+                "identity": {
+                  "group": "capacity-check",
+                  "member": "a"
+                },
+                "position": {
+                  "index": 180,
+                  "term": 1
+                },
+                "sha256": "1b5906ee266f639b261afb9756e0a806b26fead8a0a4f62b830335ded17b6979"
+              },
+              "recovery_pending": true,
+              "recovery_verified": true,
+              "recovery_index": 0
+            }
+          },
+          "retained_acknowledged_prefix": true,
+          "restored_checkpoint_index": 180
+        }
+      ]
+    }
+  ],
+  "experiment_directory": "D:\\inference-fleet\\artifacts\\controller-capacity\\capacity-8urldssl",
+  "recovery_summary": {
+    "full": {
+      "trials": 3,
+      "listener_ready_ms_median": 518.164,
+      "fresh_read_ready_ms_median": 769.774
+    },
+    "checkpoint": {
+      "trials": 3,
+      "listener_ready_ms_median": 512.696,
+      "fresh_read_ready_ms_median": 893.051
+    }
+  },
+  "passed": true,
+  "process_logs": {
+    "entry-count\\process.log": "2026/11/08 15:26:26 INFO raft peer listening id=a peer=127.0.0.1:49799 client=127.0.0.1:49800\n",
+    "entry-count-restart-checkpoint\\process.log": "2026/11/08 15:26:39 INFO raft peer listening id=a peer=127.0.0.1:50960 client=127.0.0.1:50961\n2026/11/08 15:26:39 ERROR raft peer stopped error=\"log exceeds 1024 entries\"\n",
+    "entry-count-restart-full\\process.log": "2026/11/08 15:26:35 INFO raft peer listening id=a peer=127.0.0.1:50927 client=127.0.0.1:50928\n2026/11/08 15:26:35 ERROR raft peer stopped error=\"log exceeds 1024 entries\"\n",
+    "payload-bytes\\process.log": "2026/11/08 15:26:42 INFO raft peer listening id=a peer=127.0.0.1:53296 client=127.0.0.1:53297\n",
+    "payload-bytes-restart-checkpoint\\process.log": "2026/11/08 15:26:54 INFO raft peer listening id=a peer=127.0.0.1:53520 client=127.0.0.1:53521\n",
+    "payload-bytes-restart-full\\process.log": "2026/11/08 15:26:50 INFO raft peer listening id=a peer=127.0.0.1:53505 client=127.0.0.1:53506\n",
+    "recovery-0-checkpoint\\process.log": "2026/11/08 15:26:21 INFO raft peer listening id=a peer=127.0.0.1:57501 client=127.0.0.1:57502\n",
+    "recovery-0-full\\process.log": "2026/11/08 15:26:21 INFO raft peer listening id=a peer=127.0.0.1:57466 client=127.0.0.1:57467\n",
+    "recovery-1-checkpoint\\process.log": "2026/11/08 15:26:22 INFO raft peer listening id=a peer=127.0.0.1:57538 client=127.0.0.1:57539\n",
+    "recovery-1-full\\process.log": "2026/11/08 15:26:23 INFO raft peer listening id=a peer=127.0.0.1:49684 client=127.0.0.1:49685\n",
+    "recovery-2-checkpoint\\process.log": "2026/11/08 15:26:25 INFO raft peer listening id=a peer=127.0.0.1:49762 client=127.0.0.1:49763\n",
+    "recovery-2-full\\process.log": "2026/11/08 15:26:24 INFO raft peer listening id=a peer=127.0.0.1:49717 client=127.0.0.1:49718\n",
+    "recovery-template\\process.log": "2026/11/08 15:26:19 INFO raft peer listening id=a peer=127.0.0.1:57275 client=127.0.0.1:57276\n"
+  },
+  "files_retained": false
+}
