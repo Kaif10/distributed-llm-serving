@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"sync"
@@ -78,8 +79,11 @@ func New(node *raft.Node, peers map[string]string) *Host {
 	return h
 }
 func (h *Host) Run(parent context.Context) error {
-	ctx, cancel := context.WithCancel(parent)
 	defer close(h.done)
+	if h.node.BaseIndex() != 0 {
+		return fmt.Errorf("retained snapshots require runtime installation support")
+	}
+	ctx, cancel := context.WithCancel(parent)
 	var workers sync.WaitGroup
 	transport := &http.Transport{MaxConnsPerHost: 1, MaxIdleConns: 9, MaxIdleConnsPerHost: 1, IdleConnTimeout: 15 * time.Second, MaxResponseHeaderBytes: 16 << 10}
 	client := &http.Client{Transport: transport, Timeout: 300 * time.Millisecond, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
@@ -149,8 +153,7 @@ func (h *Host) Run(parent context.Context) error {
 				continue
 			}
 			if h.node.CommitIndex() >= w.index {
-				log := h.node.Log()
-				if log[w.index-1].Term == w.term {
+				if term, ok := h.node.TermAt(w.index); ok && term == w.term {
 					if h.machine != nil {
 						r, ok := applied[w.index]
 						if !ok {

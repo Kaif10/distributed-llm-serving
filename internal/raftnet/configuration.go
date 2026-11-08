@@ -92,6 +92,9 @@ func decodeConfiguration(data []byte) (configurationCommand, error) {
 // NewConfiguration uses a fresh in-memory application rebuilt from the committed
 // journal prefix. Do not reuse raw-proposal journals or mix peer application modes.
 func NewConfiguration(node *raft.Node, peers map[string]string) (*Host, error) {
+	if node.BaseIndex() != 0 {
+		return nil, fmt.Errorf("retained snapshots require controller runtime installation support")
+	}
 	if err := validateConfigurationEntries(node.Log()); err != nil {
 		return nil, err
 	}

@@ -214,6 +214,11 @@ and payload-byte exhaustion; see [controller capacity](learning/23-controller-ca
 Entry-full restart cannot append a leader no-op even with a checkpoint; acknowledged data
 retention does not imply service availability. Full-image WAL growth is recorded separately.
 
+The Raft core now understands a retained committed boundary and absolute suffix indices;
+see [retained log boundary](learning/24-retained-log-boundary.md). Deterministic fixtures
+check recovery and lagging-peer behavior. The serving runtime rejects this mode until
+application restoration and snapshot transfer are connected; native storage is unchanged.
+
 Next: safe retained-prefix storage tied to durable checkpoints, followed by peer installation
 and bounded checkpoint-journal rollover. Preserve successful retry history and validate the
 complete path before recording the final demo.

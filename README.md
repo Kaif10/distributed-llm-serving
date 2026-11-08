@@ -63,6 +63,7 @@ replay. The full log is still required; network snapshot transfer and compaction
 - [Checkpoint publication](docs/learning/21-checkpoint-publication.md): sync-before-selection, process-kill recovery, and uncertain retries.
 - [Controller checkpoint recovery](docs/learning/22-controller-checkpoint-recovery.md): owner capture, confirmed-prefix installation, and full-replay comparison.
 - [Controller capacity](docs/learning/23-controller-capacity.md): measured write limits, journal growth, and restart failure at entry exhaustion.
+- [Retained log boundary](docs/learning/24-retained-log-boundary.md): absolute Raft indices and catch-up requirements; compaction remains disabled.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

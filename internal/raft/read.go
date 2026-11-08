@@ -31,7 +31,7 @@ func (n *Node) BeginRead() (ReadToken, []Message, error) {
 	if !n.replica || n.role != Leader {
 		return ReadToken{}, nil, ErrNotLeader
 	}
-	if n.commit == 0 || n.entries[n.commit-1].Term != n.hard.Term {
+	if term, ok := n.TermAt(n.commit); n.commit == 0 || !ok || term != n.hard.Term {
 		return ReadToken{}, nil, ErrReadNotReady
 	}
 	if len(n.reads) >= 8 {

@@ -12,6 +12,20 @@ selects complete images after recovery sync. Configuration peers can opt into ow
 and checkpoint-plus-suffix recovery verified against full replay. Write retention, snapshot
 transfer, scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
 
+## Retained-boundary core preparation
+
+`go test ./...`, `go vet ./...`, and `go build ./...` pass locally on Windows with
+Go 1.27.3. New deterministic retained-boundary tests exercise absolute suffix indices,
+reopen/election delivery, conflict repair, committed protection, read gating, verified
+boundary hints that do not acknowledge replication, unsupported catch-up detection,
+byte ownership, invalid metadata, and uint64 index exhaustion. Host tests reject a
+nonzero boundary through configuration construction and raw runtime startup.
+
+These tests use in-memory storage fixtures. No durable retained-image adapter, file
+trimming, network snapshot installation, or serving-path compaction is enabled. Existing
+native storage and the capacity experiment's limits are unchanged. See the
+[walkthrough](learning/24-retained-log-boundary.md) for the contract and next integration gate.
+
 ## Controller write bounds, journal growth, and paired recovery
 
 Source: clean commit `1841704c6e88c922013edfff626b1df968b2b530`. Reproduce:

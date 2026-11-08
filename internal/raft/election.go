@@ -36,6 +36,8 @@ const (
 )
 
 type Message struct {
+	HintIndex                                            uint64 `json:",omitempty"`
+	HintTerm                                             uint64 `json:",omitempty"`
 	ReadID                                               uint64
 	PrevIndex, PrevTerm, LeaderCommit, Probe, MatchIndex uint64
 	Entries                                              []Entry
@@ -70,6 +72,7 @@ type Node struct {
 	replica                                                           bool
 	logStorage                                                        LogStorage
 	entries                                                           []Entry
+	snapshot                                                          RetainedSnapshot
 	commit, applied, probe                                            uint64
 	batch                                                             int
 	next, match                                                       map[string]uint64
@@ -91,6 +94,15 @@ type Node struct {
 }
 
 func New(config Config, storage Storage) (*Node, error) {
+	if source, ok := storage.(SnapshotSource); ok {
+		snapshot, err := source.LoadSnapshot()
+		if err != nil {
+			return nil, err
+		}
+		if snapshot.Index != 0 || snapshot.Term != 0 || len(snapshot.Data) != 0 {
+			return nil, fmt.Errorf("use NewReplica for retained snapshot")
+		}
+	}
 	if logs, ok := storage.(LogStorage); ok {
 		entries, err := logs.LoadLog()
 		if err != nil {
@@ -146,7 +158,9 @@ func (n *Node) heartbeats() []Message {
 		var out []Message
 		for _, id := range n.members {
 			if id != n.id {
-				out = append(out, n.sendAppend(id))
+				if message := n.sendAppend(id); message.To != "" {
+					out = append(out, message)
+				}
 			}
 		}
 		return out
@@ -165,6 +179,12 @@ func (n *Node) elected() ([]Message, error) {
 	n.leader = n.id
 	n.heartbeatElapsed = 0
 	if n.replica {
+		if n.lastIndex >= ^uint64(0)-1 {
+			n.failed = true
+			n.role = Follower
+			n.leader = ""
+			return nil, fmt.Errorf("%w: log index exhausted", ErrStorage)
+		}
 		n.next = make(map[string]uint64)
 		n.match = make(map[string]uint64)
 		n.pending = make(map[string]Message)
