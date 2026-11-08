@@ -12,6 +12,34 @@ selects complete images after recovery sync. Configuration peers can opt into ow
 and checkpoint-plus-suffix recovery verified against full replay. Write retention, snapshot
 transfer, scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
 
+## Coherent retained storage, local files and process kills
+
+Windows amd64, Go 1.27.3: `go test ./internal/raft -run RetainedStorage -count=1 -v`
+passes. Six actual child-process kill stages cover cleared older slot, partial header,
+partial body, complete before sync, synced before return, and acknowledged publication.
+The first three recover generation 3 with the full log; the latter three recover
+generation 4 with boundary 2 and suffix entry 3. Every case preserves the prior durable
+vote and last acknowledged suffix. Reopen syncs complete uncertain data before use.
+
+Native-file tests also restore a real application checkpoint plus suffix, match full
+application state, and preserve the original revision-1 retry while current revision is 2.
+A 1024-no-op local fixture reproduces blocked leader restart, retains its known committed
+prefix offline, then reopens and commits the leader no-op at absolute index 1025.
+This is not a live controller-capacity fix or an application-throughput benchmark.
+
+Additional tests cover exclusive ownership from another process, failed write/sync and
+recovery sync, uncertain votes, incompatible complete images, identity/missing-file errors,
+corruption without rollback, input/output ownership, and repeated slot reuse. The two
+24-MiB payload guards plus headers and bounded identity file bound logical file lengths
+below 49 MiB; physical allocation and throughput are not measured. Process-kill results
+do not establish machine power-loss or device-failure behavior.
+
+The alternative adapter is not selected by the serving CLI; existing WALs, runtime gates,
+application history bounds, and published controller capacity results are unchanged.
+See [decision 009](DECISIONS.md#009-alternate-coherent-retained-images-before-enabling-prefix-removal)
+and the [walkthrough](learning/25-retained-storage.md) for ordering, limitations, and the
+remaining application/peer installation gate.
+
 ## Retained-boundary core preparation
 
 `go test ./...`, `go vet ./...`, and `go build ./...` pass locally on Windows with

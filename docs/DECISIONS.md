@@ -1,5 +1,28 @@
 # Decisions
 
+## 009: Alternate coherent retained images before enabling prefix removal
+
+The controller capacity experiment recorded two problems: a full log blocks a new
+leader no-op, and an append-only sequence of full-log images grows with lifetime writes.
+The core now supports a retained boundary. Its next prerequisite is coherent local
+recovery of hard state, application image, and retained suffix.
+
+Use a separate, opt-in storage adapter with two bounded image slots and one stable
+ownership/identity file. Replace the older slot while leaving the selected generation
+untouched; sync before acknowledgement. Reopen syncs recovered complete images and
+rejects complete corruption. This avoids depending on rename/replacement behavior for
+selection and bounds file lengths without a separate garbage collector. It still rewrites
+the complete image and performs two file syncs per publication. No throughput claim follows.
+
+Alternatives: extending the original append-only WAL is simpler but preserves its measured
+lifetime-growth problem; segmented logs and a separate snapshot manifest reduce rewriting
+but introduce a larger lifecycle/recovery contract. An established Raft storage implementation
+remains the operational alternative to maintaining this educational implementation.
+
+The adapter is tested with killed local processes, not power loss or multi-host failures.
+It is not selected by the serving CLI. Application validation and peer installation must
+be connected before enabling live prefix removal. See [increment 25](learning/25-retained-storage.md).
+
 ## 008: Finish recovery integration before expanding scope
 
 The product remains reliable routing across model replicas. Each added mechanism needs

@@ -219,11 +219,16 @@ see [retained log boundary](learning/24-retained-log-boundary.md). Deterministic
 check recovery and lagging-peer behavior. The serving runtime rejects this mode until
 application restoration and snapshot transfer are connected; native storage is unchanged.
 
-Next: safe retained-prefix storage tied to durable checkpoints, followed by peer installation
-and bounded checkpoint-journal rollover. Preserve successful retry history and validate the
-complete path before recording the final demo.
-Offset-aware log storage, lagging-peer snapshot installation, and publication-journal rollover
-remain prerequisites for continuous networked compaction. No log prefix is removed yet.
+A separate two-slot storage adapter now recovers hard state, checkpoint bytes, and retained
+suffix together with bounded file lengths. File/process-kill tests and an offline real-codec
+recovery check pass; see [retained storage](learning/25-retained-storage.md). This adapter
+is not wired into the CLI. Local offline retention is tested; the live service retains
+the full log.
+
+Next: connect owner-validated application restoration/local retention, then lagging-peer
+snapshot installation and bounded checkpoint-journal rollover. Preserve successful retry
+history and validate the complete path before recording the final demo. These remain
+prerequisites for continuous networked compaction; no live prefix removal is enabled.
 
 Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
 The integration closes the prior standalone-preparation loop; new components still require
