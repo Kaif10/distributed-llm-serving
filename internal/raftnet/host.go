@@ -28,6 +28,7 @@ type Snapshot struct {
 	Configuration *control.Snapshot `json:"configuration,omitempty"`
 	PendingReads  int               `json:"pending_reads"`
 	Checkpoint    *CheckpointStatus `json:"checkpoint,omitempty"`
+	Retention     *RetentionStatus  `json:"retention,omitempty"`
 }
 type result struct {
 	State         *Snapshot
@@ -36,6 +37,7 @@ type result struct {
 	Code          int
 	Configuration *control.Snapshot
 	Checkpoint    *CheckpointStatus
+	Retention     *RetentionStatus
 }
 type event struct {
 	ctx     context.Context
@@ -44,6 +46,7 @@ type event struct {
 	status  bool
 	read    bool
 	capture bool
+	retain  bool
 	reply   chan result
 }
 type waiter struct {
@@ -65,6 +68,7 @@ type Host struct {
 	checkpoints      *checkpoint.Store
 	checkpointStatus *CheckpointStatus
 	recovery         *checkpointRecovery
+	retention        *RetentionStatus
 }
 
 // Node must not be accessed elsewhere after handing it to Run.
@@ -80,7 +84,7 @@ func New(node *raft.Node, peers map[string]string) *Host {
 }
 func (h *Host) Run(parent context.Context) error {
 	defer close(h.done)
-	if h.node.BaseIndex() != 0 {
+	if h.node.BaseIndex() != 0 && (h.retention == nil || h.machine == nil || !h.node.CanRetainLocal() || h.applied != h.node.BaseIndex()) {
 		return fmt.Errorf("retained snapshots require runtime installation support")
 	}
 	ctx, cancel := context.WithCancel(parent)
@@ -196,6 +200,7 @@ func (h *Host) Run(parent context.Context) error {
 			if e.status {
 				state := &Snapshot{Node: h.node.Status(), Commit: h.node.CommitIndex(), Log: h.node.Log(), Dropped: h.dropped, SendFailures: h.sendFailures.Load(), Applied: h.applied, PendingReads: len(reads)}
 				state.Checkpoint = h.checkpointSnapshot()
+				state.Retention = h.retentionSnapshot()
 				if h.machine != nil {
 					configuration := h.machine.Snapshot()
 					state.Configuration = &configuration
@@ -246,6 +251,14 @@ func (h *Host) Run(parent context.Context) error {
 				if err := complete(); err != nil {
 					return err
 				}
+				continue
+			}
+			if e.retain {
+				response, err := h.retainLocal()
+				if err != nil {
+					return err
+				}
+				e.reply <- response
 				continue
 			}
 			if e.capture {
@@ -328,6 +341,8 @@ func write(w http.ResponseWriter, response result) {
 		json.NewEncoder(w).Encode(response.Configuration)
 	} else if response.Checkpoint != nil {
 		json.NewEncoder(w).Encode(response.Checkpoint)
+	} else if response.Retention != nil {
+		json.NewEncoder(w).Encode(response.Retention)
 	} else if response.State != nil {
 		json.NewEncoder(w).Encode(response.State)
 	} else {

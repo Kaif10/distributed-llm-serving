@@ -25,8 +25,9 @@ Gateways can consume its drain snapshots for a fixed worker pool, report applied
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
 serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction; write retention, lagging-peer snapshot transfer,
-and dynamic membership require further work.
+log remains bounded without compaction in the default multi-peer mode. An alternative
+single-member mode now supports owner-driven local retention and application restoration;
+multi-peer retention, lagging-peer snapshot transfer, and dynamic membership require further work.
 
 A versioned application checkpoint preserves configuration plus successful request-ID
 history. A separate publication journal selects synced images across process crashes, with
@@ -63,8 +64,9 @@ replay. The full log is still required; network snapshot transfer and compaction
 - [Checkpoint publication](docs/learning/21-checkpoint-publication.md): sync-before-selection, process-kill recovery, and uncertain retries.
 - [Controller checkpoint recovery](docs/learning/22-controller-checkpoint-recovery.md): owner capture, confirmed-prefix installation, and full-replay comparison.
 - [Controller capacity](docs/learning/23-controller-capacity.md): measured write limits, journal growth, and restart failure at entry exhaustion.
-- [Retained log boundary](docs/learning/24-retained-log-boundary.md): absolute Raft indices and catch-up requirements; compaction remains disabled.
-- [Retained storage](docs/learning/25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together; live integration remains pending.
+- [Retained log boundary](docs/learning/24-retained-log-boundary.md): absolute Raft indices and catch-up requirements.
+- [Retained storage](docs/learning/25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together, with native publication checks.
+- [Controller local retention](docs/learning/26-controller-local-retention.md): opt-in single-member service recovery, manual retention, and restart/retry checks.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

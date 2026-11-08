@@ -38,6 +38,9 @@ func validLog(entries []Entry, term uint64) error {
 
 // NewReplica enables replication using a durable log, unlike election-only New.
 func NewReplica(config Config, storage LogStorage) (*Node, error) {
+	if retained, ok := storage.(*RetainedStorage); ok && retained.Identity().Member != config.ID {
+		return nil, fmt.Errorf("retained storage belongs to another member")
+	}
 	n, err := newNode(config, storage)
 	if err != nil {
 		return nil, err

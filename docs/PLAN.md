@@ -11,8 +11,9 @@ policies at two offered rates with a changing hot document and explicit latency 
 Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
 now includes peer-process replication, configuration application, successful request-ID replay,
 fresh quorum reads, fixed-list gateway controller failover, and opt-in application
-checkpoint capture/recovery. Log retention, network snapshot transfer, and broader
-workload comparisons, and milestones 7 through 9 remain outstanding. CPU checks establish
+checkpoint capture/recovery, plus opt-in single-member local retention. Multi-peer log
+retention, network snapshot transfer, broader workload comparisons, and milestones 7
+through 9 remain outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
 The mixed-cost increment adds short/long prompts and output budgets, direct per-worker
@@ -216,19 +217,22 @@ retention does not imply service availability. Full-image WAL growth is recorded
 
 The Raft core now understands a retained committed boundary and absolute suffix indices;
 see [retained log boundary](learning/24-retained-log-boundary.md). Deterministic fixtures
-check recovery and lagging-peer behavior. The serving runtime rejects this mode until
-application restoration and snapshot transfer are connected; native storage is unchanged.
+check recovery and lagging-peer behavior. The original full-log storage is unchanged.
 
 A separate two-slot storage adapter now recovers hard state, checkpoint bytes, and retained
 suffix together with bounded file lengths. File/process-kill tests and an offline real-codec
-recovery check pass; see [retained storage](learning/25-retained-storage.md). This adapter
-is not wired into the CLI. Local offline retention is tested; the live service retains
-the full log.
+recovery check pass; see [retained storage](learning/25-retained-storage.md).
 
-Next: connect owner-validated application restoration/local retention, then lagging-peer
-snapshot installation and bounded checkpoint-journal rollover. Preserve successful retry
-history and validate the complete path before recording the final demo. These remain
-prerequisites for continuous networked compaction; no live prefix removal is enabled.
+The alternative adapter is now connected behind `-retained-dir`/`-retained-group` in
+single-member configuration mode, with validated application restoration and owner-only
+local retention through an empty-body `POST /retain`. A native-process check crosses
+absolute index 1024 using logged historical retries and verifies two abrupt restarts;
+see [controller local retention](learning/26-controller-local-retention.md). Maintenance
+is manual, and application history bounds remain. Multi-peer mode still retains its full log.
+
+Next: lagging-peer snapshot installation before enabling multi-peer retention, followed by
+bounded checkpoint-journal rollover where still required. Preserve successful retry history
+and validate the complete path before recording the final demo.
 
 Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
 The integration closes the prior standalone-preparation loop; new components still require

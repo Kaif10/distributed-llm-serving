@@ -182,6 +182,7 @@ func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, err
 }
 
 func (h *Host) configurationRoutes(mux *http.ServeMux) {
+	h.retentionRoute(mux)
 	if h.checkpoints != nil {
 		mux.HandleFunc("POST /checkpoint", func(w http.ResponseWriter, r *http.Request) {
 			r.Body = http.MaxBytesReader(w, r.Body, 1)

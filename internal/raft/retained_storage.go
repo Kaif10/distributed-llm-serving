@@ -43,12 +43,15 @@ type RetainedStorage struct {
 	slots    [2]*os.File
 	selected int
 	image    retainedImage
+	identity RetainedIdentity
 	failed   bool
 	write    func(int, []byte) (int, error)
 	syncSlot func(int) error
 	// Test-only process barriers, absent from serving APIs.
 	afterClear, afterWrite, afterSync func()
 }
+
+func (s *RetainedStorage) Identity() RetainedIdentity { return s.identity }
 
 func validRetainedIdentity(id RetainedIdentity) bool {
 	return len(id.Group) > 0 && len(id.Group) <= 128 && utf8.ValidString(id.Group) && len(id.Member) > 0 && len(id.Member) <= 64 && utf8.ValidString(id.Member)
@@ -143,7 +146,7 @@ func openRetainedStorage(dir string, id RetainedIdentity, syncOverride func(int)
 		lock.Close()
 		return nil, fmt.Errorf("exclusive retained storage lock: %w", err)
 	}
-	s := &RetainedStorage{lock: lock}
+	s := &RetainedStorage{lock: lock, identity: id}
 	ok := false
 	defer func() {
 		if !ok {
@@ -322,7 +325,8 @@ func (s *RetainedStorage) SaveLog(entries []Entry) error {
 // The serialized owner must certify that applied is committed/applied and that
 // the bytes encode exactly this prefix, including original retry results. This
 // storage layer checks position/term/suffix, not application semantics. Never call
-// it behind a live Node: reconstruct the node and restore the application first.
+// it behind a live Node: use Node.RetainLocal, or reconstruct the node and restore
+// the application before resuming access.
 // Remote snapshot installation needs a separate validated protocol.
 func (s *RetainedStorage) Retain(snapshot RetainedSnapshot, applied uint64) error {
 	s.mu.Lock()

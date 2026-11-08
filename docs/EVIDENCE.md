@@ -9,8 +9,30 @@ log entries. Gateway controller-peer failover is implemented and checked with re
 inference. A complete application checkpoint codec is validated in an offline recovery
 scenario. A scoped publication journal now survives tested process-kill boundaries and
 selects complete images after recovery sync. Configuration peers can opt into owner capture
-and checkpoint-plus-suffix recovery verified against full replay. Write retention, snapshot
-transfer, scheduling, and conditional sharding remain outstanding. Historical entries describe their original increments rather than current status.
+and checkpoint-plus-suffix recovery verified against full replay. Opt-in single-member
+local retention is now connected to the configuration service. Multi-peer retention,
+snapshot transfer, scheduling, and conditional sharding remain outstanding. Historical
+entries describe their original increments rather than current status.
+
+## Single-member controller restoration and local retention
+
+Windows amd64, Go 1.27.3: all Go tests, vet, and build pass locally. The real-process
+runner `scripts/check_retained_controller.py` passes with 64 and 1100 logged historical
+retries. The full check reaches absolute commit index 1103 before its first abrupt kill,
+then confirms current revision 2 and the original revision-1 retry result after two
+service restarts. Retention occurs every 64 retries; there are only two unique successes.
+It exercises real HTTP and native synced files, not inference or multi-peer availability.
+
+Owner/core tests check application restoration plus a new-update suffix against full
+pre-restart application state, original retry results, new-term read gating, continued
+absolute indices, same-prefix maintenance, metadata ownership, invalid application binding,
+member identity, and fencing after uncertain publication. CLI tests reject multi-member,
+raw, mixed-storage, and missing-identity modes before opening files.
+
+Manual maintenance is required before suffix exhaustion; no automatic compaction threshold
+or full-journal migration is provided. The successful-request/eight-MiB application codec
+bounds are unchanged. The default multi-peer service still uses its original full log.
+See the [walkthrough](learning/26-controller-local-retention.md) for commands and limitations.
 
 ## Coherent retained storage, local files and process kills
 
