@@ -16,6 +16,15 @@ entries describe their original increments rather than current status.
 
 ## Single-member controller restoration and local retention
 
+Clean source: `346ac823210b284c257706690aa1b189b065586e`. The
+[full native-process result](results/controller-local-retention-346ac82.json) records
+1100 historical retries, 19 successful retention captures, and two restarts. Before
+the first kill, commit index is 1103 with 12 suffix entries after retained boundary 1091.
+Restart restores boundary 1091 and applies through new-term no-op 1104. The next retention
+is at 1105; the second restart restores it and applies no-op 1106. Both restore current
+revision 2 and preserve the original revision-1 draining result. The source tree was clean
+when the binary was built and the run recorded; binary identity and exact command are in JSON.
+
 Windows amd64, Go 1.27.3: all Go tests, vet, and build pass locally. The real-process
 runner `scripts/check_retained_controller.py` passes with 64 and 1100 logged historical
 retries. The full check reaches absolute commit index 1103 before its first abrupt kill,

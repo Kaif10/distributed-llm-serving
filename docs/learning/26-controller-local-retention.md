@@ -103,6 +103,11 @@ The previous process-kill tests cover interrupted storage publication; this runn
 the actual service after acknowledged operations. Power/device failures, physical disk
 allocation, and multi-host behavior remain unvalidated.
 
+The [clean-source run](../results/controller-local-retention-346ac82.json) on `346ac82`
+restores boundary 1091 plus 12 suffix entries before committing no-op 1104. Its second
+restart restores boundary 1105 and commits no-op 1106. Both preserve the same current
+configuration and original retry result.
+
 Next implement snapshot installation and recovery for a lagging peer before enabling
 retention in the three-member group. Rerun real-model gateway failure checks against that
 integrated path; the final working-demo recording remains outstanding.
