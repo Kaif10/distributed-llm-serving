@@ -1,0 +1,50 @@
+{"elapsed_seconds": 0.546, "kind": "command", "text": "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe scripts/check_real_pool.py"}
+{"elapsed_seconds": 3.765, "kind": "stdout", "text": "PASS round-robin : two busy real engines, third request 503, cancellation releases slots, new generation completes"}
+{"elapsed_seconds": 5.078, "kind": "stdout", "text": "PASS least-inflight : two busy real engines, third request 503, cancellation releases slots, new generation completes"}
+{"elapsed_seconds": 6.359, "kind": "stdout", "text": "PASS prefix-affinity : two busy real engines, third request 503, cancellation releases slots, new generation completes"}
+{"elapsed_seconds": 6.484, "kind": "observed", "text": {"policy": "round-robin", "busy_real_engines": 2, "overload_status": 503, "busy_after_disconnect": 0, "completed_after_release": true, "generated_text": "A computer server is a type of computer hardware that provides a centralized computing environment for"}}
+{"elapsed_seconds": 6.484, "kind": "observed", "text": {"policy": "least-inflight", "busy_real_engines": 2, "overload_status": 503, "busy_after_disconnect": 0, "completed_after_release": true, "generated_text": "A computer server is a type of computer hardware that provides a centralized computing environment for"}}
+{"elapsed_seconds": 6.484, "kind": "observed", "text": {"policy": "prefix-affinity", "busy_real_engines": 2, "overload_status": 503, "busy_after_disconnect": 0, "completed_after_release": true, "generated_text": "A computer server is a type of computer hardware that provides a centralized computing environment for"}}
+{"elapsed_seconds": 6.484, "kind": "command", "text": "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe scripts/check_replicated_retention.py bin/raftpeer.exe --output D:\\inference-fleet\\artifacts\\demo\\8c8bf9d\\replicated-retention.json"}
+{"elapsed_seconds": 12.625, "kind": "stdout", "text": "PASS: lagging-peer snapshot/suffix, durable retry history, leader loss, wrong-group rejection, and full-cluster restart"}
+{"elapsed_seconds": 12.796, "kind": "observed", "text": {"installed_boundary": 6, "caught_up_revision": 6, "original_retry_result": {"revision": 1, "workers": [{"id": "worker", "origin": "http://127.0.0.1:20001", "draining": true}]}, "revisions_after_full_restart": {"a": 6, "b": 6, "c": 6}}}
+{"elapsed_seconds": 12.796, "kind": "command", "text": "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe scripts/check_controller_failover.py --retention --output D:\\inference-fleet\\artifacts\\demo\\8c8bf9d\\real-controller-failover.json"}
+{"elapsed_seconds": 17.39, "kind": "stdout", "text": "Traceback (most recent call last):"}
+{"elapsed_seconds": 17.39, "kind": "stdout", "text": "  File \"D:\\inference-fleet\\scripts\\check_controller_failover.py\", line 216, in <module>"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "    main()"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "  File \"D:\\inference-fleet\\scripts\\check_controller_failover.py\", line 141, in main"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "    result[\"drain_rejection\"] = rejected(\"/v1/chat/completions\", payload)"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "  File \"D:\\inference-fleet\\scripts\\check_controller_failover.py\", line 73, in rejected"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "    with urllib.request.urlopen(req, timeout=3):"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.406, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 215, in urlopen"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "    return opener.open(url, data, timeout)"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 515, in open"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "    response = self._open(req, data)"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "               ^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 532, in _open"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "    result = self._call_chain(self.handle_open, protocol, protocol +"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 492, in _call_chain"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "    result = func(*args)"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "             ^^^^^^^^^^^"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 1373, in http_open"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "    return self.do_open(http.client.HTTPConnection, req)"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.468, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py\", line 1348, in do_open"}
+{"elapsed_seconds": 17.484, "kind": "stdout", "text": "    r = h.getresponse()"}
+{"elapsed_seconds": 17.484, "kind": "stdout", "text": "        ^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.484, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\client.py\", line 1428, in getresponse"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "    response.begin()"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\client.py\", line 331, in begin"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "    version, status, reason = self._read_status()"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "                              ^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\client.py\", line 292, in _read_status"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "    line = str(self.fp.readline(_MAXLINE + 1), \"iso-8859-1\")"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.515, "kind": "stdout", "text": "  File \"C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\socket.py\", line 720, in readinto"}
+{"elapsed_seconds": 17.546, "kind": "stdout", "text": "    return self._sock.recv_into(b)"}
+{"elapsed_seconds": 17.546, "kind": "stdout", "text": "           ^^^^^^^^^^^^^^^^^^^^^^^"}
+{"elapsed_seconds": 17.546, "kind": "stdout", "text": "ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host"}

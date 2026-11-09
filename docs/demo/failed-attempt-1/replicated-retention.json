@@ -1,0 +1,318 @@
+{
+  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "working_tree": "",
+  "binary_sha256": "47d0e0200f1dcecf6afd87d85916e7ab407c839d0ac441f4468bd64959154968",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "scope": "three native processes on one host; real HTTP/files; no inference or multi-host claim",
+  "commands": [
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57759",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\a",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57762",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\b",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "c",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57764",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\c",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57759",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\a",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57762",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\b",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57759",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\a",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57762",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\b",
+      "-retained-group",
+      "replicated-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "c",
+      "-peers",
+      "a=http://127.0.0.1:57758,b=http://127.0.0.1:57761,c=http://127.0.0.1:57763",
+      "-client-listen",
+      "127.0.0.1:57764",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\replicated-retention-iay5tlt_\\c",
+      "-retained-group",
+      "replicated-check"
+    ]
+  ],
+  "events": [
+    {
+      "retained_leader": "b",
+      "offline_peer": "a",
+      "capture": {
+        "base_index": 6,
+        "base_term": 1,
+        "recovered_index": 0,
+        "sha256": "7f9906d960a7260fdb59215ec8e9190a6bf0aa276de74a924d17e7ba30f4437a",
+        "checkpoint_bytes": 611,
+        "installed_index": 0
+      }
+    },
+    {
+      "killed_leader": "b",
+      "replacement": "c"
+    }
+  ],
+  "passed": true,
+  "installed_peer": {
+    "node": {
+      "ID": "a",
+      "Role": "follower",
+      "Term": 1,
+      "VotedFor": "b",
+      "Leader": "b",
+      "Failed": false
+    },
+    "commit_index": 7,
+    "log": [
+      {
+        "index": 7,
+        "term": 1,
+        "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJzdWZmaXgiLCJleHBlY3RlZF9yZXZpc2lvbiI6NSwid29ya2VycyI6W119fQ=="
+      }
+    ],
+    "dropped_outbound": 0,
+    "send_failures": 0,
+    "applied_index": 7,
+    "configuration": {
+      "revision": 6,
+      "workers": []
+    },
+    "pending_reads": 0,
+    "retention": {
+      "base_index": 6,
+      "base_term": 1,
+      "recovered_index": 0,
+      "sha256": "7f9906d960a7260fdb59215ec8e9190a6bf0aa276de74a924d17e7ba30f4437a",
+      "checkpoint_bytes": 611,
+      "installed_index": 6
+    }
+  },
+  "after_full_restart": {
+    "a": {
+      "node": {
+        "ID": "a",
+        "Role": "leader",
+        "Term": 3,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 11,
+      "log": [
+        {
+          "index": 7,
+          "term": 1,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJzdWZmaXgiLCJleHBlY3RlZF9yZXZpc2lvbiI6NSwid29ya2VycyI6W119fQ=="
+        },
+        {
+          "index": 8,
+          "term": 2,
+          "noop": true
+        },
+        {
+          "index": 9,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJmaXJzdCIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6IndvcmtlciIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MjAwMDEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        },
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJmaXJzdCIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6IndvcmtlciIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MjAwMDEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 4,
+      "applied_index": 11,
+      "configuration": {
+        "revision": 6,
+        "workers": []
+      },
+      "pending_reads": 0,
+      "retention": {
+        "base_index": 6,
+        "base_term": 1,
+        "recovered_index": 6,
+        "sha256": "7f9906d960a7260fdb59215ec8e9190a6bf0aa276de74a924d17e7ba30f4437a",
+        "checkpoint_bytes": 611,
+        "installed_index": 0
+      }
+    },
+    "b": {
+      "node": {
+        "ID": "b",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "a",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 11,
+      "log": [
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJmaXJzdCIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6IndvcmtlciIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MjAwMDEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 11,
+      "configuration": {
+        "revision": 6,
+        "workers": []
+      },
+      "pending_reads": 0,
+      "retention": {
+        "base_index": 9,
+        "base_term": 2,
+        "recovered_index": 9,
+        "sha256": "613f385512bddeefc801f08872abf722598607f00795576609f38f0c42d37122",
+        "checkpoint_bytes": 694,
+        "installed_index": 0
+      }
+    },
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "follower",
+        "Term": 3,
+        "VotedFor": "",
+        "Leader": "a",
+        "Failed": false
+      },
+      "commit_index": 11,
+      "log": [
+        {
+          "index": 10,
+          "term": 3,
+          "noop": true
+        },
+        {
+          "index": 11,
+          "term": 3,
+          "data": "eyJ2ZXJzaW9uIjoxLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJmaXJzdCIsImV4cGVjdGVkX3JldmlzaW9uIjowLCJ3b3JrZXJzIjpbeyJpZCI6IndvcmtlciIsIm9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6MjAwMDEiLCJkcmFpbmluZyI6dHJ1ZX1dfX0="
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 11,
+      "configuration": {
+        "revision": 6,
+        "workers": []
+      },
+      "pending_reads": 0,
+      "retention": {
+        "base_index": 9,
+        "base_term": 2,
+        "recovered_index": 9,
+        "sha256": "613f385512bddeefc801f08872abf722598607f00795576609f38f0c42d37122",
+        "checkpoint_bytes": 694,
+        "installed_index": 0
+      }
+    }
+  },
+  "original_retry_result": {
+    "revision": 1,
+    "workers": [
+      {
+        "id": "worker",
+        "origin": "http://127.0.0.1:20001",
+        "draining": true
+      }
+    ]
+  }
+}

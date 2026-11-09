@@ -1,0 +1,15 @@
+{
+  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "attempts": [
+    {
+      "directory": "failed-attempt-1",
+      "passed": false,
+      "failure": "ConnectionResetError WinError 10054 during drain-rejection probe; cause not established; no video exported"
+    },
+    {
+      "directory": "raw",
+      "passed": true,
+      "capture": "second complete capture; no source changes between attempts"
+    }
+  ]
+}

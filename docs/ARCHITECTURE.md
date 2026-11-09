@@ -2,15 +2,17 @@
 
 This describes the target. The current implementation forwards streaming requests from one
 gateway to a statically configured worker pool, with per-worker local admission limits.
-Both policies have been checked against two pinned llama.cpp CPU inference servers running
+Routing policies have been checked against two pinned llama.cpp CPU inference servers running
 SmolLM2-135M. Health probes, draining, and consumption of single-controller snapshots are
 implemented. A separate `raftpeer -configuration` API now applies replicated updates and
 serves fresh quorum-confirmed reads after local application. Gateways can fail over reads
 across a configured list of controller peers while bounding view age. Configuration peers
 can opt into owner-serialized checkpoint capture and confirmed-prefix recovery. Full retained
-prefix replay verifies selected images, so the full log is still mandatory. Offset-aware
-retention, lagging-peer snapshot transfer, and compaction remain pending. The drain discussion
-describes the fleet-wide target.
+prefix replay verifies selected images in the original journal mode. Alternative two-slot
+storage binds the committed application image and suffix together, supports manual leader
+retention, and installs snapshots on lagging fixed-membership peers. The owner validates
+successful history before installation and syncs before acknowledging. The drain discussion
+describes the fleet-wide target; independent-host and multi-gateway validation remain separate.
 
 ```mermaid
 flowchart LR

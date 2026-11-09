@@ -20,8 +20,9 @@ but introduce a larger lifecycle/recovery contract. An established Raft storage 
 remains the operational alternative to maintaining this educational implementation.
 
 The adapter is tested with killed local processes, not power loss or multi-host failures.
-It is not selected by the serving CLI. Application validation and peer installation must
-be connected before enabling live prefix removal. See [increment 25](learning/25-retained-storage.md).
+At [increment 25](learning/25-retained-storage.md) it was isolated from the serving CLI.
+Status: [increment 27](learning/27-peer-snapshot-recovery.md) connects owner validation,
+fixed-member peer installation, and manual prefix removal behind explicit storage flags.
 
 ## 008: Finish recovery integration before expanding scope
 

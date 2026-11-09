@@ -235,7 +235,8 @@ with native peer failures/restarts and real CPU-model gateway expiry/recovery; s
 [peer snapshot recovery](learning/27-peer-snapshot-recovery.md). Two-slot mode owns both
 image and suffix generations, so separate publication-journal rollover is unnecessary
 there. The old journal stays a bounded comparison mode. Manual maintenance and codec
-history bounds remain. Next: capture and publish the reproducible complete working demo.
+history bounds remain. The [complete working-demo video](demo/README.md) is now recorded
+and includes raw results, commands, source identity, and the failed first capture.
 
 Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
 The integration closes the prior standalone-preparation loop; new components still require
@@ -275,6 +276,13 @@ Learning: terms, elections, majority quorum, log matching, commit versus apply, 
 network partitions, persistence ordering, safety versus liveness. Dynamic membership is deferred.
 
 ## 7. Exercise the whole system and decide what is useful
+
+The selected local serving/recovery demo is implemented and recorded: real-model pool
+admission/cancellation, three-peer snapshot catch-up and restart/retry, and real-model
+gateway failover, quorum expiry, active-stream completion, and checkpoint-backed recovery.
+See [the video and evidence](demo/README.md). This closes the remaining local core/demo
+deliverables. Multiple-gateway experiments, independent-host validation, external workload
+demand, and operational deployment hardening remain separate, explicitly unvalidated work.
 
 Run multiple gateways and inference workers with a three-node controller. Test stale views,
 controller partitions, worker loss, slow clients, and rolling drains. Explain that per-gateway

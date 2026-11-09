@@ -1,0 +1,15 @@
+{
+  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "working_tree": "",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "started_utc": "2026-11-09T00:55:05Z",
+  "scope": "one laptop; real model generation and native controller processes; no scale claim",
+  "format": "edited terminal/results playback; raw timestamped stdout preserved",
+  "passed": false,
+  "binary_sha256": {
+    "gateway.exe": "9cdb7ade8c8a39620d1a5ecd0243884e9efaeb987ad9011c07ee93934ccd9460",
+    "raftpeer.exe": "47d0e0200f1dcecf6afd87d85916e7ab407c839d0ac441f4468bd64959154968"
+  },
+  "wall_seconds": 17.593
+}

@@ -1,0 +1,151 @@
+{
+  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "working_tree": "",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "logical_cpus": 12,
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "57886",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--no-ui",
+      "--slots"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:57880,b=http://127.0.0.1:57881,c=http://127.0.0.1:57882",
+      "-client-listen",
+      "127.0.0.1:57883",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-f9_j3y5i\\a",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:57880,b=http://127.0.0.1:57881,c=http://127.0.0.1:57882",
+      "-client-listen",
+      "127.0.0.1:57884",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-f9_j3y5i\\b",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "c",
+      "-peers",
+      "a=http://127.0.0.1:57880,b=http://127.0.0.1:57881,c=http://127.0.0.1:57882",
+      "-client-listen",
+      "127.0.0.1:57885",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-f9_j3y5i\\c",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:57887",
+      "-admin-listen",
+      "127.0.0.1:57888",
+      "-backend",
+      "http://127.0.0.1:57886",
+      "-controllers",
+      "http://127.0.0.1:57883,http://127.0.0.1:57884,http://127.0.0.1:57885",
+      "-config-poll",
+      "100ms",
+      "-config-timeout",
+      "900ms",
+      "-config-max-age",
+      "3s",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "observations": [
+    {
+      "killed_leader": "a",
+      "replacement": "c",
+      "observed_failover_ms": 734.0
+    }
+  ],
+  "binary_sha256": {
+    "gateway": "9cdb7ade8c8a39620d1a5ecd0243884e9efaeb987ad9011c07ee93934ccd9460",
+    "raftpeer": "47d0e0200f1dcecf6afd87d85916e7ab407c839d0ac441f4468bd64959154968",
+    "engine": "00d50686815af38249d0218c91558fbd0e9093ac8c074bac86196907f4305e31"
+  },
+  "initial_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-09T00:55:21.5019935Z",
+    "expires_at": "2026-11-09T00:55:24.5006698Z",
+    "controller_origin": "http://127.0.0.1:57883"
+  },
+  "initial_generation": {
+    "ttft_ms": 180.19,
+    "completion_ms": 314.524,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "after_failover": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-09T00:55:22.6209907Z",
+    "expires_at": "2026-11-09T00:55:25.6199047Z",
+    "controller_origin": "http://127.0.0.1:57885"
+  },
+  "drain_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 2,
+    "fresh": true,
+    "confirmed_at": "2026-11-09T00:55:22.7228897Z",
+    "expires_at": "2026-11-09T00:55:25.7215415Z",
+    "controller_origin": "http://127.0.0.1:57885"
+  },
+  "passed": false,
+  "error": "[WinError 10054] An existing connection was forcibly closed by the remote host"
+}

@@ -1,0 +1,37 @@
+{
+  "format": "captioned edited terminal/results playback; no audio; pauses shortened",
+  "duration_seconds": 32,
+  "pages": 4,
+  "resolution": [
+    1280,
+    720
+  ],
+  "ffmpeg_version": "7.1-essentials_build-www.gyan.dev",
+  "command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-y",
+    "-f",
+    "rawvideo",
+    "-pixel_format",
+    "rgb24",
+    "-video_size",
+    "1280x720",
+    "-framerate",
+    "1",
+    "-i",
+    "pipe:0",
+    "-an",
+    "-c:v",
+    "libx264",
+    "-crf",
+    "23",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\inference-fleet\\artifacts\\demo\\8c8bf9d-attempt2\\demo.mp4"
+  ],
+  "sha256": "22db0a77cf112483be49d0f7854d0899796ceaf408db5ba5db2907f94cb317eb",
+  "bytes": 308881,
+  "full_decode_passed": true
+}

@@ -14,6 +14,27 @@ retention and snapshot transfer are now connected across fixed configuration pee
 Scheduling and conditional sharding remain workload-gated extensions. Historical
 entries describe their original increments rather than current status.
 
+## Recorded complete local demo
+
+Clean source `8c8bf9d77b664eda5803bb996e498ca956adc54b`: the second capture runs all
+three scenarios successfully, preserving the same source/binaries as the first attempt.
+The [32-second MP4](demo/demo.mp4) is edited terminal/results playback, not an OS screen
+recording; timestamps, actual stdout, source/binary identity, and complete scenario JSON
+are in the [raw capture](demo/raw/). All video frames decode successfully; its checksum
+and export details are in [media metadata](demo/media.json).
+
+Real-model checks demonstrate two busy engines, 503 overload, cancellation and slot
+release under all three policies; native peers install boundary 6 and recover revision 6
+through leader loss/full restart; the real-model gateway survives controller failover,
+expires without quorum while an existing stream completes, restores installed boundary 5,
+reconfirms revision 3, generates again, and returns an original revision-1 retry result.
+
+The first capture failed with Windows connection reset 10054 during a drain-rejection
+probe. Its [transcript and reports](demo/failed-attempt-1/) remain committed. The cause is
+not established and no fix is claimed. The second capture passes, but does not erase that
+observation. Both are listed in [attempt history](demo/attempts.json). These are local
+correctness checks, not a success-rate or scaling benchmark.
+
 ## Fixed-member snapshot transfer and retained-image recovery
 
 Local tests, vet, and builds pass with snapshot transfer enabled. The native three-peer

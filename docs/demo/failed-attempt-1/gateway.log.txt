@@ -1,0 +1,3 @@
+2026/11/09 00:55:21 INFO gateway admin listening address=127.0.0.1:57888
+2026/11/09 00:55:21 INFO gateway listening address=127.0.0.1:57887
+2026/11/09 00:55:21 INFO forwarding ended worker=0 duration=300.0457ms context_error=<nil>

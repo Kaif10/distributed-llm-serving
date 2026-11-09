@@ -2,6 +2,8 @@
 
 A project to build and understand reliable routing across a pool of LLM inference servers.
 
+[Watch the working demo](docs/demo/demo.mp4) · [Recording, commands, raw results, and limitations](docs/demo/README.md)
+
 The intended user operates several replicas of the same model. Requests differ in length,
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The
 goal is to keep useful work flowing while bounding queues and handling failures explicitly.
@@ -69,6 +71,7 @@ transfers images to lagging peers while preserving historical successful results
 - [Retained storage](docs/learning/25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together, with native publication checks.
 - [Controller local retention](docs/learning/26-controller-local-retention.md): opt-in single-member service recovery, manual retention, and restart/retry checks.
 - [Peer snapshot recovery](docs/learning/27-peer-snapshot-recovery.md): three-controller retention, lagging-peer installation, and real-model quorum recovery.
+- [Recorded demo](docs/demo/README.md): real-model routing/cancellation, controller snapshots, failure/recovery, and the complete capture evidence.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation
