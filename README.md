@@ -1,133 +1,162 @@
 # Distributed LLM Serving
 
-A project to build and understand reliable routing across a pool of LLM inference servers.
+[![CI](https://github.com/Kaif10/distributed-llm-serving/actions/workflows/ci.yml/badge.svg)](https://github.com/Kaif10/distributed-llm-serving/actions/workflows/ci.yml)
 
-![Recorded working demo: real LLM routing, cancellation, and controller recovery](docs/demo/demo.gif)
+**A streaming LLM gateway with a custom Raft-replicated control plane.**
 
-Actual terminal screen recording with live model tokens and controller failure/recovery. [Commands, raw results, and limitations](docs/demo/README.md).
+Route requests across model replicas, bound overload, drain workers, and recover controller
+state after failures. Built in Go with Python experiment tooling; real inference runs through
+llama.cpp and pinned SmolLM2 weights. Raft replicates configuration and successful request
+history. Prompts, generated tokens, and model weights stay on the serving path.
 
-The intended user operates several replicas of the same model. Requests differ in length,
-popular prompts concentrate traffic, and workers sometimes slow down or disappear. The
-goal is to keep useful work flowing while bounding queues and handling failures explicitly.
+[Architecture](docs/ARCHITECTURE.md) ? [Design decisions](docs/DECISIONS.md) ? [Evidence](docs/EVIDENCE.md) ? [Walkthroughs](docs/learning/README.md)
 
-**Current status:** a Go gateway routing streams across statically configured replicas with
-round-robin, least-inflight, or hinted prefix-affinity selection and per-worker admission limits, validated with
-both the synthetic worker and real SmolLM2-135M generation through llama.cpp on CPU. Network
-tests cover cancellation, deadlines, and worker failures; a separate local-engine check observes
-slot release on disconnect and records a small sequential latency baseline. A two-engine CPU
-experiment checks routing and overload against real models. Active health probes exclude
-unavailable workers, and a separate local admin API drains assignments while streams finish.
-Real-model experiments cover drain, worker process loss, and recovery. A separate replicated
-configuration API supports committed updates and quorum-backed reads; gateways can poll a
-fixed peer list and switch controller sources after leadership changes. A repeated-document experiment measures real prefix-cache reuse against disabled
-caching and the existing routing policies; its evidence includes an unresolved timeout from
-an interrupted run. No production usage is claimed. The operational problem still
-needs validation with a real application workload.
+## Watch the system fail and recover
 
-A durable controller persists desired configuration with CAS and idempotent retries.
-Gateways can consume its drain snapshots for a fixed worker pool, report applied revisions,
-and reject new work when their confirmed view expires. A fixed-membership Raft group now
-applies configuration updates, replays successful request-ID results after restart, and
-serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction in the default journal mode. The alternative
-two-slot mode supports owner-driven local retention, application restoration, and snapshot
-catch-up across fixed controller peers. Dynamic membership remains outside scope.
+Two real model servers. Three controller processes. A gateway forwarding live generated
+tokens while controllers lose their leader, lose quorum, and recover from a retained snapshot.
 
-A versioned application checkpoint preserves configuration plus successful request-ID
-history. A separate publication journal selects synced images across process crashes, with
-identity/history checks and idempotent retries. Configuration peers can opt into manual
-checkpoint capture and checkpoint-plus-suffix recovery, verified against retained-prefix
-replay. The alternative retained-image mode removes committed prefixes manually and
-transfers images to lagging peers while preserving historical successful results.
+![Live terminal screen recording: real inference, overload, cancellation, and controller recovery](docs/demo/demo.gif)
 
-## Start here
+Actual Windows console capture, continuous and at real-time speed. Commands execute during
+recording; the terminal shows real process IDs, arriving model tokens, HTTP responses, and
+failure/recovery actions. [Full-resolution MP4](docs/demo/demo.mp4) ? [Recording details and raw output](docs/demo/README.md)
 
-- [Milestones](docs/PLAN.md): what to build, why, and what evidence completes each step.
-- [Architecture](docs/ARCHITECTURE.md): request flow, control-plane responsibilities, and failure contracts.
-- [First walkthrough](docs/learning/00-service.md): run the service and understand its lifecycle.
-- [Streaming worker walkthrough](docs/learning/01-streaming-worker.md): watch chunks arrive and disconnect the client.
-- [Gateway forwarding walkthrough](docs/learning/02-gateway-streaming.md): stream across two connections and trace failures.
-- [Real inference walkthrough](docs/learning/03-real-inference.md): run pinned CPU inference and observe engine cancellation.
-- [Worker pool walkthrough](docs/learning/04-worker-pool.md): run two real engines and reject excess work.
-- [Health and draining walkthrough](docs/learning/05-health-and-draining.md): remove workers safely from new assignments.
-- [Cache baseline walkthrough](docs/learning/06-cache-baseline.md): measure real prefix reuse and existing routing policies.
-- [Prefix affinity walkthrough](docs/learning/07-prefix-affinity.md): preserve locality with capacity escape and real-model checks.
-- [Load and goodput walkthrough](docs/learning/08-load-and-goodput.md): compare fixed arrivals and changing hot prefixes.
-- [Mixed request costs](docs/learning/09-mixed-costs.md): measure short/long generations and different CPU allocations.
-- [Restart under load](docs/learning/10-restart-under-load.md): verify real worker recovery while arrivals continue.
-- [Decisions](docs/DECISIONS.md): choices and alternatives, including where Raft belongs.
-- [Durable configuration](docs/learning/11-durable-configuration.md): journal recovery and revision contracts.
-- [Applied configuration](docs/learning/12-applied-configuration.md): distinguish saved, applied, and drained state.
-- [Deterministic state machine](docs/learning/13-state-machine.md): separate ordered decisions from journal I/O.
-- [Raft election core](docs/learning/14-raft-elections.md): durable voting and deterministic election/failure scenarios.
-- [Raft log replication](docs/learning/15-raft-replication.md): durable proposals, conflict repair, and quorum commit.
-- [Raft peer processes](docs/learning/16-raft-processes.md): bounded HTTP transport, leader loss, and journal recovery.
-- [Replicated configuration](docs/learning/17-replicated-configuration.md): commit/apply, retry replay, and the initial read contract.
-- [Read quorums](docs/learning/18-read-quorum.md): fresh reads without per-poll journal growth.
-- [Controller failover](docs/learning/19-controller-failover.md): bounded peer polling, stale-view expiry, and real-model recovery.
-- [Application checkpoints](docs/learning/20-application-checkpoints.md): preserve retry results before log retention.
-- [Checkpoint publication](docs/learning/21-checkpoint-publication.md): sync-before-selection, process-kill recovery, and uncertain retries.
-- [Controller checkpoint recovery](docs/learning/22-controller-checkpoint-recovery.md): owner capture, confirmed-prefix installation, and full-replay comparison.
-- [Controller capacity](docs/learning/23-controller-capacity.md): measured write limits, journal growth, and restart failure at entry exhaustion.
-- [Retained log boundary](docs/learning/24-retained-log-boundary.md): absolute Raft indices and catch-up requirements.
-- [Retained storage](docs/learning/25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together, with native publication checks.
-- [Controller local retention](docs/learning/26-controller-local-retention.md): opt-in single-member service recovery, manual retention, and restart/retry checks.
-- [Peer snapshot recovery](docs/learning/27-peer-snapshot-recovery.md): three-controller retention, lagging-peer installation, and real-model quorum recovery.
-- [Recorded demo](docs/demo/README.md): real-model routing/cancellation, controller snapshots, failure/recovery, and the complete capture evidence.
-- [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
+The recorded scenarios exercise:
 
-## Run the foundation
+- **Admission and cancellation:** occupy both real engines, reject the next request with
+  HTTP 503, disconnect the clients, observe released slots, and generate again.
+- **Replication and catch-up:** stop a follower, commit changes with a majority, retain the
+  log prefix, then recover that follower through snapshot installation and suffix replay.
+- **Controller failure:** kill the leader and confirm that the gateway switches to a new
+  source; apply a drain and resume without putting consensus on the token path.
+- **Quorum loss and recovery:** expire the gateway's configuration view, reject new work
+  while an existing stream finishes, restore an installed checkpoint, and generate again.
+- **Historical retries:** return an original successful result after restart even when the
+  current configuration has advanced.
 
-With Go 1.26 or later:
+## Two paths, separate responsibilities
 
-```sh
-go run ./cmd/gateway -listen 127.0.0.1:8080
+```mermaid
+flowchart LR
+    Client[Client] --> Gateway[Go streaming gateway]
+    Gateway --> W1[llama.cpp worker 1]
+    Gateway --> W2[llama.cpp worker 2]
+    Admin[Configuration client] --> A[Controller A]
+    A <-->|Raft| B[Controller B]
+    B <-->|Raft| C[Controller C]
+    C <-->|Raft| A
+    A -. confirmed configuration .-> Gateway
+    B -. peer fallback .-> Gateway
+    C -. peer fallback .-> Gateway
 ```
 
-In another terminal:
+**Serving path:** round-robin, least-inflight, or bounded prefix affinity; per-worker local
+admission; health probes; draining; streaming responses; cancellation and deadlines.
+Prefix affinity uses an explicit client hint and leaves KV-cache management to the engine.
 
-```sh
-curl http://127.0.0.1:8080/healthz
+**Control path:** versioned compare-and-swap updates, durable successful request IDs,
+fixed-membership Raft elections and replication, current-term majority-confirmed reads,
+application checkpoints, manual retention, and lagging-peer snapshot installation.
+
+Controller polling happens outside generation requests. Gateways expose their applied
+revision and reject new work after their last confirmed view expires. A committed drain
+records desired state; it does not by itself prove every gateway has finished draining.
+
+## Failure contracts and checks
+
+| Event | Expected behavior | Reproducible check |
+| --- | --- | --- |
+| Every eligible worker is busy | Reject excess work; keep admission bounded | [Real two-worker pool](scripts/check_real_pool.py) |
+| Client disconnects mid-generation | Propagate cancellation and observe engine slot release | [Real inference](scripts/check_real_inference.py) |
+| Controller leader dies | Elect with a surviving majority; gateway confirms a replacement source | [Real-model failover](scripts/check_controller_failover.py) |
+| Controller majority disappears | Fresh reads/writes cannot complete; gateway expires its view | [Quorum reads](docs/learning/18-read-quorum.md) |
+| Follower misses a removed prefix | Install a validated durable image, then replicate the suffix | [Three-peer retention](scripts/check_replicated_retention.py) |
+| Storage publication has an uncertain outcome | Fence the owner; select and sync complete state on reopen | [Storage process-kill tests](internal/raft/retained_process_test.go) |
+
+The evidence includes a clean-source single-controller run reaching absolute log index
+**1103** through periodic retention, followed by two abrupt restarts preserving original
+retry results. That workload has **two unique successful updates and 1100 logged retries**;
+it is a correctness exercise, not a throughput benchmark. [Raw result](docs/results/controller-local-retention-346ac82.json)
+
+Routing experiments separately examine prefix reuse, fixed-arrival goodput, mixed request
+costs, and worker restart under load. Conditions, negative outcomes, and raw measurements
+are in the [evidence ledger](docs/EVIDENCE.md). No GPU performance or algorithmic novelty
+claim follows from the CPU results.
+
+## Run real inference locally
+
+The supplied setup targets Windows x64 with Python 3.11+ and Go 1.26+ on PATH. It downloads
+checksum-verified engine/model assets into ignored `.tools/`; model weights are not committed.
+
+```powershell
+python scripts/setup_llama.py
+powershell -ExecutionPolicy Bypass -File scripts/run_llama.ps1
 ```
 
-This returns `{"status":"ok"}`. It means the HTTP process responds; it does not mean a
-model is loaded. Without `-backend`, generation returns 503. Stop with Ctrl+C.
-To stream through the gateway, start the test worker and run
-`go run ./cmd/gateway -backend http://127.0.0.1:8081`; follow the forwarding walkthrough above.
+In a second terminal, start the gateway:
+
+```powershell
+go run ./cmd/gateway -listen 127.0.0.1:18080 -backend http://127.0.0.1:18081 -request-timeout 60s
+```
+
+In a third terminal, request a real stream:
+
+```powershell
+curl.exe --no-buffer -H "Content-Type: application/json" --data-binary "@examples/real-stream.json" http://127.0.0.1:18080/v1/chat/completions
+```
+
+For the complete controller path, build the services and run the retained-mode scenario:
+
+```powershell
+go build -o bin/gateway.exe ./cmd/gateway
+go build -o bin/raftpeer.exe ./cmd/raftpeer
+python scripts/check_controller_failover.py --retention --live --output artifacts/controller-failover/local.json
+```
+
+That runner starts its own engine, gateway, and three peers, injects failures, checks the
+outcomes, and cleans up its processes. See [real inference setup](docs/learning/03-real-inference.md)
+and [peer snapshot recovery](docs/learning/27-peer-snapshot-recovery.md) for individual commands.
+The Go services and native peer checks also run in Linux CI; the supplied model setup and
+screen recorder are Windows-specific.
+
+## Validate the implementation
 
 ```sh
 go test ./...
 go vet ./...
-go build -o bin/gateway ./cmd/gateway
-python scripts/smoke.py bin/gateway
+go build ./...
 ```
 
-On Linux with a C compiler, also run `go test -race ./...`.
-On Windows, use `bin/gateway.exe` for the build output and smoke-test argument.
-`scripts/smoke.py` checks the gateway process over HTTP; Go network tests check the synthetic worker.
+Linux CI also runs `go test -race ./...`, native-process replication/recovery checks,
+and the three-peer retention scenario. Real-model checks run separately with pinned local
+assets. Ordinary CI uses explicit synthetic fixtures and does not download model weights.
 
-## Planned system
+## Scope and limits
 
-```text
-Application -> gateway -> inference servers running real model weights
-                  |
-                  +-- local view of versioned fleet configuration
-                                      ^
-                           replicated control plane (fixed membership)
-```
+This is a local systems prototype with real model execution and real process/network/file
+I/O. Validation runs on one laptop; independent-host, disk, and power failures remain
+unvalidated. The custom consensus implementation adds maintenance and correctness costs;
+[the design decisions](docs/DECISIONS.md) discuss established implementations as alternatives.
 
-Start with static configuration and one backend. Add multiple workers, bounded admission,
-failure handling, and measured routing policies. Then make administrative configuration
-durable and replicate it with Raft. Token streams never pass through the consensus log.
+Retention is manual. The application checkpoint codec is bounded at 1024 successful request
+IDs and an eight-MiB payload. Admission counters are local to each gateway. Listeners use
+trusted loopback HTTP without authentication or TLS. Dynamic membership, distributed model
+execution, cross-request engine batching, and production deployment are outside this scope.
 
-Existing systems already address this problem, including
-[vLLM's load-aware router](https://docs.vllm.ai/projects/production-stack/en/latest/use_cases/loadaware-routing.html).
-We will compare against them before claiming a useful improvement. A focused upstream
-contribution remains a valid outcome.
+The evidence preserves an intermittent Windows connection reset during an earlier drain
+probe and an earlier interrupted cache-experiment timeout. Successful later runs do not
+establish fixes for those observations. External application demand remains unvalidated;
+workload-driven scheduling and sharding are deferred.
 
-## Verification
+## Explore the implementation
 
-Commits describe changes to behavior, design, and validation. The evidence ledger records
-commands, environments, raw results, and limitations. Walkthroughs connect each increment
-to a runnable experiment. Engine and model sources are pinned and credited in the setup
-configuration and real inference walkthrough.
+| Area | Entry points |
+| --- | --- |
+| Gateway, routing, cancellation | [Gateway code](internal/gateway) ? [Serving walkthroughs](docs/learning/README.md) |
+| Consensus and persistence | [Raft core](internal/raft) ? [Peer runtime](internal/raftnet) |
+| Ordered configuration and retries | [State machine](internal/control/machine.go) ? [Checkpoint codec](internal/control/checkpoint.go) |
+| Tradeoffs and failure contracts | [Architecture](docs/ARCHITECTURE.md) ? [Decisions](docs/DECISIONS.md) |
+| Experiments and limitations | [Evidence ledger](docs/EVIDENCE.md) ? [Recorded demo](docs/demo/README.md) |
+
+Engine/model provenance and SHA-256 pins are recorded in [config/llama-cpu.json](config/llama-cpu.json).
