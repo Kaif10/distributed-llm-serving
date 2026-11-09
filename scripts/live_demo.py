@@ -24,15 +24,27 @@ def console(title):
     class Font(ctypes.Structure):
         _fields_ = [("cbSize", ctypes.c_ulong), ("nFont", ctypes.c_ulong), ("dwFontSize", Coord),
                     ("FontFamily", ctypes.c_uint), ("FontWeight", ctypes.c_uint), ("FaceName", ctypes.c_wchar*32)]
+    class Info(ctypes.Structure):
+        _fields_ = [("size", Coord), ("cursor", Coord), ("attributes", ctypes.c_ushort),
+                    ("window", Rect), ("maximum", Coord)]
     handle = k.GetStdHandle(-11)
     k.SetCurrentConsoleFontEx.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(Font)]
-    font = Font(ctypes.sizeof(Font), 0, Coord(0, 24), 54, 400, "Consolas")
+    font = Font(ctypes.sizeof(Font), 0, Coord(0, 16), 54, 400, "Consolas")
     k.SetCurrentConsoleFontEx(handle, False, ctypes.byref(font))
     k.SetConsoleWindowInfo.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(Rect)]
     k.SetConsoleScreenBufferSize.argtypes = [ctypes.c_void_p, Coord]
     k.SetConsoleWindowInfo(handle, True, ctypes.byref(Rect(0, 0, 79, 19)))
     k.SetConsoleScreenBufferSize(handle, Coord(100, 3000))
     k.SetConsoleWindowInfo(handle, True, ctypes.byref(Rect(0, 0, 99, 27)))
+    k.GetConsoleScreenBufferInfo.argtypes = [ctypes.c_void_p, ctypes.POINTER(Info)]
+    info = Info()
+    if not k.GetConsoleScreenBufferInfo(handle, ctypes.byref(info)):
+        raise RuntimeError("cannot inspect actual console viewport")
+    # Match the buffer to the actual DPI-constrained viewport so long commands
+    # wrap visibly rather than disappearing into a horizontal scroll area.
+    columns = info.window.Right-info.window.Left+1
+    if not k.SetConsoleScreenBufferSize(handle, Coord(columns, 3000)):
+        raise RuntimeError("cannot fit console buffer to visible window")
     u.ShowWindow.argtypes = [ctypes.c_void_p, ctypes.c_int]
     u.SetForegroundWindow.argtypes = [ctypes.c_void_p]
     u.SetWindowPos.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_uint]
