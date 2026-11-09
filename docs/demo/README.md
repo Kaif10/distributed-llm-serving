@@ -1,8 +1,8 @@
 # Recorded working demo
 
-[Watch the 32-second MP4](demo.mp4) · [Poster](poster.png) · [Raw capture](raw/) · [Attempt history](attempts.json)
+[Download the 32-second MP4](demo.mp4) · [Raw capture](raw/) · [Attempt history](attempts.json)
 
-[![Demo poster](poster.png)](demo.mp4)
+![Recorded working demo](demo.gif)
 
 Recorded from clean source `8c8bf9d77b664eda5803bb996e498ca956adc54b` on Windows,
 using the pinned llama.cpp b12110 CPU engine and real SmolLM2-135M Q4_K_M generation.
@@ -14,6 +14,9 @@ No outcomes or generated text are simulated. Raw timestamps and complete reports
 in [transcript.jsonl](raw/transcript.jsonl), [session.json](raw/session.json), and the JSON
 scenario reports. [Media metadata](media.json) records the hash, renderer, and successful
 decode of every exported frame.
+
+The animated GIF embeds the same recorded playback directly in GitHub READMEs and loops
+automatically. The MP4 remains available as a downloadable version.
 
 The demo shows:
 

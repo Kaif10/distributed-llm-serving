@@ -2,7 +2,9 @@
 
 A project to build and understand reliable routing across a pool of LLM inference servers.
 
-[Watch the working demo](docs/demo/demo.mp4) · [Recording, commands, raw results, and limitations](docs/demo/README.md)
+![Recorded working demo: real LLM routing, cancellation, and controller recovery](docs/demo/demo.gif)
+
+32-second edited playback of the real run. [Commands, raw results, and limitations](docs/demo/README.md).
 
 The intended user operates several replicas of the same model. Requests differ in length,
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The

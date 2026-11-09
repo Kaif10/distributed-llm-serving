@@ -33,5 +33,24 @@
   ],
   "sha256": "22db0a77cf112483be49d0f7854d0899796ceaf408db5ba5db2907f94cb317eb",
   "bytes": 308881,
-  "full_decode_passed": true
+  "full_decode_passed": true,
+  "inline_gif": {
+    "command": [
+      "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+      "-y",
+      "-v",
+      "error",
+      "-i",
+      "docs\\demo\\demo.mp4",
+      "-filter_complex",
+      "fps=1,split[a][b];[a]palettegen[p];[b][p]paletteuse",
+      "-loop",
+      "0",
+      "docs\\demo\\demo.gif"
+    ],
+    "sha256": "e018b51940f29540099d14f96cfd525e4f823571db218dfd20bb88c289768eb4",
+    "bytes": 652894,
+    "loop": "forever",
+    "validated_duration_ms": 32000
+  }
 }

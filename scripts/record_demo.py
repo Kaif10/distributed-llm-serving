@@ -70,11 +70,17 @@ def render(output):
                 process.wait()
     # Decode every frame to validate the exported media container and bitstream.
     subprocess.run([ffmpeg, "-v", "error", "-i", str(output/"demo.mp4"), "-f", "null", "-"], check=True, timeout=90)
+    gif_command = [ffmpeg, "-y", "-v", "error", "-i", str(output/"demo.mp4"),
+                   "-filter_complex", "fps=1,split[a][b];[a]palettegen[p];[b][p]paletteuse",
+                   "-loop", "0", str(output/"demo.gif")]
+    subprocess.run(gif_command, check=True, timeout=90)
     media = {"format": "captioned edited terminal/results playback; no audio; pauses shortened",
              "duration_seconds": len(pages)*8, "pages": len(pages), "resolution": [1280,720],
              "ffmpeg_version": imageio_ffmpeg.get_ffmpeg_version(), "command": command,
              "sha256": hashlib.sha256((output/"demo.mp4").read_bytes()).hexdigest(),
              "bytes": (output/"demo.mp4").stat().st_size, "full_decode_passed": True}
+    media["inline_gif"] = {"command": gif_command, "sha256": hashlib.sha256((output/"demo.gif").read_bytes()).hexdigest(),
+                           "bytes": (output/"demo.gif").stat().st_size, "loop": "forever"}
     (output/"media.json").write_text(json.dumps(media,indent=2)+"\n",encoding="utf-8")
     print(json.dumps(media), flush=True)
 
