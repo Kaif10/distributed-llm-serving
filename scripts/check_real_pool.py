@@ -1,6 +1,7 @@
 """Start two real CPU model servers and validate pool admission for both routing policies."""
 
 import contextlib
+import argparse
 import http.client
 import json
 import os
@@ -57,7 +58,7 @@ def wait_idle():
     raise RuntimeError("Real engines did not release slots")
 
 
-def exercise(policy, payload):
+def exercise(policy, payload, live=False):
     gateway = "http://127.0.0.1:18080"
     held = []
     result = {"policy": policy}
@@ -74,6 +75,8 @@ def exercise(policy, payload):
             else:
                 raise RuntimeError("No generated text")
         result["busy_slots"] = slot_states()
+        if live:
+            print("LIVE engine processing states:", [s["is_processing"] for s in result["busy_slots"]], flush=True)
         if not all(s["is_processing"] for s in result["busy_slots"]):
             raise RuntimeError("Both real engines must be actively generating")
         connection = http.client.HTTPConnection("127.0.0.1", 18080, timeout=3)
@@ -86,6 +89,8 @@ def exercise(policy, payload):
             response.close()
             if result["overload"]["status"] != 503 or result["overload"]["retry_after"] != "1":
                 raise RuntimeError("Expected admission rejection while both engines busy")
+            if live:
+                print("Third request HTTP:", result["overload"]["status"], "Retry-After:", result["overload"]["retry_after"], flush=True)
         finally:
             connection.close()
     finally:
@@ -93,15 +98,24 @@ def exercise(policy, payload):
             response.close()
             connection.close()
     result["idle_after_disconnect"] = wait_idle()
+    if live:
+        print("Clients disconnected. LIVE engine processing states:", [s["is_processing"] for s in result["idle_after_disconnect"]], flush=True)
     # Engine capacity can return just before the gateway handler releases its reservation.
     time.sleep(.1)
-    result["after_release"] = measure(gateway, dict(payload, max_tokens=16))
+    if live:
+        print("New request: actual generated tokens -> ", end="", flush=True)
+    result["after_release"] = measure(gateway, dict(payload, max_tokens=16), on_content=(lambda text: print(text, end="", flush=True)) if live else None)
+    if live:
+        print("\nStream complete:", result["after_release"]["done"], flush=True)
     result["passed"] = True
     print("PASS", policy, ": two busy real engines, third request 503, cancellation releases slots, new generation completes", flush=True)
     return result
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--live", action="store_true", help="print live process, admission, and generated-token output")
+    args = parser.parse_args()
     output = ROOT / "artifacts/real-pool"
     output.mkdir(parents=True, exist_ok=True)
     # Refuse to share ports with existing services. Every child below is owned by this run.
@@ -122,14 +136,18 @@ def main():
                            "--alias", "smollm2-135m", "-c", "2048", "-np", "1", "-t", "2", "-ngl", "0",
                            "--slots", "--no-ui", "--no-cache-prompt"]
                 result["commands"].append(command)
-                stack.enter_context(service(command, f"http://127.0.0.1:{port}/health", output / f"engine-{port}.log"))
+                process = stack.enter_context(service(command, f"http://127.0.0.1:{port}/health", output / f"engine-{port}.log"))
+                if args.live:
+                    print("READY real llama.cpp engine PID", process.pid, "port", port, flush=True)
             for policy in ("round-robin", "least-inflight", "prefix-affinity"):
                 command = [str(ROOT / "bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends",
                            "http://127.0.0.1:18081,http://127.0.0.1:18082", "-policy", policy,
                            "-max-inflight", "1", "-request-timeout", "60s"]
                 result["commands"].append(command)
-                with service(command, "http://127.0.0.1:18080/readyz", output / f"gateway-{policy}.log"):
-                    result["runs"].append(exercise(policy, payload))
+                with service(command, "http://127.0.0.1:18080/readyz", output / f"gateway-{policy}.log") as process:
+                    if args.live:
+                        print("\nREADY gateway PID", process.pid, "policy", policy, flush=True)
+                    result["runs"].append(exercise(policy, payload, args.live))
         result["passed"] = True
     except Exception as err:
         result["passed"] = False

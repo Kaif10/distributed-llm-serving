@@ -52,7 +52,7 @@ def events(response):
         yield json.loads(data)
 
 
-def measure(origin, payload, headers=None):
+def measure(origin, payload, headers=None, on_content=None):
     started = time.perf_counter()
     connection, response = open_stream(origin, payload, headers)
     first = None
@@ -74,6 +74,8 @@ def measure(origin, payload, headers=None):
                     if first is None:
                         first = time.perf_counter()
                     parts.append(content)
+                    if on_content is not None:
+                        on_content(content)
                 finish = choice.get("finish_reason") or finish
         elapsed = time.perf_counter() - started
         if first is None or not done or finish is None:
