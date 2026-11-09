@@ -235,8 +235,8 @@ with native peer failures/restarts and real CPU-model gateway expiry/recovery; s
 [peer snapshot recovery](learning/27-peer-snapshot-recovery.md). Two-slot mode owns both
 image and suffix generations, so separate publication-journal rollover is unnecessary
 there. The old journal stays a bounded comparison mode. Manual maintenance and codec
-history bounds remain. The [complete working-demo video](demo/README.md) is now recorded
-and includes raw results, commands, source identity, and the failed first capture.
+history bounds remain. The [actual terminal screen recording](demo/README.md) now captures the live demo
+in one real-time take, with raw console output, capture metadata, and complete results.
 
 Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
 The integration closes the prior standalone-preparation loop; new components still require

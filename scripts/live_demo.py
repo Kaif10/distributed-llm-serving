@@ -119,6 +119,8 @@ def main():
             time.sleep(6)
         finally:
             (output/"finished.json").write_text(json.dumps({"passed": passed, "wall_seconds": round(time.monotonic()-started, 3)}), encoding="utf-8")
+            sys.stdout.flush()
+            sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
 
 
 if __name__ == "__main__":

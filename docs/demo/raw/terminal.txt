@@ -1,0 +1,97 @@
+INFERENCE FLEET - REAL LIVE TERMINAL DEMO
+Scripted commands execute real services. This is not result playback.
+One laptop | real llama.cpp CPU generation | three Raft controllers
+Source: 613ca9522d396d0daeafa7d532c9c98b875e08cd
+
+
+==========================================================================================
+1. REAL MODEL ROUTING, OVERLOAD, CANCELLATION, LIVE TOKENS
+EXECUTE: C:\Users\kaifk\AppData\Local\Programs\Python\Python312\python.exe -u scripts/check_real_pool.py --live
+==========================================================================================
+READY real llama.cpp engine PID 8240 port 18081
+READY real llama.cpp engine PID 4228 port 18082
+
+READY gateway PID 26552 policy round-robin
+LIVE engine processing states: [True, True]
+Third request HTTP: 503 Retry-After: 1
+Clients disconnected. LIVE engine processing states: [False, False]
+New request: actual generated tokens -> A computer server is a type of computer hardware that provides a centralized computing environment for
+Stream complete: True
+PASS round-robin : two busy real engines, third request 503, cancellation releases slots, new generation completes
+
+READY gateway PID 34952 policy least-inflight
+LIVE engine processing states: [True, True]
+Third request HTTP: 503 Retry-After: 1
+Clients disconnected. LIVE engine processing states: [False, False]
+New request: actual generated tokens -> A computer server is a type of computer hardware that provides a centralized computing environment for
+Stream complete: True
+PASS least-inflight : two busy real engines, third request 503, cancellation releases slots, new generation completes
+
+READY gateway PID 30876 policy prefix-affinity
+LIVE engine processing states: [True, True]
+Third request HTTP: 503 Retry-After: 1
+Clients disconnected. LIVE engine processing states: [False, False]
+New request: actual generated tokens -> A computer server is a type of computer hardware that provides a centralized computing environment for
+Stream complete: True
+PASS prefix-affinity : two busy real engines, third request 503, cancellation releases slots, new generation completes
+
+Command finished successfully. Elapsed real time: 13.7 seconds
+
+==========================================================================================
+2. THREE CONTROLLERS: OFFLINE FOLLOWER, SNAPSHOT, LEADER LOSS, FULL RESTART
+EXECUTE: C:\Users\kaifk\AppData\Local\Programs\Python\Python312\python.exe -u scripts/check_replicated_retention.py bin/raftpeer.exe --output D:\inference-fleet\artifacts\demo\real-screen-2\replicated-retention.json
+==========================================================================================
+PASS: lagging-peer snapshot/suffix, durable retry history, leader loss, wrong-group rejection, and full-cluster restart
+
+Command finished successfully. Elapsed real time: 28.1 seconds
+
+==========================================================================================
+3. LIVE LLM THROUGH CONTROLLER FAILURE, QUORUM LOSS, AND DURABLE RECOVERY
+EXECUTE: C:\Users\kaifk\AppData\Local\Programs\Python\Python312\python.exe -u scripts/check_controller_failover.py --retention --live --output D:\inference-fleet\artifacts\demo\real-screen-2\real-controller-failover.json
+==========================================================================================
+READY real llama.cpp engine PID 35972 http://127.0.0.1:64637
+READY controller a PID 35384 http://127.0.0.1:64634
+READY controller b PID 26052 http://127.0.0.1:64635
+READY controller c PID 31768 http://127.0.0.1:64636
+ELECTED controller leader: a | committed configuration revision 1
+READY gateway PID 4256 http://127.0.0.1:64638
+
+Before failure: actual generated tokens ->
+A computer server is a type of computer hardware that provides a centralized computing environment for
+Completed SSE stream: True finish: length
+
+KILL controller leader a PID 35384
+ELECTED replacement: b | gateway confirmed source: http://127.0.0.1:64635
+Drain committed/applied revision 2. New generation HTTP: 503
+Resume committed/applied revision 3
+
+After controller failover: actual generated tokens ->
+A computer server is a type of computer hardware that provides a centralized computing environment for
+Completed SSE stream: True finish: length
+Old leader restarted; snapshot installed: 5 | current revision: 3
+Stopped old leader again; remaining two controllers still form quorum
+
+KILL controller c | majority lost while a real generation is active
+Gateway fresh: False | readiness HTTP: 503 | active worker requests: 1
+Existing real stream still arriving: 256 chunks after first content
+Existing real stream still arriving: 512 chunks after first content
+Existing real stream still arriving: 768 chunks after first content
+Existing real stream still arriving: 1024 chunks after first content
+Existing real stream still arriving: 1280 chunks after first content
+Existing real stream still arriving: 1536 chunks after first content
+Existing real stream completed: True | finish: length | chunks: 1536
+Worker idle, quorum still absent: new generation HTTP 503
+RESTART controller a PID 27048 | restored durable boundary 5
+Quorum recovered; gateway fresh: True | applied revision: 3
+
+After checkpoint-backed quorum recovery: actual generated tokens ->
+A computer server is a type of computer hardware that provides a centralized computing environment for
+Completed SSE stream: True finish: length
+Historical request retry returns original revision: 1 | current configuration remains revision 3
+PASS: real CPU generation, controller leader failover, drain, expiry with stream completion, and quorum recovery
+
+Command finished successfully. Elapsed real time: 75.0 seconds
+
+LIVE DEMO COMPLETE - all scenario assertions passed.
+Actual window capture. No synthetic terminal frames or reconstructed results.
+Local validation only; manual retention and finite history limits remain.

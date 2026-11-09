@@ -4,7 +4,7 @@ A project to build and understand reliable routing across a pool of LLM inferenc
 
 ![Recorded working demo: real LLM routing, cancellation, and controller recovery](docs/demo/demo.gif)
 
-32-second edited playback of the real run. [Commands, raw results, and limitations](docs/demo/README.md).
+Actual terminal screen recording with live model tokens and controller failure/recovery. [Commands, raw results, and limitations](docs/demo/README.md).
 
 The intended user operates several replicas of the same model. Requests differ in length,
 popular prompts concentrate traffic, and workers sometimes slow down or disappear. The

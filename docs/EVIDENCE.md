@@ -14,7 +14,20 @@ retention and snapshot transfer are now connected across fixed configuration pee
 Scheduling and conditional sharding remain workload-gated extensions. Historical
 entries describe their original increments rather than current status.
 
-## Recorded complete local demo
+## Actual terminal screen recording
+
+Clean source `613ca9522d396d0daeafa7d532c9c98b875e08cd`: the actual Windows console
+was recorded continuously with FFmpeg `gdigrab` while all three live scenarios ran.
+The demonstration completed in 84.031 seconds; all scenario assertions passed. The
+MP4 is uncut, real-time, and fully decoded after capture. The README GIF derives from
+those screen pixels at the same wall-clock pace. See [the recording](demo/README.md),
+[actual console output](demo/raw/terminal.txt), and [capture metadata](demo/media.json).
+Live output includes real process IDs, model-token arrival, overload/cancellation,
+controller leader loss, snapshot catch-up, quorum expiry with active-stream completion,
+durable restart, new generation, and historical retry results. Source was clean at run
+start. No synthetic terminal frames are used in this recording.
+
+## Previous captured-output presentation (historical)
 
 Clean source `8c8bf9d77b664eda5803bb996e498ca956adc54b`: the second capture runs all
 three scenarios successfully, preserving the same source/binaries as the first attempt.

@@ -1,5 +1,5 @@
 {
-  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "source_commit": "613ca9522d396d0daeafa7d532c9c98b875e08cd",
   "working_tree_dirty": false,
   "assets": {
     "engine": "llama.cpp",
@@ -34,7 +34,7 @@
           "speculative": false,
           "is_processing": true,
           "id_task": 1,
-          "n_prompt_tokens": 63,
+          "n_prompt_tokens": 55,
           "n_prompt_tokens_processed": 41,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -95,8 +95,8 @@
             {
               "has_next_token": true,
               "has_new_line": false,
-              "n_remain": 1002,
-              "n_decoded": 22
+              "n_remain": 1010,
+              "n_decoded": 14
             }
           ]
         },
@@ -106,7 +106,7 @@
           "speculative": false,
           "is_processing": true,
           "id_task": 1,
-          "n_prompt_tokens": 44,
+          "n_prompt_tokens": 42,
           "n_prompt_tokens_processed": 41,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -167,8 +167,8 @@
             {
               "has_next_token": true,
               "has_new_line": false,
-              "n_remain": 1021,
-              "n_decoded": 3
+              "n_remain": 1023,
+              "n_decoded": 1
             }
           ]
         }
@@ -177,7 +177,7 @@
         "status": 503,
         "retry_after": "1",
         "body": "no healthy undrained worker with capacity\n",
-        "elapsed_ms": 1.549
+        "elapsed_ms": 2.504
       },
       "idle_after_disconnect": [
         {
@@ -186,7 +186,7 @@
           "speculative": false,
           "is_processing": false,
           "id_task": 1,
-          "n_prompt_tokens": 65,
+          "n_prompt_tokens": 56,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -258,7 +258,7 @@
           "speculative": false,
           "is_processing": false,
           "id_task": 1,
-          "n_prompt_tokens": 45,
+          "n_prompt_tokens": 43,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -326,8 +326,8 @@
         }
       ],
       "after_release": {
-        "ttft_ms": 185.006,
-        "completion_ms": 337.345,
+        "ttft_ms": 364.474,
+        "completion_ms": 654.781,
         "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
         "usage": null,
         "finish_reason": "length",
@@ -343,8 +343,8 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": true,
-          "id_task": 49,
-          "n_prompt_tokens": 58,
+          "id_task": 42,
+          "n_prompt_tokens": 61,
           "n_prompt_tokens_processed": 41,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -405,8 +405,8 @@
             {
               "has_next_token": true,
               "has_new_line": false,
-              "n_remain": 1007,
-              "n_decoded": 17
+              "n_remain": 1004,
+              "n_decoded": 20
             }
           ]
         },
@@ -487,7 +487,7 @@
         "status": 503,
         "retry_after": "1",
         "body": "no healthy undrained worker with capacity\n",
-        "elapsed_ms": 9.076
+        "elapsed_ms": 2.243
       },
       "idle_after_disconnect": [
         {
@@ -495,8 +495,8 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": false,
-          "id_task": 49,
-          "n_prompt_tokens": 60,
+          "id_task": 42,
+          "n_prompt_tokens": 62,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -568,7 +568,7 @@
           "speculative": false,
           "is_processing": false,
           "id_task": 12,
-          "n_prompt_tokens": 44,
+          "n_prompt_tokens": 43,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -636,8 +636,8 @@
         }
       ],
       "after_release": {
-        "ttft_ms": 122.343,
-        "completion_ms": 240.807,
+        "ttft_ms": 269.335,
+        "completion_ms": 527.942,
         "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
         "usage": null,
         "finish_reason": "length",
@@ -653,7 +653,7 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": true,
-          "id_task": 92,
+          "id_task": 87,
           "n_prompt_tokens": 42,
           "n_prompt_tokens_processed": 41,
           "n_prompt_tokens_cache": 0,
@@ -725,8 +725,8 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": true,
-          "id_task": 22,
-          "n_prompt_tokens": 58,
+          "id_task": 21,
+          "n_prompt_tokens": 57,
           "n_prompt_tokens_processed": 41,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -787,8 +787,8 @@
             {
               "has_next_token": true,
               "has_new_line": false,
-              "n_remain": 1007,
-              "n_decoded": 17
+              "n_remain": 1008,
+              "n_decoded": 16
             }
           ]
         }
@@ -797,7 +797,7 @@
         "status": 503,
         "retry_after": "1",
         "body": "no healthy undrained worker with capacity\n",
-        "elapsed_ms": 1.258
+        "elapsed_ms": 2.675
       },
       "idle_after_disconnect": [
         {
@@ -805,7 +805,7 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": false,
-          "id_task": 92,
+          "id_task": 87,
           "n_prompt_tokens": 43,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
@@ -877,8 +877,8 @@
           "n_ctx": 2048,
           "speculative": false,
           "is_processing": false,
-          "id_task": 22,
-          "n_prompt_tokens": 59,
+          "id_task": 21,
+          "n_prompt_tokens": 58,
           "n_prompt_tokens_processed": 0,
           "n_prompt_tokens_cache": 0,
           "params": {
@@ -946,8 +946,8 @@
         }
       ],
       "after_release": {
-        "ttft_ms": 135.698,
-        "completion_ms": 247.61,
+        "ttft_ms": 324.393,
+        "completion_ms": 590.355,
         "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
         "usage": null,
         "finish_reason": "length",

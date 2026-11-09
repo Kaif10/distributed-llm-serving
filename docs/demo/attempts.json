@@ -1,15 +1,20 @@
 {
-  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
-  "attempts": [
+  "selected_capture": "raw",
+  "format": "actual Windows console screen recording via gdigrab",
+  "source_commit": "613ca9522d396d0daeafa7d532c9c98b875e08cd",
+  "takes": [
     {
-      "directory": "failed-attempt-1",
-      "passed": false,
-      "failure": "ConnectionResetError WinError 10054 during drain-rejection probe; cause not established; no video exported"
+      "name": "real-screen-1",
+      "scenario_assertions_passed": true,
+      "selected": false,
+      "reason": "console text exceeded visible viewport"
     },
     {
-      "directory": "raw",
-      "passed": true,
-      "capture": "second complete capture; no source changes between attempts"
+      "name": "real-screen-2",
+      "scenario_assertions_passed": true,
+      "selected": true,
+      "wall_seconds": 84.031
     }
-  ]
+  ],
+  "historical_failed_scenario": "failed-attempt-1"
 }

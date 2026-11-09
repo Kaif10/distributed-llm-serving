@@ -1,15 +1,80 @@
 {
-  "source_commit": "8c8bf9d77b664eda5803bb996e498ca956adc54b",
+  "source_commit": "613ca9522d396d0daeafa7d532c9c98b875e08cd",
   "working_tree": "",
   "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.7",
-  "started_utc": "2026-11-09T00:55:51Z",
-  "scope": "one laptop; real model generation and native controller processes; no scale claim",
-  "format": "edited terminal/results playback; raw timestamped stdout preserved",
+  "started_utc": "2026-11-09T14:27:51Z",
+  "format": "actual Windows console window captured by FFmpeg gdigrab; continuous real-time recording",
+  "driver_command": [
+    "C:/Windows/System32/conhost.exe",
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-u",
+    "D:\\inference-fleet\\scripts\\live_demo.py",
+    "--output",
+    "D:\\inference-fleet\\artifacts\\demo\\real-screen-2"
+  ],
   "passed": true,
-  "binary_sha256": {
-    "gateway.exe": "9cdb7ade8c8a39620d1a5ecd0243884e9efaeb987ad9011c07ee93934ccd9460",
-    "raftpeer.exe": "47d0e0200f1dcecf6afd87d85916e7ab407c839d0ac441f4468bd64959154968"
+  "capture_command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-y",
+    "-f",
+    "gdigrab",
+    "-framerate",
+    "10",
+    "-draw_mouse",
+    "0",
+    "-i",
+    "title=Inference Fleet - REAL LIVE DEMO 12740",
+    "-vf",
+    "pad=ceil(iw/2)*2:ceil(ih/2)*2",
+    "-an",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "veryfast",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\inference-fleet\\artifacts\\demo\\real-screen-2\\demo.mp4"
+  ],
+  "wall_seconds": 84.031,
+  "console": {
+    "title": "Inference Fleet - REAL LIVE DEMO 12740",
+    "hwnd": 5571950,
+    "pid": 12740,
+    "stdout_is_console": true
   },
-  "wall_seconds": 37.907
+  "uncut": true,
+  "speed": 1.0,
+  "overlays": false,
+  "generated_frames": false,
+  "ffmpeg_version": "7.1-essentials_build-www.gyan.dev",
+  "full_decode_passed": true,
+  "media": {
+    "demo.mp4": {
+      "bytes": 4453439,
+      "sha256": "c20f98398f55aa646bf9e4f35e738e65e40e61ee5d5066a166810318bd305591"
+    },
+    "demo.gif": {
+      "bytes": 8614945,
+      "sha256": "cbaddcd9331b705d4e346c2a8fcb973d313b3a416cf1babb8dfb0c675658a465"
+    }
+  },
+  "gif_command": [
+    "C:\\Users\\kaifk\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-y",
+    "-v",
+    "error",
+    "-i",
+    "docs\\demo\\demo.mp4",
+    "-filter_complex",
+    "fps=3,scale=900:-1:flags=lanczos,split[a][b];[a]palettegen[q];[b][q]paletteuse=dither=bayer",
+    "-loop",
+    "0",
+    "docs\\demo\\demo.gif"
+  ],
+  "gif_duration_ms": 84660,
+  "gif_frames": 254
 }

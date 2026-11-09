@@ -70,7 +70,7 @@ def main():
         driver.wait(timeout=15)
         subprocess.run([ffmpeg,"-v","error","-i",str(output/"demo.mp4"),"-f","null","-"],check=True,timeout=120)
         gif=[ffmpeg,"-y","-v","error","-i",str(output/"demo.mp4"),"-filter_complex",
-             "fps=5,scale=1000:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse=dither=bayer","-loop","0",str(output/"demo.gif")]
+             "fps=3,scale=900:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse=dither=bayer","-loop","0",str(output/"demo.gif")]
         subprocess.run(gif,check=True,timeout=120)
         subprocess.run([ffmpeg,"-y","-v","error","-ss","3","-i",str(output/"demo.mp4"),"-frames:v","1",str(output/"poster.png")],check=True,timeout=30)
         session.update(passed=True,wall_seconds=finished["wall_seconds"],console=console,
