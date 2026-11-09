@@ -19,14 +19,20 @@ type RetentionStatus struct {
 	RecoveredIndex uint64 `json:"recovered_index"`
 	SHA256         string `json:"sha256,omitempty"`
 	Bytes          int    `json:"checkpoint_bytes"`
+	InstalledIndex uint64 `json:"installed_index"`
 }
 
 // NewConfigurationWithRetention restores a trusted local retained image before
-// applying the suffix. Only single-member groups are supported. Unlike the
+// applying the suffix. Fixed membership uses snapshot installation for catch-up. Unlike the
 // independent publication journal, this store's boundary certifies commitment.
 func NewConfigurationWithRetention(node *raft.Node, peers map[string]string) (*Host, error) {
-	if !node.CanRetainLocal() || len(peers) != 1 || peers[node.Status().ID] == "" {
-		return nil, fmt.Errorf("retention requires a single-member configuration and retained storage")
+	if !node.CanRetainLocal() || len(peers) != len(node.MemberIDs()) {
+		return nil, fmt.Errorf("retention requires matching membership and retained storage")
+	}
+	for _, id := range node.MemberIDs() {
+		if peers[id] == "" {
+			return nil, fmt.Errorf("retention membership mismatch")
+		}
 	}
 	if err := validateConfigurationEntries(node.Log()); err != nil {
 		return nil, err
@@ -63,7 +69,7 @@ func (h *Host) retentionSnapshot() *RetentionStatus {
 }
 func (h *Host) retainLocal() (result, error) {
 	if h.retention == nil || h.machine == nil || h.node.Status().Role != raft.Leader || h.applied == 0 || h.applied != h.node.CommitIndex() {
-		return result{Err: "retention requires a fully applied single-member leader", Code: 503}, nil
+		return result{Err: "retention requires a fully applied retained-storage leader", Code: 503}, nil
 	}
 	if h.applied == h.node.BaseIndex() {
 		return result{Retention: h.retentionSnapshot(), Code: 200}, nil
@@ -82,8 +88,31 @@ func (h *Host) retainLocal() (result, error) {
 	if err := h.node.RetainLocal(image); err != nil {
 		return result{}, err // Owner stops on uncertain storage or invariant failure.
 	}
+	installed := h.retention.InstalledIndex
 	h.retention = retentionMetadata(image, h.retention.RecoveredIndex)
+	h.retention.InstalledIndex = installed
 	return result{Retention: h.retentionSnapshot(), Code: 200}, nil
+}
+
+// Validate before any core persistence. Bind the trusted peer's group, position,
+// and every successful result already applied by this recipient.
+func (h *Host) validateSnapshot(m raft.Message) (*control.Machine, error) {
+	if h.retention == nil || m.Snapshot == nil || m.Group != h.node.RetentionIdentity().Group {
+		return nil, fmt.Errorf("snapshot mode/group mismatch")
+	}
+	machine, pos, err := control.RestoreCheckpoint(m.Snapshot.Data)
+	if err != nil {
+		return nil, err
+	}
+	if pos.Index != m.Snapshot.Index || pos.Term != m.Snapshot.Term {
+		return nil, fmt.Errorf("snapshot application boundary mismatch")
+	}
+	if pos.Index > h.node.CommitIndex() {
+		if err := machine.ValidateSuccessor(h.machine); err != nil {
+			return nil, err
+		}
+	}
+	return machine, nil
 }
 func (h *Host) retentionRoute(mux *http.ServeMux) {
 	if h.retention == nil {

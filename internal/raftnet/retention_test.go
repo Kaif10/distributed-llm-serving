@@ -140,3 +140,30 @@ func TestRetentionConstructorRejectsInvalidApplicationBinding(t *testing.T) {
 		})
 	}
 }
+
+func TestIncomingSnapshotCannotDiscardSuccessfulHistory(t *testing.T) {
+	s, err := raft.OpenRetainedStorage(t.TempDir(), raft.RetainedIdentity{Group: "history", Member: "a"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close()
+	h := retainedHost(t, s)
+	electRetainedHost(t, h)
+	applyRetainedUpdate(t, h, control.Update{RequestID: "original", Workers: []control.Worker{}})
+	other := control.NewMachine()
+	if _, err := other.Apply(control.Update{RequestID: "different", Workers: []control.Worker{}}); err != nil {
+		t.Fatal(err)
+	}
+	data, err := other.Checkpoint(control.CheckpointPosition{Index: 10, Term: 1})
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := raft.Message{Type: raft.InstallSnapshot, Group: "history", Snapshot: &raft.RetainedSnapshot{Index: 10, Term: 1, Data: data}}
+	if _, err := h.validateSnapshot(m); err == nil {
+		t.Fatal("incoming image discarded an original successful request")
+	}
+	m.Group = "wrong"
+	if _, err := h.validateSnapshot(m); err == nil {
+		t.Fatal("cross-group application image accepted")
+	}
+}

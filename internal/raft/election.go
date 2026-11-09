@@ -1,5 +1,5 @@
 // Package raft starts with an isolated fixed-membership election core.
-// Algorithm reference: Ongaro and Ousterhout, extended Raft paper, Figure 2 / §5.2.
+// Algorithm reference: Ongaro and Ousterhout, extended Raft paper, Figure 2 / Â§5.2.
 // New is election-only; NewReplica adds durable log replication and quorum commit.
 // Network transport, distributed reads, and serving-controller integration are separate.
 package raft
@@ -36,8 +36,10 @@ const (
 )
 
 type Message struct {
-	HintIndex                                            uint64 `json:",omitempty"`
-	HintTerm                                             uint64 `json:",omitempty"`
+	Snapshot                                             *RetainedSnapshot `json:",omitempty"`
+	Group                                                string            `json:",omitempty"`
+	HintIndex                                            uint64            `json:",omitempty"`
+	HintTerm                                             uint64            `json:",omitempty"`
 	ReadID                                               uint64
 	PrevIndex, PrevTerm, LeaderCommit, Probe, MatchIndex uint64
 	Entries                                              []Entry
@@ -251,7 +253,7 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	if n.failed {
 		return nil, ErrStorage
 	}
-	if m.Term == 0 || m.To != n.id || m.From == n.id || !n.member[m.From] || (m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat && m.Type != AppendEntries && m.Type != AppendResponse && m.Type != ReadProbe && m.Type != ReadResponse) {
+	if m.Term == 0 || m.To != n.id || m.From == n.id || !n.member[m.From] || (m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat && m.Type != AppendEntries && m.Type != AppendResponse && m.Type != ReadProbe && m.Type != ReadResponse && m.Type != InstallSnapshot && m.Type != SnapshotResponse) {
 		return nil, nil
 	}
 	if m.Term > n.hard.Term {
@@ -266,7 +268,7 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	if n.replica && m.Type == Heartbeat {
 		return nil, nil
 	}
-	if !n.replica && (m.Type == AppendEntries || m.Type == AppendResponse || m.Type == ReadProbe || m.Type == ReadResponse) {
+	if !n.replica && (m.Type == AppendEntries || m.Type == AppendResponse || m.Type == ReadProbe || m.Type == ReadResponse || m.Type == InstallSnapshot || m.Type == SnapshotResponse) {
 		return nil, nil
 	}
 	if m.Type == RequestVote {
@@ -283,6 +285,9 @@ func (n *Node) Step(m Message) ([]Message, error) {
 		return []Message{{Type: VoteResponse, From: n.id, To: m.From, Term: n.hard.Term, Granted: grant}}, nil
 	}
 	if m.Term != n.hard.Term {
+		if n.replica && m.Type == InstallSnapshot {
+			return []Message{{Type: SnapshotResponse, From: n.id, To: m.From, Term: n.hard.Term, Probe: m.Probe}}, nil
+		}
 		if n.replica && m.Type == ReadProbe {
 			return []Message{{Type: ReadResponse, From: n.id, To: m.From, Term: n.hard.Term, ReadID: m.ReadID}}, nil
 		}
@@ -293,6 +298,12 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	}
 	if m.Type == AppendEntries {
 		return n.appendRequest(m)
+	}
+	if m.Type == InstallSnapshot {
+		return n.installSnapshot(m)
+	}
+	if m.Type == SnapshotResponse {
+		return n.snapshotResponse(m)
 	}
 	if m.Type == ReadProbe {
 		return n.confirmRead(m), nil

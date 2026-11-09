@@ -5,11 +5,10 @@ import (
 	"fmt"
 )
 
-// CanRetainLocal deliberately excludes multi-member groups until snapshot
-// installation can recover a peer that falls behind the retained boundary.
+// CanRetainLocal requires storage capable of atomic snapshot installation.
 func (n *Node) CanRetainLocal() bool {
 	_, ok := n.logStorage.(*RetainedStorage)
-	return n.replica && len(n.members) == 1 && ok
+	return n.replica && ok
 }
 
 // RetainLocal is called by the serialized application owner after constructing
@@ -21,7 +20,7 @@ func (n *Node) RetainLocal(snapshot RetainedSnapshot) error {
 		return ErrStorage
 	}
 	if !n.CanRetainLocal() || n.role != Leader {
-		return fmt.Errorf("local retention requires a single-member retained-storage leader")
+		return fmt.Errorf("local retention requires a retained-storage leader")
 	}
 	if snapshot.Index <= n.BaseIndex() || snapshot.Index != n.commit || n.applied != n.commit {
 		return fmt.Errorf("local retention requires an advancing fully delivered committed prefix")
@@ -30,7 +29,8 @@ func (n *Node) RetainLocal(snapshot RetainedSnapshot) error {
 	if !ok || term != snapshot.Term {
 		return fmt.Errorf("local retention boundary term mismatch")
 	}
-	if err := validRetainedLog(snapshot, nil, n.hard.Term); err != nil {
+	suffix := cloneEntries(n.entries[snapshot.Index-n.BaseIndex():])
+	if err := validRetainedLog(snapshot, suffix, n.hard.Term); err != nil {
 		return err
 	}
 	if err := n.logStorage.(*RetainedStorage).Retain(snapshot, n.applied); err != nil {
@@ -40,7 +40,8 @@ func (n *Node) RetainLocal(snapshot RetainedSnapshot) error {
 		return err
 	}
 	n.snapshot = cloneSnapshot(snapshot)
-	n.entries = []Entry{}
+	n.entries = suffix
+	n.pending = make(map[string]Message)
 	n.updateTail()
 	return nil
 }

@@ -11,9 +11,9 @@ policies at two offered rates with a changing hot document and explicit latency 
 Milestone 5's durable journal and fixed-pool snapshot consumption are implemented. Milestone 6
 now includes peer-process replication, configuration application, successful request-ID replay,
 fresh quorum reads, fixed-list gateway controller failover, and opt-in application
-checkpoint capture/recovery, plus opt-in single-member local retention. Multi-peer log
-retention, network snapshot transfer, broader workload comparisons, and milestones 7
-through 9 remain outstanding. CPU checks establish
+checkpoint capture/recovery, opt-in fixed-member retention, and lagging-peer snapshot
+installation. Broader workload comparisons and later workload-gated extensions remain
+outstanding. CPU checks establish
 mechanisms, not GPU capacity.
 
 The mixed-cost increment adds short/long prompts and output budgets, direct per-worker
@@ -230,9 +230,12 @@ absolute index 1024 using logged historical retries and verifies two abrupt rest
 see [controller local retention](learning/26-controller-local-retention.md). Maintenance
 is manual, and application history bounds remain. Multi-peer mode still retains its full log.
 
-Next: lagging-peer snapshot installation before enabling multi-peer retention, followed by
-bounded checkpoint-journal rollover where still required. Preserve successful retry history
-and validate the complete path before recording the final demo.
+Fixed-member snapshot installation and multi-peer retention are now connected and checked
+with native peer failures/restarts and real CPU-model gateway expiry/recovery; see
+[peer snapshot recovery](learning/27-peer-snapshot-recovery.md). Two-slot mode owns both
+image and suffix generations, so separate publication-journal rollover is unnecessary
+there. The old journal stays a bounded comparison mode. Manual maintenance and codec
+history bounds remain. Next: capture and publish the reproducible complete working demo.
 
 Scope gate: preserve one short request/failure walkthrough for the complete recovery path.
 The integration closes the prior standalone-preparation loop; new components still require

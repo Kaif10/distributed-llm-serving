@@ -137,11 +137,24 @@ func (n *Node) Log() []Entry { return cloneEntries(n.entries) }
 func (n *Node) sendAppend(peer string) Message {
 	if pending, ok := n.pending[peer]; ok {
 		pending.Entries = cloneEntries(pending.Entries)
+		if pending.Snapshot != nil {
+			copy := cloneSnapshot(*pending.Snapshot)
+			pending.Snapshot = &copy
+		}
 		return pending
 	}
 	next := n.next[peer]
 	if next <= n.snapshot.Index {
-		return Message{}
+		if !n.CanRetainLocal() {
+			return Message{}
+		}
+		n.probe++
+		image := cloneSnapshot(n.snapshot)
+		m := Message{Type: InstallSnapshot, From: n.id, To: peer, Term: n.hard.Term, Probe: n.probe, Snapshot: &image, Group: n.RetentionIdentity().Group}
+		n.pending[peer] = m
+		copy := cloneSnapshot(image)
+		m.Snapshot = &copy
+		return m
 	}
 	n.probe++
 	end := next + min(uint64(n.batch), n.lastIndex+1-next)
@@ -237,7 +250,7 @@ func (n *Node) appendResponse(m Message) ([]Message, error) {
 		return nil, nil
 	}
 	pending, ok := n.pending[m.From]
-	if !ok || m.Probe != pending.Probe {
+	if !ok || pending.Type != AppendEntries || m.Probe != pending.Probe {
 		return nil, nil
 	}
 	last := pending.PrevIndex + uint64(len(pending.Entries))

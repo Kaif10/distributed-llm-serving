@@ -89,18 +89,18 @@ func TestLocalRetentionUncertainStorageFencesCore(t *testing.T) {
 	}
 }
 
-func TestLocalRetentionRejectsMultiMemberAndWrongMemberStorage(t *testing.T) {
+func TestLocalRetentionRejectsFollowerAndWrongMemberStorage(t *testing.T) {
 	s, err := OpenRetainedStorage(t.TempDir(), retainedTestID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer s.Close()
 	n := replica(t, "a", []string{"a", "b", "c"}, s, 1, 16)
-	if n.CanRetainLocal() {
-		t.Fatal("multi-member group can discard a peer's needed prefix")
+	if !n.CanRetainLocal() {
+		t.Fatal("retained storage must support snapshot-capable membership")
 	}
 	if err := n.RetainLocal(RetainedSnapshot{Index: 1, Term: 1, Data: []byte("opaque")}); err == nil {
-		t.Fatal("multi-member retention accepted")
+		t.Fatal("follower retention accepted")
 	}
 	if _, err := NewReplica(Config{ID: "b", Members: []string{"b"}, ElectionTicks: 5, HeartbeatTicks: 1, Seed: 1}, s); err == nil {
 		t.Fatal("member opened another member's retained state")

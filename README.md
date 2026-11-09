@@ -25,15 +25,16 @@ Gateways can consume its drain snapshots for a fixed worker pool, report applied
 and reject new work when their confirmed view expires. A fixed-membership Raft group now
 applies configuration updates, replays successful request-ID results after restart, and
 serves fresh reads through majority confirmations without growing the journal. The write
-log remains bounded without compaction in the default multi-peer mode. An alternative
-single-member mode now supports owner-driven local retention and application restoration;
-multi-peer retention, lagging-peer snapshot transfer, and dynamic membership require further work.
+log remains bounded without compaction in the default journal mode. The alternative
+two-slot mode supports owner-driven local retention, application restoration, and snapshot
+catch-up across fixed controller peers. Dynamic membership remains outside scope.
 
 A versioned application checkpoint preserves configuration plus successful request-ID
 history. A separate publication journal selects synced images across process crashes, with
 identity/history checks and idempotent retries. Configuration peers can opt into manual
 checkpoint capture and checkpoint-plus-suffix recovery, verified against retained-prefix
-replay. The full log is still required; network snapshot transfer and compaction remain pending.
+replay. The alternative retained-image mode removes committed prefixes manually and
+transfers images to lagging peers while preserving historical successful results.
 
 ## Start here
 
@@ -67,6 +68,7 @@ replay. The full log is still required; network snapshot transfer and compaction
 - [Retained log boundary](docs/learning/24-retained-log-boundary.md): absolute Raft indices and catch-up requirements.
 - [Retained storage](docs/learning/25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together, with native publication checks.
 - [Controller local retention](docs/learning/26-controller-local-retention.md): opt-in single-member service recovery, manual retention, and restart/retry checks.
+- [Peer snapshot recovery](docs/learning/27-peer-snapshot-recovery.md): three-controller retention, lagging-peer installation, and real-model quorum recovery.
 - [Evidence](docs/EVIDENCE.md): implemented behavior and validation records.
 
 ## Run the foundation

@@ -25,7 +25,7 @@ func TestMembershipBoundary(t *testing.T) {
 }
 
 func TestRetainedStorageModeRejectsUnsafeCombinations(t *testing.T) {
-	for _, mode := range []string{"raw", "multi", "no-group", "group-only", "both-storage", "no-storage", "checkpoint"} {
+	for _, mode := range []string{"raw", "no-group", "group-only", "both-storage", "no-storage", "checkpoint"} {
 		t.Run(mode, func(t *testing.T) {
 			dir := t.TempDir()
 			path, retained, group := "", filepath.Join(dir, "retained"), "test"

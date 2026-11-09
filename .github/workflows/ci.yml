@@ -30,3 +30,4 @@ jobs:
       - run: python3 scripts/replicated_config_check.py bin/raftpeer --checkpoints --output artifacts/replicated-config/checkpoint-ci.json
       - run: python3 scripts/check_controller_capacity.py bin/raftpeer --profile quick --output artifacts/controller-capacity/ci.json
       - run: python3 scripts/check_retained_controller.py bin/raftpeer --retries 64 --output artifacts/retained-controller/ci.json
+      - run: python3 scripts/check_replicated_retention.py bin/raftpeer --output artifacts/replicated-retention/ci.json

@@ -137,6 +137,9 @@ func (h *Host) Run(parent context.Context) error {
 	}()
 	emit := func(messages []raft.Message) {
 		for _, m := range messages {
+			if h.retention != nil {
+				m.Group = h.node.RetentionIdentity().Group
+			}
 			if queue, ok := h.out[m.To]; ok {
 				select {
 				case queue <- m:
@@ -209,6 +212,20 @@ func (h *Host) Run(parent context.Context) error {
 				continue
 			}
 			if e.message != nil {
+				if (h.retention == nil && e.message.Group != "") || (h.retention != nil && e.message.Group != h.node.RetentionIdentity().Group) {
+					e.reply <- result{Err: "peer group/storage mode mismatch", Code: 400}
+					continue
+				}
+				var installedMachine *control.Machine
+				oldBase := h.node.BaseIndex()
+				if e.message.Type == raft.InstallSnapshot {
+					var err error
+					installedMachine, err = h.validateSnapshot(*e.message)
+					if err != nil {
+						e.reply <- result{Err: err.Error(), Code: 400}
+						continue
+					}
+				}
 				if h.machine != nil {
 					if err := validateConfigurationEntries(e.message.Entries); err != nil {
 						e.reply <- result{Err: err.Error(), Code: 400}
@@ -222,6 +239,14 @@ func (h *Host) Run(parent context.Context) error {
 				if err != nil {
 					e.reply <- result{Err: err.Error(), Code: 400}
 				} else {
+					if h.node.BaseIndex() > oldBase {
+						if installedMachine == nil {
+							return fmt.Errorf("snapshot installed without application")
+						}
+						h.machine, h.applied = installedMachine, h.node.BaseIndex()
+						h.retention = retentionMetadata(h.node.Snapshot(), h.retention.RecoveredIndex)
+						h.retention.InstalledIndex = h.applied
+					}
 					emit(messages)
 					e.reply <- result{Code: 204}
 				}
@@ -352,7 +377,7 @@ func write(w http.ResponseWriter, response result) {
 func (h *Host) PeerHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /raft/message", func(w http.ResponseWriter, r *http.Request) {
-		r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
+		r.Body = http.MaxBytesReader(w, r.Body, 12<<20)
 		decoder := json.NewDecoder(r.Body)
 		decoder.DisallowUnknownFields()
 		var m raft.Message

@@ -33,7 +33,7 @@ func main() {
 	peerListen := flag.String("peer-listen", "", "optional loopback bind address behind a test relay; defaults to local advertised origin")
 	checkpointPath := flag.String("checkpoint-journal", "", "optional local checkpoint publication journal; configuration mode only")
 	checkpointGroup := flag.String("checkpoint-group", "", "explicit group label required with -checkpoint-journal")
-	retainedDir := flag.String("retained-dir", "", "alternative two-slot storage directory; single-member configuration mode only")
+	retainedDir := flag.String("retained-dir", "", "alternative two-slot storage directory; fixed-membership configuration mode only")
 	retainedGroup := flag.String("retained-group", "", "explicit group identity required with -retained-dir")
 	flag.Parse()
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -81,8 +81,8 @@ func run(parent context.Context, id, spec, address, path string, configuration b
 	if err != nil {
 		return err
 	}
-	if (retainedDir == "") != (retainedGroup == "") || (retainedDir != "" && (!configuration || len(peers) != 1 || checkpointPath != "")) {
-		return fmt.Errorf("retained storage requires single-member configuration mode, an explicit retained group, and no checkpoint journal")
+	if (retainedDir == "") != (retainedGroup == "") || (retainedDir != "" && (!configuration || checkpointPath != "")) {
+		return fmt.Errorf("retained storage requires configuration mode, an explicit retained group, and no checkpoint journal")
 	}
 	if !loopback(address) || (path == "") == (retainedDir == "") {
 		return fmt.Errorf("require loopback client address and exactly one of journal or retained directory")

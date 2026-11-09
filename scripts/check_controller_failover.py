@@ -25,7 +25,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/controller-failover/results.json")
     parser.add_argument("--checkpoints", action="store_true", help="capture the peer that is restarted after quorum loss")
+    parser.add_argument("--retention", action="store_true", help="exercise retained-image transfer and checkpoint-backed quorum recovery")
     args = parser.parse_args()
+    if args.checkpoints and args.retention:
+        parser.error("choose checkpoints or retention")
     output = args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     assets = json.loads((ROOT / "config/llama-cpu.json").read_text(encoding="utf-8"))
@@ -102,7 +105,11 @@ def main():
             stack.enter_context(service(engine_command, backend + "/health", output.parent / "engine.log"))
             for i, node in enumerate(ids):
                 command = [str(ROOT / "bin/raftpeer.exe"), "-configuration", "-id", node, "-peers", members,
-                           "-client-listen", f"127.0.0.1:{ports[i+3]}", "-journal", str(Path(temporary) / f"{node}.wal")]
+                           "-client-listen", f"127.0.0.1:{ports[i+3]}"]
+                if args.retention:
+                    command += ["-retained-dir", str(Path(temporary) / node), "-retained-group", "real-failover-check"]
+                else:
+                    command += ["-journal", str(Path(temporary) / f"{node}.wal")]
                 if args.checkpoints:
                     command += ["-checkpoint-journal", str(Path(temporary) / f"{node}.checkpoint.wal"), "-checkpoint-group", "real-failover-check"]
                 commands[node] = command
@@ -135,6 +142,17 @@ def main():
             assert put(replacement, "resume", 2, False)["revision"] == 3
             wait_for(lambda: config_when(lambda s: s["fresh"] and s["applied_revision"] == 3), "resume applied")
             result["generation_after_failover"] = measure(gateway, dict(payload, max_tokens=16))
+            if args.retention:
+                req = urllib.request.Request(clients[replacement] + "/retain", data=b"", method="POST")
+                with urllib.request.urlopen(req, timeout=5) as captured:
+                    result["retained_capture"] = json.load(captured)
+                processes[initial] = stack.enter_context(service(commands[initial], clients[initial] + "/status", output.parent / f"peer-{initial}-catchup.log"))
+                def snapshot_caught_up():
+                    state = get_json(clients[initial], "/status")
+                    return state if state["retention"]["installed_index"] >= result["retained_capture"]["base_index"] and state["configuration"]["revision"] == 3 else None
+                result["snapshot_caught_up_peer"] = wait_for(snapshot_caught_up, "old leader installs snapshot and catches up")
+                processes[initial].kill()
+                processes[initial].wait(timeout=5)
             other = next(node for node in ids if node not in (initial, replacement))
             if args.checkpoints:
                 wait_for(lambda: get_json(clients[other], "/status")["configuration"]["revision"] == 3, "checkpoint peer applies revision 3")
@@ -168,7 +186,11 @@ def main():
                 connection.close()
             wait_for(lambda: not get_json(admin, "/workers")[0]["inflight"], "active stream released")
             result["idle_generation_when_expired"] = rejected("/v1/chat/completions", payload)
-            processes[other] = stack.enter_context(service(commands[other], clients[other] + "/status", output.parent / f"peer-{other}-restarted.log"))
+            recovering = initial if args.retention else other
+            processes[recovering] = stack.enter_context(service(commands[recovering], clients[recovering] + "/status", output.parent / f"peer-{recovering}-restarted.log"))
+            if args.retention:
+                expected = result["retained_capture"]["base_index"]
+                result["retained_restarted_peer"] = wait_for(lambda: (state if (state := get_json(clients[recovering], "/status"))["retention"]["recovered_index"] == expected else None), "durable installed checkpoint restored")
             if args.checkpoints:
                 expected = result["captured_checkpoint"]["published"]["position"]["index"]
                 def restored_checkpoint():
@@ -177,6 +199,9 @@ def main():
                 result["restored_checkpoint_peer"] = wait_for(restored_checkpoint, "checkpoint prefix installed after commitment")
             result["after_quorum_recovery"] = wait_for(lambda: config_when(lambda s: s["fresh"] and s["applied_revision"] == 3), "same-revision reconfirmation")
             result["generation_after_recovery"] = measure(gateway, dict(payload, max_tokens=16))
+            if args.retention:
+                result["historical_retry_after_recovery"] = put(replacement, "initial", 0, False)
+                assert result["historical_retry_after_recovery"]["revision"] == 1
             result["controller_statuses"] = {node: get_json(clients[node], "/status") for node, proc in processes.items() if proc.poll() is None}
             result["passed"] = True
             print("PASS: real CPU generation, controller leader failover, drain, expiry with stream completion, and quorum recovery", flush=True)

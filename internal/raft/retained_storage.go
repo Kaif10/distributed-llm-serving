@@ -32,6 +32,7 @@ type retainedImage struct {
 	State      HardState        `json:"state"`
 	Snapshot   RetainedSnapshot `json:"snapshot"`
 	Log        []Entry          `json:"log"`
+	Installed  bool             `json:"installed,omitempty"`
 }
 
 // RetainedStorage implements SnapshotSource using two alternating, bounded full
@@ -266,6 +267,12 @@ func retainedTransition(old, next retainedImage) error {
 	if !validTransition(old.State, next.State) {
 		return fmt.Errorf("term regression or conflicting retained vote")
 	}
+	if next.Installed {
+		if next.Snapshot.Index <= old.Snapshot.Index || next.Snapshot.Term < old.Snapshot.Term {
+			return fmt.Errorf("installed boundary must advance")
+		}
+		return nil
+	}
 	if next.Snapshot.Index == old.Snapshot.Index {
 		if !reflect.DeepEqual(next.Snapshot, old.Snapshot) {
 			return fmt.Errorf("retained boundary changed at same index")
@@ -311,6 +318,7 @@ func (s *RetainedStorage) Save(state HardState) error {
 	defer s.mu.Unlock()
 	next := s.image
 	next.State = state
+	next.Installed = false
 	return s.publish(next)
 }
 func (s *RetainedStorage) SaveLog(entries []Entry) error {
@@ -318,6 +326,7 @@ func (s *RetainedStorage) SaveLog(entries []Entry) error {
 	defer s.mu.Unlock()
 	next := s.image
 	next.Log = cloneEntries(entries)
+	next.Installed = false
 	return s.publish(next)
 }
 
@@ -339,6 +348,7 @@ func (s *RetainedStorage) Retain(snapshot RetainedSnapshot, applied uint64) erro
 	}
 	next := s.image
 	next.Snapshot = cloneSnapshot(snapshot)
+	next.Installed = false
 	next.Log = cloneEntries(s.image.Log[snapshot.Index-s.image.Snapshot.Index:])
 	return s.publish(next)
 }

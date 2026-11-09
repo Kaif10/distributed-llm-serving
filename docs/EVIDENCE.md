@@ -10,9 +10,25 @@ inference. A complete application checkpoint codec is validated in an offline re
 scenario. A scoped publication journal now survives tested process-kill boundaries and
 selects complete images after recovery sync. Configuration peers can opt into owner capture
 and checkpoint-plus-suffix recovery verified against full replay. Opt-in single-member
-local retention is now connected to the configuration service. Multi-peer retention,
-snapshot transfer, scheduling, and conditional sharding remain outstanding. Historical
+retention and snapshot transfer are now connected across fixed configuration peers.
+Scheduling and conditional sharding remain workload-gated extensions. Historical
 entries describe their original increments rather than current status.
+
+## Fixed-member snapshot transfer and retained-image recovery
+
+Local tests, vet, and builds pass with snapshot transfer enabled. The native three-peer
+scenario passes offline-follower installation plus suffix catch-up, original retry results,
+leader loss, full-cluster restart, and rejection of a wrong-group term probe. The real
+CPU-model scenario passes leader failover, drain/resume, old-leader snapshot installation,
+quorum-loss view expiry while a real stream completes, installed-image restart, same-revision
+reconfirmation, new generation, and original revision-1 retry after recovery.
+
+Core tests cover exact correlated acknowledgements, dropped/duplicate replies, suffix
+delivery/reopen, no rollback for stale images, cross-group rejection, and uncertain install
+sync fencing followed by recovery. Owner validation rejects loss of prior successful history.
+Snapshot bytes are opaque in core tests; application and native/real-model checks use the
+actual checkpoint codec. Three peers still run on one host; no host/power failure or scale
+claim follows. The [walkthrough](learning/27-peer-snapshot-recovery.md) states limits and commands.
 
 ## Single-member controller restoration and local retention
 
