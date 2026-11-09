@@ -19,9 +19,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/checkpoint"
-	"github.com/Kaif10/inference-fleet/internal/raft"
-	"github.com/Kaif10/inference-fleet/internal/raftnet"
+	"github.com/Kaif10/distributed-llm-serving/internal/checkpoint"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/raftnet"
 )
 
 func main() {

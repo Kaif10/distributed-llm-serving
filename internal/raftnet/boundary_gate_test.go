@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 type boundaryOnlyStorage struct{}

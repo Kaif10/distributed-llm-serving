@@ -74,12 +74,12 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     output = args.output.resolve()
-    title = "Inference Fleet - REAL LIVE DEMO " + str(os.getpid())
+    title = "Distributed LLM Serving - REAL LIVE DEMO " + str(os.getpid())
     hwnd = console(title)
     with (output/"terminal.txt").open("w", encoding="utf-8") as transcript:
         sys.stdout = Tee(sys.stdout, transcript)
         sys.stderr = sys.stdout
-        print("INFERENCE FLEET - REAL LIVE TERMINAL DEMO")
+        print("DISTRIBUTED LLM SERVING - REAL LIVE TERMINAL DEMO")
         print("Scripted commands execute real services. This is not result playback.")
         print("One laptop | real llama.cpp CPU generation | three Raft controllers")
         print("Source:", subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip())

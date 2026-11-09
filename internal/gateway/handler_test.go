@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/testworker"
+	"github.com/Kaif10/distributed-llm-serving/internal/testworker"
 )
 
 const payload = `{"model":"test-worker","messages":[{"role":"user","content":"hello"}],"stream":true,"max_tokens":3}`

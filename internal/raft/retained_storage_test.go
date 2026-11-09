@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Kaif10/inference-fleet/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/control"
 )
 
 var retainedTestID = RetainedIdentity{Group: "retained-storage-test", Member: "a"}

@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/control"
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 type RetentionStatus struct {

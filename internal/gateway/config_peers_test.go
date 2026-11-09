@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/control"
 )
 
 func TestControllerPeerFallbackPreferenceExpiryAndRecovery(t *testing.T) {

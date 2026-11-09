@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 func main() {

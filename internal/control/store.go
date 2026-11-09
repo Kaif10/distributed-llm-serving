@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/Kaif10/inference-fleet/internal/filelock"
+	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
 var ErrUnavailable = errors.New("store unavailable; update outcome may be unknown")

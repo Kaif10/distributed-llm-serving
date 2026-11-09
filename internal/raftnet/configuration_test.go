@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/control"
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 func configRequest(t *testing.T, origin, method string, update *control.Update) (int, control.Snapshot) {

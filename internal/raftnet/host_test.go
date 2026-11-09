@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 func start(t *testing.T, members []string, configuration ...bool) (*Host, *httptest.Server, *httptest.Server) {

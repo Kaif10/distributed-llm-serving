@@ -13,9 +13,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/checkpoint"
-	"github.com/Kaif10/inference-fleet/internal/control"
-	"github.com/Kaif10/inference-fleet/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/checkpoint"
+	"github.com/Kaif10/distributed-llm-serving/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/raft"
 )
 
 type Snapshot struct {

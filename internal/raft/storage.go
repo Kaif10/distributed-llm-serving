@@ -11,7 +11,7 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"github.com/Kaif10/inference-fleet/internal/filelock"
+	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
 // FileStorage persists term/vote and a bounded full-log snapshot per record.

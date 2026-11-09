@@ -1,4 +1,4 @@
-# Inference Fleet
+# Distributed LLM Serving
 
 A project to build and understand reliable routing across a pool of LLM inference servers.
 

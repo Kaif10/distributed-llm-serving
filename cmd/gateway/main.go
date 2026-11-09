@@ -15,7 +15,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/gateway"
+	"github.com/Kaif10/distributed-llm-serving/internal/gateway"
 )
 
 func main() {

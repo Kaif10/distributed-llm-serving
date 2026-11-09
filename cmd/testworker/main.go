@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Kaif10/inference-fleet/internal/testworker"
+	"github.com/Kaif10/distributed-llm-serving/internal/testworker"
 )
 
 func main() {
