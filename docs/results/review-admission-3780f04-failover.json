@@ -1,0 +1,374 @@
+{
+  "source_commit": "3780f04da0d79a76c3383a735949c03d125e20d9",
+  "working_tree": "",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.7",
+  "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "logical_cpus": 12,
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "58716",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--no-ui",
+      "--slots"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "a",
+      "-peers",
+      "a=http://127.0.0.1:58710,b=http://127.0.0.1:58711,c=http://127.0.0.1:58712",
+      "-client-listen",
+      "127.0.0.1:58713",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-kgc0klb1\\a",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "b",
+      "-peers",
+      "a=http://127.0.0.1:58710,b=http://127.0.0.1:58711,c=http://127.0.0.1:58712",
+      "-client-listen",
+      "127.0.0.1:58714",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-kgc0klb1\\b",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\raftpeer.exe",
+      "-configuration",
+      "-id",
+      "c",
+      "-peers",
+      "a=http://127.0.0.1:58710,b=http://127.0.0.1:58711,c=http://127.0.0.1:58712",
+      "-client-listen",
+      "127.0.0.1:58715",
+      "-retained-dir",
+      "C:\\Users\\kaifk\\AppData\\Local\\Temp\\controller-fleet-kgc0klb1\\c",
+      "-retained-group",
+      "real-failover-check"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:58717",
+      "-admin-listen",
+      "127.0.0.1:58718",
+      "-backend",
+      "http://127.0.0.1:58716",
+      "-controllers",
+      "http://127.0.0.1:58713,http://127.0.0.1:58714,http://127.0.0.1:58715",
+      "-config-poll",
+      "100ms",
+      "-config-timeout",
+      "900ms",
+      "-config-max-age",
+      "3s",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "observations": [
+    {
+      "killed_leader": "a",
+      "replacement": "c",
+      "observed_failover_ms": 609.0
+    }
+  ],
+  "binary_sha256": {
+    "gateway": "37bf92efabc52dcbedbf2e31e0311314460ed9943cd02173cd2cd27a91e14193",
+    "raftpeer": "ee8fe3a6fc18735b7c8afc0248c6348a97823402c9468a121896df465c681a89",
+    "engine": "00d50686815af38249d0218c91558fbd0e9093ac8c074bac86196907f4305e31"
+  },
+  "initial_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-11T15:30:24.7229433Z",
+    "expires_at": "2026-11-11T15:30:27.7218472Z",
+    "controller_origin": "http://127.0.0.1:58713"
+  },
+  "initial_generation": {
+    "ttft_ms": 137.003,
+    "completion_ms": 243.081,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "after_failover": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 1,
+    "fresh": true,
+    "confirmed_at": "2026-11-11T15:30:25.6451335Z",
+    "expires_at": "2026-11-11T15:30:28.6437525Z",
+    "controller_origin": "http://127.0.0.1:58715"
+  },
+  "drain_applied": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 2,
+    "fresh": true,
+    "confirmed_at": "2026-11-11T15:30:25.7473978Z",
+    "expires_at": "2026-11-11T15:30:28.745876Z",
+    "controller_origin": "http://127.0.0.1:58715"
+  },
+  "drain_rejection": 503,
+  "generation_after_failover": {
+    "ttft_ms": 19.253,
+    "completion_ms": 129.208,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "retained_capture": {
+    "base_index": 5,
+    "base_term": 2,
+    "recovered_index": 0,
+    "sha256": "749be3c9b67d9b74e88d3704f172728effa1c2a9cc02bcaf4aa659bd229b2510",
+    "checkpoint_bytes": 644,
+    "installed_index": 0
+  },
+  "snapshot_caught_up_peer": {
+    "node": {
+      "ID": "a",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "",
+      "Leader": "c",
+      "Failed": false
+    },
+    "commit_index": 5,
+    "log": [],
+    "dropped_outbound": 0,
+    "send_failures": 0,
+    "applied_index": 5,
+    "configuration": {
+      "revision": 3,
+      "workers": [
+        {
+          "id": "worker-a",
+          "origin": "http://127.0.0.1:58716",
+          "draining": false
+        }
+      ]
+    },
+    "pending_reads": 0,
+    "retention": {
+      "base_index": 5,
+      "base_term": 2,
+      "recovered_index": 0,
+      "sha256": "749be3c9b67d9b74e88d3704f172728effa1c2a9cc02bcaf4aa659bd229b2510",
+      "checkpoint_bytes": 644,
+      "installed_index": 5
+    }
+  },
+  "expired": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": false,
+    "confirmed_at": "2026-11-11T15:30:26.5599002Z",
+    "expires_at": "2026-11-11T15:30:29.5592058Z",
+    "last_error": "no fresh controller snapshot: http://127.0.0.1:58715: Get \"http://127.0.0.1:58715/config\": context deadline exceeded; http://127.0.0.1:58713: Get \"http://127.0.0.1:58713/config\": dial tcp 127.0.0.1:58713: connectex: No connection could be made because the target machine actively refused it.; http://127.0.0.1:58714: Get \"http://127.0.0.1:58714/config\": dial tcp 127.0.0.1:58714: connectex: No connection could be made because the target machine actively refused it.",
+    "controller_origin": "http://127.0.0.1:58715"
+  },
+  "worker_at_expiry": [
+    {
+      "id": 0,
+      "origin": "http://127.0.0.1:58716",
+      "healthy": true,
+      "checked_at": "2026-11-11T15:30:29.3236679Z",
+      "draining": false,
+      "inflight": 1,
+      "drained": false,
+      "config_id": "worker-a"
+    }
+  ],
+  "readiness_when_expired": 503,
+  "long_stream": {
+    "done": true,
+    "finish_reason": "length",
+    "chunks_after_first_content": 1536
+  },
+  "active_stream_survived_expiry": true,
+  "idle_generation_when_expired": 503,
+  "retained_restarted_peer": {
+    "node": {
+      "ID": "a",
+      "Role": "follower",
+      "Term": 2,
+      "VotedFor": "",
+      "Leader": "c",
+      "Failed": false
+    },
+    "commit_index": 5,
+    "log": [],
+    "dropped_outbound": 0,
+    "send_failures": 0,
+    "applied_index": 5,
+    "configuration": {
+      "revision": 3,
+      "workers": [
+        {
+          "id": "worker-a",
+          "origin": "http://127.0.0.1:58716",
+          "draining": false
+        }
+      ]
+    },
+    "pending_reads": 0,
+    "retention": {
+      "base_index": 5,
+      "base_term": 2,
+      "recovered_index": 5,
+      "sha256": "749be3c9b67d9b74e88d3704f172728effa1c2a9cc02bcaf4aa659bd229b2510",
+      "checkpoint_bytes": 644,
+      "installed_index": 0
+    }
+  },
+  "after_quorum_recovery": {
+    "managed": true,
+    "applied": true,
+    "applied_revision": 3,
+    "fresh": true,
+    "confirmed_at": "2026-11-11T15:30:44.8109698Z",
+    "expires_at": "2026-11-11T15:30:47.8095928Z",
+    "controller_origin": "http://127.0.0.1:58715"
+  },
+  "generation_after_recovery": {
+    "ttft_ms": 40.614,
+    "completion_ms": 139.034,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  },
+  "historical_retry_after_recovery": {
+    "revision": 1,
+    "workers": [
+      {
+        "id": "worker-a",
+        "origin": "http://127.0.0.1:58716",
+        "draining": false
+      }
+    ]
+  },
+  "controller_statuses": {
+    "a": {
+      "node": {
+        "ID": "a",
+        "Role": "follower",
+        "Term": 2,
+        "VotedFor": "",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 6,
+      "log": [
+        {
+          "index": 6,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoyLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU4NzE2IiwiZHJhaW5pbmciOmZhbHNlfV19fQ=="
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 0,
+      "applied_index": 6,
+      "configuration": {
+        "revision": 3,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:58716",
+            "draining": false
+          }
+        ]
+      },
+      "pending_reads": 0,
+      "retention": {
+        "base_index": 5,
+        "base_term": 2,
+        "recovered_index": 5,
+        "sha256": "749be3c9b67d9b74e88d3704f172728effa1c2a9cc02bcaf4aa659bd229b2510",
+        "checkpoint_bytes": 644,
+        "installed_index": 0
+      }
+    },
+    "c": {
+      "node": {
+        "ID": "c",
+        "Role": "leader",
+        "Term": 2,
+        "VotedFor": "c",
+        "Leader": "c",
+        "Failed": false
+      },
+      "commit_index": 6,
+      "log": [
+        {
+          "index": 6,
+          "term": 2,
+          "data": "eyJ2ZXJzaW9uIjoyLCJraW5kIjoidXBkYXRlIiwidXBkYXRlIjp7InJlcXVlc3RfaWQiOiJpbml0aWFsIiwiZXhwZWN0ZWRfcmV2aXNpb24iOjAsIndvcmtlcnMiOlt7ImlkIjoid29ya2VyLWEiLCJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU4NzE2IiwiZHJhaW5pbmciOmZhbHNlfV19fQ=="
+        }
+      ],
+      "dropped_outbound": 0,
+      "send_failures": 772,
+      "applied_index": 6,
+      "configuration": {
+        "revision": 3,
+        "workers": [
+          {
+            "id": "worker-a",
+            "origin": "http://127.0.0.1:58716",
+            "draining": false
+          }
+        ]
+      },
+      "pending_reads": 0,
+      "retention": {
+        "base_index": 5,
+        "base_term": 2,
+        "recovered_index": 0,
+        "sha256": "749be3c9b67d9b74e88d3704f172728effa1c2a9cc02bcaf4aa659bd229b2510",
+        "checkpoint_bytes": 644,
+        "installed_index": 0
+      }
+    }
+  },
+  "passed": true
+}

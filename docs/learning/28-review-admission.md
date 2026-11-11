@@ -80,6 +80,10 @@ The byte-bound test reaches the payload limit before the count limit with valid 
 configurations. Linux CI additionally runs the suite with race detection and native peer
 failure/recovery scenarios.
 
+Clean-source evidence on `3780f04`: [real two-engine pool](../results/review-admission-3780f04-pool.json),
+[real-model controller failover](../results/review-admission-3780f04-failover.json), and
+[Linux race/native-process CI](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43048907488).
+
 Request-cost weighting and prefix-policy tuning remain experiments requiring measured
 goodput improvements. This change introduces neither a claimed routing win nor fleet-wide
 admission. Independent-host validation and the previously recorded reset/timeout remain

@@ -2,6 +2,15 @@
 
 ## Review follow-up: request admission and retained history
 
+Clean source `3780f04da0d79a76c3383a735949c03d125e20d9` passed
+[Linux verification CI](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43048907488)
+on the verification branch before promotion to main: vet, race suite, builds, and all
+native peer/checkpoint/retention checks. Local Windows tests and vet passed as well.
+The same clean source/binaries passed [real CPU pool checks](results/review-admission-3780f04-pool.json)
+under all three policies and [retained three-controller real-model failover](results/review-admission-3780f04-failover.json).
+The raw reports retain source identity, pinned assets, exact commands, generated text,
+and observed outcomes. These are correctness/regression runs, not new routing benchmarks.
+
 The slow-upload raw-socket regression failed against the prior handler: a complete request
 received 503 while the engine was idle because another client held a partial upload. With
 separate bounded uploads, network tests pass for concurrent valid generation, upload-limit
