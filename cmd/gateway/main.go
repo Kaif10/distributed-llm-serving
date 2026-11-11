@@ -24,6 +24,8 @@ func main() {
 	backends := flag.String("backends", "", "comma-separated worker origins serving the same model")
 	policy := flag.String("policy", "least-inflight", "least-inflight, round-robin, or prefix-affinity")
 	limit := flag.Int("max-inflight", 1, "maximum admitted requests per worker, local to this gateway")
+	uploads := flag.Int("max-uploads", 8, "maximum concurrent request-body uploads per gateway")
+	uploadTimeout := flag.Duration("upload-timeout", 10*time.Second, "maximum time to read a generation request body")
 	admin := flag.String("admin-listen", "", "optional loopback-only administration address")
 	controller := flag.String("controller", "", "optional controller origin for durable drain settings")
 	controllers := flag.String("controllers", "", "optional comma-separated controller peer origins from one replicated group")
@@ -54,7 +56,7 @@ func main() {
 			origins = append(origins, strings.TrimSpace(origin))
 		}
 	}
-	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit}
+	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit, MaxUploads: *uploads, UploadTimeout: *uploadTimeout}
 	config := gateway.ControllerOptions{Origin: *controller, Interval: *configPoll, Timeout: *configTimeout, MaxAge: *configAge}
 	if *controllers != "" {
 		for _, origin := range strings.Split(*controllers, ",") {

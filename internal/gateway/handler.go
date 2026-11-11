@@ -37,6 +37,13 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 	if timeout <= 0 {
 		return nil, fmt.Errorf("request timeout must be positive")
 	}
+	if options.MaxUploads == 0 {
+		options.MaxUploads = 8
+	}
+	if options.UploadTimeout == 0 {
+		options.UploadTimeout = 10 * time.Second
+	}
+	uploads := make(chan struct{}, options.MaxUploads)
 	pool := &workerPool{limit: options.MaxInflight, policy: options.Policy}
 	seen := make(map[string]bool)
 	for _, backend := range options.Backends {
@@ -101,6 +108,15 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 			http.Error(w, "prefix key exceeds 256 bytes", http.StatusBadRequest)
 			return
 		}
+		body, ok := readUpload(w, r, uploads, options.UploadTimeout)
+		if !ok {
+			return
+		}
+		if r.Context().Err() != nil {
+			return
+		}
+		// Re-evaluate freshness, health, drain, and capacity AFTER body validation.
+		// An upload neither reserves a worker nor pins a stale routing decision.
 		index, available := pool.acquire(prefixKey)
 		if !available {
 			w.Header().Set("Retry-After", "1")
@@ -110,22 +126,6 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		defer pool.release(index)
 		w.Header().Set("X-Inference-Worker", strconv.Itoa(index))
 		logger.Debug("worker selected", "worker", index, "policy", options.Policy)
-		// Buffer only the bounded request; the response is copied incrementally.
-		r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			var tooLarge *http.MaxBytesError
-			if errors.As(err, &tooLarge) {
-				http.Error(w, "request exceeds 64 KiB", http.StatusRequestEntityTooLarge)
-				return
-			}
-			http.Error(w, "cannot read request", http.StatusBadRequest)
-			return
-		}
-		if !json.Valid(body) {
-			http.Error(w, "invalid JSON", http.StatusBadRequest)
-			return
-		}
 		ctx, cancel := context.WithTimeout(r.Context(), timeout)
 		defer cancel()
 		started := time.Now()
@@ -151,4 +151,47 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 		pool.proxies[index].ServeHTTP(w, r)
 	})
 	return &Handler{Handler: mux, pool: pool}, nil
+}
+
+// The upload budget covers body ingestion only. Generation has its own worker
+// reservations, so a full serving pool does not hold these tokens. No waiting queue.
+func readUpload(w http.ResponseWriter, r *http.Request, slots chan struct{}, timeout time.Duration) ([]byte, bool) {
+	select {
+	case slots <- struct{}{}:
+		defer func() { <-slots }()
+	default:
+		w.Header().Set("Retry-After", "1")
+		http.Error(w, "request upload capacity full", http.StatusServiceUnavailable)
+		return nil, false
+	}
+	controller := http.NewResponseController(w)
+	if err := controller.SetReadDeadline(time.Now().Add(timeout)); err != nil {
+		http.Error(w, "request upload deadline unavailable", http.StatusInternalServerError)
+		return nil, false
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		var tooLarge *http.MaxBytesError
+		var timedOut interface{ Timeout() bool }
+		switch {
+		case errors.As(err, &tooLarge):
+			http.Error(w, "request exceeds 64 KiB", http.StatusRequestEntityTooLarge)
+		case errors.As(err, &timedOut) && timedOut.Timeout():
+			http.Error(w, "request upload deadline exceeded", http.StatusRequestTimeout)
+		default:
+			http.Error(w, "cannot read request", http.StatusBadRequest)
+		}
+		// Keep a failed/expired deadline in force for net/http's body cleanup.
+		return nil, false
+	}
+	if err := controller.SetReadDeadline(time.Time{}); err != nil {
+		http.Error(w, "cannot clear request upload deadline", http.StatusInternalServerError)
+		return nil, false
+	}
+	if !json.Valid(body) {
+		http.Error(w, "invalid JSON", http.StatusBadRequest)
+		return nil, false
+	}
+	return body, true
 }

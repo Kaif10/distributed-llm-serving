@@ -298,6 +298,19 @@ func (h *Host) Run(parent context.Context) error {
 				e.reply <- result{Err: "proposal waiters full", Code: 503}
 				continue
 			}
+			if h.retention != nil && h.node.Status().Role == raft.Leader {
+				command, err := decodeConfiguration(e.data)
+				if err != nil {
+					e.reply <- result{Err: err.Error(), Code: 400}
+					continue
+				}
+				if command.Version == 2 && command.Kind == "update" {
+					if err := h.machine.CheckCheckpointAdmission(*command.Update); errors.Is(err, control.ErrCapacity) {
+						e.reply <- result{Err: err.Error(), Code: 503}
+						continue
+					}
+				}
+			}
 			messages, err := h.node.Propose(e.data)
 			if err != nil {
 				if errors.Is(err, raft.ErrStorage) {

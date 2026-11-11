@@ -11,9 +11,11 @@ import (
 
 // PoolOptions describes replicas of the same model. Limits apply to this gateway.
 type PoolOptions struct {
-	Backends    []string
-	Policy      string
-	MaxInflight int
+	Backends      []string
+	Policy        string
+	MaxInflight   int
+	MaxUploads    int
+	UploadTimeout time.Duration
 }
 
 type workerPool struct {
@@ -46,6 +48,9 @@ func validateOptions(options PoolOptions) error {
 	}
 	if options.MaxInflight < 1 {
 		return fmt.Errorf("max-inflight must be positive")
+	}
+	if options.MaxUploads < 0 || options.MaxUploads > 1024 || options.UploadTimeout < 0 {
+		return fmt.Errorf("max-uploads must be 0..1024 and upload-timeout nonnegative")
 	}
 	return nil
 }

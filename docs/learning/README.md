@@ -1,5 +1,7 @@
 # Walkthroughs and design notes
 
+- [Review follow-up: bounded uploads and checkpoint-capacity admission](28-review-admission.md)
+
 Each increment explains the problem, implementation, runnable checks, and limitations.
 Start with the [project overview](../../README.md), or follow the walkthroughs in order.
 

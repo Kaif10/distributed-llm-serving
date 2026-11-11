@@ -1,5 +1,26 @@
 # Evidence ledger
 
+## Review follow-up: request admission and retained history
+
+The slow-upload raw-socket regression failed against the prior handler: a complete request
+received 503 while the engine was idle because another client held a partial upload. With
+separate bounded uploads, network tests pass for concurrent valid generation, upload-limit
+503, timeout 408 and recovery, release of upload admission during active generation, and
+rechecking drain state before dispatch. A two-gateway/one-worker test verifies the worker's
+independent capacity bound and cancellation/reuse; it is an explicit HTTP fixture.
+
+Checkpoint admission tests pass at the 1024-ID boundary and at the byte boundary (344
+successful large updates in that fixture). Rejection leaves state/history unchanged and
+the previous success remains checkpointable even at maximum index/term encoding widths.
+Historical results survive restore. Native-file HTTP/reopen tests exercise a version-1
+prefix upgraded to version-2 submissions, no log growth on known-full rejections, successful
+retention at capacity, and current/original retry results after restart. Ordered apply also
+rejects capacity without preflight; legacy version-1 replay is tested unchanged.
+
+These fixes preserve manual retention, finite history, local gateway counters, and existing
+unresolved reset/timeout observations. No cost-aware routing improvement, independent-host
+validation, or new throughput claim is made. [Design and commands](learning/28-review-admission.md).
+
 The serving gateway routes real-model streams across a fixed worker pool, with admission,
 health, draining, and controller-snapshot freshness checks. Real CPU-model experiments and
 their limitations are recorded below. The serving controller has a durable single-writer

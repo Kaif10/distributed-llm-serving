@@ -51,7 +51,8 @@ flowchart LR
     C -. peer fallback .-> Gateway
 ```
 
-**Serving path:** round-robin, least-inflight, or bounded prefix affinity; per-worker local
+**Serving path:** bounded body uploads with independent deadlines before worker admission;
+round-robin, least-inflight, or bounded prefix affinity; per-worker local
 admission; health probes; draining; streaming responses; cancellation and deadlines.
 Prefix affinity uses an explicit client hint and leaves KV-cache management to the engine.
 
@@ -68,6 +69,7 @@ records desired state; it does not by itself prove every gateway has finished dr
 | Event | Expected behavior | Reproducible check |
 | --- | --- | --- |
 | Every eligible worker is busy | Reject excess work; keep admission bounded | [Real two-worker pool](scripts/check_real_pool.py) |
+| Client stalls while uploading | Hold an upload token, not worker capacity; expire the body read | [Upload and admission regressions](internal/gateway/upload_test.go) |
 | Client disconnects mid-generation | Propagate cancellation and observe engine slot release | [Real inference](scripts/check_real_inference.py) |
 | Controller leader dies | Elect with a surviving majority; gateway confirms a replacement source | [Real-model failover](scripts/check_controller_failover.py) |
 | Controller majority disappears | Fresh reads/writes cannot complete; gateway expires its view | [Quorum reads](docs/learning/18-read-quorum.md) |
@@ -140,7 +142,10 @@ unvalidated. The custom consensus implementation adds maintenance and correctnes
 [the design decisions](docs/DECISIONS.md) discuss established implementations as alternatives.
 
 Retention is manual. The application checkpoint codec is bounded at 1024 successful request
-IDs and an eight-MiB payload. Admission counters are local to each gateway. Listeners use
+IDs and an eight-MiB payload. New retained-mode commands reject fresh successes that would
+exceed those bounds while preserving original retries; legacy command replay is unchanged.
+[Review follow-up and compatibility](docs/learning/28-review-admission.md).
+Admission counters are local to each gateway. Listeners use
 trusted loopback HTTP without authentication or TLS. Dynamic membership, distributed model
 execution, cross-request engine batching, and production deployment are outside this scope.
 

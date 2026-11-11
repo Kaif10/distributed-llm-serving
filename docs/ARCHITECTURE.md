@@ -26,6 +26,10 @@ flowchart LR
 
 ## Request path
 
+Body ingestion uses its own bounded concurrency budget and socket deadline. Worker
+selection/reservation happens after complete JSON validation and rechecks current routing
+state. Upload tokens are released before streaming; worker reservations last through it.
+
 Validate and bound the request, acquire admission capacity, select a compatible worker,
 forward the stream, and release capacity on every completion or failure path. Generation
 uses the gateway's local configuration view. Prompts and generated tokens never enter Raft.
@@ -60,6 +64,11 @@ requires gateway acknowledgement of that revision and no active work, or explici
 of unreachable gateways. Do not label a controller acknowledgement "drain complete".
 
 ## Boundaries
+
+Retained-mode version-2 configuration updates must keep the complete successful history
+checkpointable before becoming a new success. A leader precheck rejects known-full updates
+without logging; ordered apply repeats the check. Version-1 replay retains its old semantics.
+See [review admission changes](learning/28-review-admission.md) for limits and compatibility.
 
 A gateway failure interrupts its streams. Another gateway can serve new requests. Replication
 of configuration does not make an active stream fault tolerant. A worker crash loses local

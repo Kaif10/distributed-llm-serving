@@ -68,12 +68,12 @@ func decodeConfiguration(data []byte) (configurationCommand, error) {
 	if err := decoder.Decode(new(any)); err != io.EOF {
 		return command, fmt.Errorf("expected one command")
 	}
-	if command.Version != 1 {
+	if command.Version != 1 && command.Version != 2 {
 		return command, fmt.Errorf("unsupported configuration command version")
 	}
 	switch command.Kind {
 	case "read":
-		if command.Update != nil {
+		if command.Update != nil || command.Version != 1 {
 			return command, fmt.Errorf("read must not contain update")
 		}
 	case "update":
@@ -167,7 +167,11 @@ func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, err
 	}
 	state := machine.Snapshot()
 	if command.Kind == "update" {
-		state, err = machine.Apply(*command.Update)
+		if command.Version == 2 {
+			state, err = machine.ApplyCheckpointable(*command.Update)
+		} else {
+			state, err = machine.Apply(*command.Update)
+		}
 	}
 	r := result{Configuration: &state, Code: 200}
 	if err != nil {
@@ -176,6 +180,9 @@ func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, err
 		r.Code = 400
 		if errors.Is(err, control.ErrConflict) {
 			r.Code = 409
+		}
+		if errors.Is(err, control.ErrCapacity) {
+			r.Code = 503
 		}
 	}
 	return r, nil
@@ -197,6 +204,9 @@ func (h *Host) configurationRoutes(mux *http.ServeMux) {
 		})
 	}
 	submit := func(w http.ResponseWriter, r *http.Request, command configurationCommand) {
+		if h.retention != nil {
+			command.Version = 2
+		}
 		data, err := json.Marshal(command)
 		if err != nil || len(data) > 64<<10 {
 			http.Error(w, "encoded configuration command exceeds 64 KiB", 400)
