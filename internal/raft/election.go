@@ -138,7 +138,12 @@ func newNode(config Config, storage Storage) (*Node, error) {
 	if (hard.VotedFor != "" && (!member[hard.VotedFor] || hard.Term == 0)) || config.LastTerm > hard.Term || (config.LastIndex == 0) != (config.LastTerm == 0) {
 		return nil, fmt.Errorf("invalid durable state or log-tail metadata")
 	}
-	n := &Node{id: config.ID, members: append([]string{}, config.Members...), member: member, hard: hard, role: Follower, storage: storage, rng: rand.New(rand.NewSource(config.Seed)), electionBase: config.ElectionTicks, heartbeatTicks: config.HeartbeatTicks, lastIndex: config.LastIndex, lastTerm: config.LastTerm}
+	n := &Node{
+		id: config.ID, members: append([]string{}, config.Members...), member: member,
+		hard: hard, role: Follower, storage: storage, rng: rand.New(rand.NewSource(config.Seed)),
+		electionBase: config.ElectionTicks, heartbeatTicks: config.HeartbeatTicks,
+		lastIndex: config.LastIndex, lastTerm: config.LastTerm,
+	}
 	n.reset()
 	return n, nil
 }
@@ -254,7 +259,13 @@ func (n *Node) Step(m Message) ([]Message, error) {
 	if n.failed {
 		return nil, ErrStorage
 	}
-	if m.Term == 0 || m.To != n.id || m.From == n.id || !n.member[m.From] || (m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat && m.Type != AppendEntries && m.Type != AppendResponse && m.Type != ReadProbe && m.Type != ReadResponse && m.Type != InstallSnapshot && m.Type != SnapshotResponse) {
+	if m.Term == 0 ||
+		m.To != n.id ||
+		m.From == n.id ||
+		!n.member[m.From] ||
+		(m.Type != RequestVote && m.Type != VoteResponse && m.Type != Heartbeat &&
+			m.Type != AppendEntries && m.Type != AppendResponse && m.Type != ReadProbe &&
+			m.Type != ReadResponse && m.Type != InstallSnapshot && m.Type != SnapshotResponse) {
 		return nil, nil
 	}
 	if m.Term > n.hard.Term {

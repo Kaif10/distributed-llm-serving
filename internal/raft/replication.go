@@ -163,7 +163,12 @@ func (n *Node) sendAppend(peer string) Message {
 	if prev > 0 {
 		prevTerm, _ = n.TermAt(prev)
 	}
-	m := Message{Type: AppendEntries, From: n.id, To: peer, Term: n.hard.Term, PrevIndex: prev, PrevTerm: prevTerm, Entries: cloneEntries(n.entries[next-n.snapshot.Index-1 : end-n.snapshot.Index-1]), LeaderCommit: n.commit, Probe: n.probe}
+	m := Message{
+		Type: AppendEntries, From: n.id, To: peer, Term: n.hard.Term,
+		PrevIndex: prev, PrevTerm: prevTerm,
+		Entries:      cloneEntries(n.entries[next-n.snapshot.Index-1 : end-n.snapshot.Index-1]),
+		LeaderCommit: n.commit, Probe: n.probe,
+	}
 	n.pending[peer] = m
 	m.Entries = cloneEntries(m.Entries)
 	return m

@@ -4,10 +4,10 @@
 
 **A streaming LLM gateway with a custom Raft-replicated control plane.**
 
-Route requests across model replicas, bound overload, drain workers, and recover controller
-state after failures. Built in Go with Python experiment tooling; real inference runs through
-llama.cpp and pinned SmolLM2 weights. Raft replicates configuration and successful request
-history. Prompts, generated tokens, and model weights stay on the serving path.
+Route requests across model replicas, bound overload, drain workers, and recover configuration
+after controller failures. Real inference runs through llama.cpp; Go handles routing and Raft.
+**2 real model replicas · 3 replicated controllers · 2,200 distinct session updates checked
+through retention and restart.** Prompts and tokens stay off the consensus path.
 
 [Architecture](docs/ARCHITECTURE.md) | [Design decisions](docs/DECISIONS.md) | [Evidence](docs/EVIDENCE.md) | [Walkthroughs](docs/learning/README.md)
 
@@ -56,9 +56,9 @@ round-robin, least-inflight, or bounded prefix affinity; per-worker local
 admission; health probes; draining; streaming responses; cancellation and deadlines.
 Prefix affinity uses an explicit client hint and leaves KV-cache management to the engine.
 
-**Control path:** versioned compare-and-swap updates, durable successful request IDs,
+**Control path:** versioned compare-and-swap updates, durable retries and bounded client sessions,
 fixed-membership Raft elections and replication, current-term majority-confirmed reads,
-application checkpoints, manual retention, and lagging-peer snapshot installation.
+automatic retention on every replica, and lagging-peer snapshot installation.
 
 Controller polling happens outside generation requests. Gateways expose their applied
 revision and reject new work after their last confirmed view expires. A committed drain
@@ -76,10 +76,10 @@ records desired state; it does not by itself prove every gateway has finished dr
 | Follower misses a removed prefix | Install a validated durable image, then replicate the suffix | [Three-peer retention](scripts/check_replicated_retention.py) |
 | Storage publication has an uncertain outcome | Fence the owner; select and sync complete state on reopen | [Storage process-kill tests](internal/raft/retained_process_test.go) |
 
-The evidence includes a clean-source single-controller run reaching absolute log index
-**1103** through periodic retention, followed by two abrupt restarts preserving original
-retry results. That workload has **two unique successful updates and 1100 logged retries**;
-it is a correctness exercise, not a throughput benchmark. [Raw result](docs/results/controller-local-retention-346ac82.json)
+The extended three-peer regression crosses the old 1,024-entry boundary with healthy followers,
+then checks distinct session writes, snapshot catch-up, full restart, and retired-request
+rejection. A separate finite API-history checker covers concurrent CAS and reads under faults.
+[Contracts and reproduction](docs/learning/29-retention-and-sessions.md) | [Recorded evidence](docs/EVIDENCE.md)
 
 Routing experiments separately examine prefix reuse, fixed-arrival goodput, mixed request
 costs, and worker restart under load. Conditions, negative outcomes, and raw measurements
@@ -141,13 +141,17 @@ I/O. Validation runs on one laptop; independent-host, disk, and power failures r
 unvalidated. The custom consensus implementation adds maintenance and correctness costs;
 [the design decisions](docs/DECISIONS.md) discuss established implementations as alternatives.
 
-Retained-mode replicas automatically snapshot committed/applied prefixes at 128 entries or one MiB of suffix pressure. Manual capture remains available. The application checkpoint codec is bounded at 1024 successful request
-IDs and an eight-MiB payload. New retained-mode commands reject fresh successes that would
-exceed those bounds while preserving original retries; legacy command replay is unchanged.
-[Review follow-up and compatibility](docs/learning/28-review-admission.md).
-Admission counters are local to each gateway. Listeners use
-trusted loopback HTTP without authentication or TLS. Dynamic membership, distributed model
-execution, cross-request engine batching, and production deployment are outside this scope.
+Retained replicas automatically snapshot applied prefixes at 128 entries or one MiB of suffix
+pressure. New session clients use 64 reusable slots with durable generation/sequence fences;
+only the latest result per slot is retained. Legacy request IDs keep their original contract
+and 1,024-ID bound. Images remain bounded at eight MiB. [Retry contracts](docs/learning/29-retention-and-sessions.md).
+
+Loopback HTTP remains the local default. Optional mutual TLS authenticates network peers and
+separates reader/admin access; gateway controller polling supports reader credentials.
+[Network setup and trust model](docs/learning/30-authenticated-network.md).
+Admission counters remain local to each process; a shared worker-side gate must be the only
+path to its engine to enforce a bound across gateways. Dynamic membership, distributed model
+execution, GPU-scale validation, and production deployment remain outside the tested scope.
 
 The evidence preserves an intermittent Windows connection reset during an earlier drain
 probe and an earlier interrupted cache-experiment timeout. Successful later runs do not

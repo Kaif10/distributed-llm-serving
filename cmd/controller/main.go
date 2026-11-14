@@ -42,7 +42,11 @@ func run(ctx context.Context, address, path string) error {
 	if err != nil {
 		return err
 	}
-	server := &http.Server{Handler: store.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10}
+	server := &http.Server{
+		Handler: store.Handler(), ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second,
+		IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10,
+	}
 	defer server.Close()
 	slog.Info("controller listening", "address", listener.Addr().String())
 	done := make(chan error, 1)

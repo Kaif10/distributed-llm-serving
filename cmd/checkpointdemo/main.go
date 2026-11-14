@@ -117,7 +117,10 @@ func run(output string) error {
 		return apply(machine, entries, 0)
 	}
 	propose := func(key string, revision uint64, draining bool) error {
-		data, err := json.Marshal(command{Version: 1, Kind: "update", Update: control.Update{RequestID: key, ExpectedRevision: revision, Workers: []control.Worker{{ID: "worker-a", Origin: "http://127.0.0.1:18081", Draining: draining}}}})
+		data, err := json.Marshal(command{Version: 1, Kind: "update", Update: control.Update{
+			RequestID: key, ExpectedRevision: revision,
+			Workers: []control.Worker{{ID: "worker-a", Origin: "http://127.0.0.1:18081", Draining: draining}},
+		}})
 		if err != nil {
 			return err
 		}
@@ -242,7 +245,9 @@ func run(output string) error {
 		"journal": journal, "checkpoint": checkpointPath, "checkpoint_bytes": len(frame), "checkpoint_sha256": hex.EncodeToString(checksum[:]),
 		"checkpoint_position": position, "checkpoint_configuration": checkpointState, "before_restart": beforeRestart, "final_position": finalPosition,
 		"full_replay": full.Snapshot(), "checkpoint_plus_tail": restored.Snapshot(), "historical_retry": original,
-		"rejected_before_commit_reestablished": true, "rejected_wrong_boundary_term": true, "altered_id_rejected": true, "corruption_rejected": true, "full_checkpoint_images_equal": true, "log": node.Log(), "passed": true,
+		"rejected_before_commit_reestablished": true, "rejected_wrong_boundary_term": true,
+		"altered_id_rejected": true, "corruption_rejected": true,
+		"full_checkpoint_images_equal": true, "log": node.Log(), "passed": true,
 	}
 	encoded, err := json.MarshalIndent(transcript, "", "  ")
 	if err != nil {
@@ -251,6 +256,7 @@ func run(output string) error {
 	if err := os.WriteFile(output, append(encoded, '\n'), 0600); err != nil {
 		return err
 	}
-	fmt.Printf("PASS: checkpoint index %d/revision %d plus committed suffix equals full replay at index %d; original retry restored; %s\n", position.Index, checkpointState.Revision, finalPosition.Index, output)
+	fmt.Printf("PASS: checkpoint index %d/revision %d plus committed suffix equals full replay at index %d; original retry restored; %s\n",
+		position.Index, checkpointState.Revision, finalPosition.Index, output)
 	return nil
 }

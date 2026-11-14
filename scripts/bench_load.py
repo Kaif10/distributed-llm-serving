@@ -103,10 +103,14 @@ def run(policy, rate, trial, args, config, workload, output):
                     result["calibration"].append(sample)
             measure(origin, {"model": "smollm2-135m", "messages": [{"role": "user", "content": "Say hello."}],
                              "stream": True, "max_tokens": 16, "ignore_eos": True, "cache_prompt": False})
-        command = [str(ROOT/"bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends", ",".join(origins),
-                   "-policy", policy, "-max-inflight", "1", "-request-timeout", "60s"]
-        result["commands"].append(command)
-        stack.enter_context(service(command, "http://127.0.0.1:18080/readyz", output/f"{label}-gateway.log"))
+        if policy.startswith("nginx-"):
+            from nginx_baseline import nginx_router
+            result["baseline"]=stack.enter_context(nginx_router(args.nginx,policy,origins,output,label,result["commands"]))
+        else:
+            command = [str(ROOT/"bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends", ",".join(origins),
+                       "-policy", policy, "-max-inflight", "1", "-request-timeout", "60s"]
+            result["commands"].append(command)
+            stack.enter_context(service(command, "http://127.0.0.1:18080/readyz", output/f"{label}-gateway.log"))
         start = time.perf_counter()+.1
         futures = []
         # One thread per possible request avoids a hidden executor queue. This is
@@ -159,7 +163,10 @@ def main():
     parser.add_argument("--ttft-ms", type=float, default=2000)
     parser.add_argument("--completion-ms", type=float, default=3000)
     parser.add_argument("--output-dir", type=Path, default=ROOT/"artifacts/load-baseline")
+    parser.add_argument("--policies",nargs="+",choices=["least-inflight","prefix-affinity","nginx-round-robin","nginx-hash"],default=["least-inflight","prefix-affinity"])
+    parser.add_argument("--nginx",type=Path)
     args = parser.parse_args()
+    if any(p.startswith("nginx-") for p in args.policies) and not args.nginx:parser.error("NGINX policies require --nginx")
     if any(n < 1 or n > 8 for n in args.worker_threads):
         parser.error("worker thread counts must be between 1 and 8")
     if not 4 <= args.requests <= 64 or args.trials < 1 or any(not math.isfinite(r) or r <= 0 for r in args.rates) or not 0 < args.ttft_ms <= args.completion_ms or not math.isfinite(args.completion_ms):
@@ -174,8 +181,8 @@ def main():
     result = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "working_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True)),
               "platform": platform.platform(), "assets": config, "workload": workload,
-              "settings": vars(args)|{"output_dir": str(output)}, "runs": []}
-    order = [(trial, policy, rate) for trial in range(args.trials) for policy in ("least-inflight", "prefix-affinity") for rate in args.rates]
+              "settings": vars(args)|{"output_dir": str(output),"nginx":str(args.nginx) if args.nginx else None}, "runs": []}
+    order = [(trial, policy, rate) for trial in range(args.trials) for policy in args.policies for rate in args.rates]
     random.Random(11).shuffle(order)
     result["condition_order_seed"] = 11
     try:

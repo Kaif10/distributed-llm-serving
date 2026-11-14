@@ -43,7 +43,12 @@ func cloneSnapshot(snapshot RetainedSnapshot) RetainedSnapshot {
 	return snapshot
 }
 func validRetainedLog(snapshot RetainedSnapshot, entries []Entry, term uint64) error {
-	if (snapshot.Index == 0) != (snapshot.Term == 0) || snapshot.Term > term || snapshot.Index == ^uint64(0) || len(snapshot.Data) > (8<<20)+12 || (snapshot.Index == 0 && len(snapshot.Data) != 0) || (snapshot.Index > 0 && len(snapshot.Data) == 0) {
+	if (snapshot.Index == 0) != (snapshot.Term == 0) ||
+		snapshot.Term > term ||
+		snapshot.Index == ^uint64(0) ||
+		len(snapshot.Data) > (8<<20)+12 ||
+		(snapshot.Index == 0 && len(snapshot.Data) != 0) ||
+		(snapshot.Index > 0 && len(snapshot.Data) == 0) {
 		return fmt.Errorf("invalid retained snapshot boundary")
 	}
 	if len(entries) > 1024 {

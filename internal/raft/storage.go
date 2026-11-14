@@ -33,7 +33,9 @@ type stateRecord struct {
 }
 
 func validTransition(previous, next HardState) bool {
-	return utf8.ValidString(next.VotedFor) && len(next.VotedFor) <= 64 && next.Term > 0 && next.Term >= previous.Term && (next.Term != previous.Term || previous.VotedFor == "" || next.VotedFor == previous.VotedFor)
+	return utf8.ValidString(next.VotedFor) && len(next.VotedFor) <= 64 &&
+		next.Term > 0 && next.Term >= previous.Term &&
+		(next.Term != previous.Term || previous.VotedFor == "" || next.VotedFor == previous.VotedFor)
 }
 func OpenStorage(path string) (*FileStorage, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
@@ -100,7 +102,10 @@ func (s *FileStorage) recover() error {
 		if err := json.Unmarshal(data, &record); err != nil {
 			return err
 		}
-		if (record.Kind != "raft-election-v1" && record.Kind != "raft-state-v2") || (record.Kind == "raft-election-v1" && (s.replicationFormat || len(record.Log) > 0)) || !validTransition(s.state, record.State) {
+		if (record.Kind != "raft-election-v1" && record.Kind != "raft-state-v2") ||
+			(record.Kind == "raft-election-v1" && (s.replicationFormat ||
+				len(record.Log) > 0)) ||
+			!validTransition(s.state, record.State) {
 			return fmt.Errorf("invalid election state transition")
 		}
 		if err := validLog(record.Log, record.State.Term); err != nil {
