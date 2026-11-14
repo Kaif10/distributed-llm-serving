@@ -138,6 +138,8 @@ def run(policy, rate, trial, args, config, workload, output):
                       successful_ttft_p95_ms=percentile([s["ttft_ms"] for s in completed], .95),
                       successful_completion_p95_ms=percentile([s["completion_ms"] for s in completed], .95),
                       cached_token_fraction=sum(s["usage"]["prompt_tokens_details"]["cached_tokens"] for s in completed)/tokens if tokens else None)
+        result["arrival_lag_budget_ms"]=args.max_dispatch_lag_ms
+        result["arrival_schedule_valid"]=result["max_dispatch_lag_ms"]<=args.max_dispatch_lag_ms
         assert result["completed"]+result["rejected"]+result["failed"] == args.requests
         result["class_summary"] = {}
         for kind in sorted({s["request_class"] for s in samples}):
@@ -162,10 +164,12 @@ def main():
     parser.add_argument("--calibrate", action="store_true", help="measure each engine directly before warmup")
     parser.add_argument("--ttft-ms", type=float, default=2000)
     parser.add_argument("--completion-ms", type=float, default=3000)
+    parser.add_argument("--max-dispatch-lag-ms",type=float,default=100,help="arrival fidelity budget; late dispatch marks a trial invalid without hiding its samples")
     parser.add_argument("--output-dir", type=Path, default=ROOT/"artifacts/load-baseline")
     parser.add_argument("--policies",nargs="+",choices=["least-inflight","prefix-affinity","nginx-round-robin","nginx-hash"],default=["least-inflight","prefix-affinity"])
     parser.add_argument("--nginx",type=Path)
     args = parser.parse_args()
+    if not math.isfinite(args.max_dispatch_lag_ms) or args.max_dispatch_lag_ms<=0:parser.error("positive finite dispatch-lag budget required")
     if any(p.startswith("nginx-") for p in args.policies) and not args.nginx:parser.error("NGINX policies require --nginx")
     if any(n < 1 or n > 8 for n in args.worker_threads):
         parser.error("worker thread counts must be between 1 and 8")
@@ -189,6 +193,7 @@ def main():
         for trial, policy, rate in order:
             result["runs"].append(run(policy, rate, trial, args, config, workload, output))
         result["experiment_completed"] = True
+        result["all_arrival_schedules_valid"]=all(r["arrival_schedule_valid"] for r in result["runs"])
     except Exception as err:
         result["experiment_completed"] = False; result["error"] = str(err)
         raise

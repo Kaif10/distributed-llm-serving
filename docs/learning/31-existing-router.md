@@ -38,6 +38,10 @@ command produces 96 requests per condition/trial; the fixed-arrival command incl
 all rejected and failed requests in its denominator. A finished experiment is not
 the same as a statistically established performance ranking. Raw trial records,
 dispatch lag, successful-response latency, goodput, and losing outcomes matter.
+The load runner marks trials invalid when maximum dispatch lag exceeds the declared
+budget (100 ms by default). It preserves those trials and their failures; a laptop
+pause must not silently turn a fixed-arrival test into a burst. Report any repeats
+separately and never use an invalid arrival schedule to rank routers.
 
 Published measurements belong in the evidence ledger with the exact source commit.
 They remain small-model CPU experiments using constructed traffic on one laptop.
