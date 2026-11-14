@@ -1,0 +1,13 @@
+{
+  "source_commit": "385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10",
+  "binaries": {
+    "gateway": {
+      "sha256": "cae9b153b5df23a7527b318e7c7bb88313a38464a54d6f3360388af09ee18302",
+      "build_info": "D:\\inference-fleet\\bin\\gateway.exe: go1.27.3\n\tpath\tgithub.com/Kaif10/distributed-llm-serving/cmd/gateway\n\tmod\tgithub.com/Kaif10/distributed-llm-serving\tv0.0.0-20261114192028-385cf0cc72b9\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tDefaultGODEBUG=tracebacklabels=0,x509sslcertoverrideplatform=0\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10\n\tbuild\tvcs.time=2026-11-14T19:20:28Z\n\tbuild\tvcs.modified=false\n"
+    },
+    "raftpeer": {
+      "sha256": "9b2581e3640fb2cdffe07022af0655a53d4ee790a2aa9a5e35f2baf9846979e1",
+      "build_info": "D:\\inference-fleet\\bin\\raftpeer.exe: go1.27.3\n\tpath\tgithub.com/Kaif10/distributed-llm-serving/cmd/raftpeer\n\tmod\tgithub.com/Kaif10/distributed-llm-serving\tv0.0.0-20261114192028-385cf0cc72b9\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tDefaultGODEBUG=tracebacklabels=0,x509sslcertoverrideplatform=0\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10\n\tbuild\tvcs.time=2026-11-14T19:20:28Z\n\tbuild\tvcs.modified=false\n"
+    }
+  }
+}

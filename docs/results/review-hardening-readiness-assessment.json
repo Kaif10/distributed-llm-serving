@@ -1,0 +1,55 @@
+{
+  "linearizable": true,
+  "explored_states": 12,
+  "operations": 12,
+  "witness": [
+    {
+      "id": "op-0",
+      "effect": "applied"
+    },
+    {
+      "id": "op-2",
+      "effect": "applied"
+    },
+    {
+      "id": "op-3",
+      "effect": "applied"
+    },
+    {
+      "id": "op-1",
+      "effect": "applied"
+    },
+    {
+      "id": "op-4",
+      "effect": "applied"
+    },
+    {
+      "id": "op-5",
+      "effect": "applied"
+    },
+    {
+      "id": "op-8",
+      "effect": "applied"
+    },
+    {
+      "id": "op-6",
+      "effect": "omitted incomplete"
+    },
+    {
+      "id": "op-7",
+      "effect": "omitted incomplete"
+    },
+    {
+      "id": "op-9",
+      "effect": "applied"
+    },
+    {
+      "id": "op-10",
+      "effect": "applied"
+    },
+    {
+      "id": "op-11",
+      "effect": "omitted incomplete"
+    }
+  ]
+}

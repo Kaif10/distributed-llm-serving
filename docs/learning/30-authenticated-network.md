@@ -42,6 +42,7 @@ openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 1 \
 openssl req -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
   -subj /CN=peer-a -keyout .secrets/a.key -out .secrets/a.csr
 printf '%s\n' 'basicConstraints=critical,CA:FALSE' 'keyUsage=critical,digitalSignature' \
+  'subjectKeyIdentifier=hash' 'authorityKeyIdentifier=keyid:always' \
   'extendedKeyUsage=serverAuth,clientAuth' \
   'subjectAltName=IP:10.10.0.11,URI:spiffe://distributed-llm-serving/peer/a' > .secrets/a.cnf
 openssl x509 -req -in .secrets/a.csr -CA .secrets/ca.pem -CAkey .secrets/ca.key \

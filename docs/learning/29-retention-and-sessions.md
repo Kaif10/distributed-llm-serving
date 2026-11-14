@@ -107,6 +107,8 @@ to have failed. Search-budget exhaustion is inconclusive, never success.
 This checker models the legacy config API, not the session API or all possible
 executions. Session behavior has separate state-machine and native-process checks.
 The harness uses one host, and timestamps have that host's monotonic-clock resolution.
+Restart readiness polls are recorded separately: 503 is allowed until the new leader
+commits its current-term entry, but any successful read at the wrong revision fails.
 
 ```sh
 go test ./internal/raft ./internal/control ./internal/raftnet

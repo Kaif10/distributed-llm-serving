@@ -1,0 +1,365 @@
+{
+  "source_commit": "385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10",
+  "working_tree": "",
+  "scope": "finite config API histories; three native peers and real HTTP relays on one host; no inference",
+  "history": [
+    {
+      "id": "op-0",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "original",
+        "expected_revision": 0,
+        "workers": []
+      },
+      "call_ns": 155103922392,
+      "status": 200,
+      "response": {
+        "revision": 1,
+        "workers": []
+      },
+      "return_ns": 155110640634
+    },
+    {
+      "id": "op-1",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "cas-a",
+        "expected_revision": 1,
+        "workers": []
+      },
+      "call_ns": 167873390284,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": []
+      },
+      "return_ns": 167879945954
+    },
+    {
+      "id": "op-3",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 167874304097,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": []
+      },
+      "return_ns": 167885689639
+    },
+    {
+      "id": "op-2",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "cas-b",
+        "expected_revision": 1,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:20000",
+            "draining": true
+          }
+        ]
+      },
+      "call_ns": 167873846813,
+      "status": 409,
+      "response": "revision or request ID conflict\n",
+      "return_ns": 167890748841
+    },
+    {
+      "id": "op-4",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "original",
+        "expected_revision": 0,
+        "workers": []
+      },
+      "call_ns": 167892801046,
+      "status": 200,
+      "response": {
+        "revision": 1,
+        "workers": []
+      },
+      "return_ns": 167910262821
+    },
+    {
+      "id": "op-5",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 167910270599,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": []
+      },
+      "return_ns": 167914778903
+    },
+    {
+      "id": "op-8",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "majority-write",
+        "expected_revision": 2,
+        "workers": []
+      },
+      "call_ns": 168518613345,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 168524872688
+    },
+    {
+      "id": "op-6",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 168518036212,
+      "status": 504,
+      "response": "deadline; outcome unknown\n",
+      "return_ns": 173519584489
+    },
+    {
+      "id": "op-7",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "isolated-write",
+        "expected_revision": 2,
+        "workers": []
+      },
+      "call_ns": 168518312271,
+      "status": 504,
+      "response": "deadline; outcome unknown\n",
+      "return_ns": 173520518722
+    },
+    {
+      "id": "op-9",
+      "node": "c",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 173621722886,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 173624688608
+    },
+    {
+      "id": "op-10",
+      "node": "b",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 174199400092,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 174202282359
+    },
+    {
+      "id": "op-11",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 175018243308,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 175022806395
+    },
+    {
+      "id": "op-12",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "original",
+        "expected_revision": 0,
+        "workers": []
+      },
+      "call_ns": 175022980663,
+      "status": 200,
+      "response": {
+        "revision": 1,
+        "workers": []
+      },
+      "return_ns": 175032920219
+    },
+    {
+      "id": "op-14",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 175023733828,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 175037201962
+    },
+    {
+      "id": "op-13",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "final",
+        "expected_revision": 3,
+        "workers": []
+      },
+      "call_ns": 175023429652,
+      "status": 200,
+      "response": {
+        "revision": 4,
+        "workers": []
+      },
+      "return_ns": 175043234303
+    }
+  ],
+  "events": [
+    {
+      "healthy_retries": 1100,
+      "statuses": {
+        "a": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 0,
+          "automatic_captures": 8,
+          "last_auto_attempt": 1024
+        },
+        "b": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 640,
+          "automatic_captures": 5,
+          "last_auto_attempt": 1024
+        },
+        "c": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 1024,
+          "automatic_captures": 3,
+          "last_auto_attempt": 640
+        }
+      }
+    },
+    {
+      "isolated_old_leader": "a",
+      "majority_leader": "c"
+    }
+  ],
+  "passed": true,
+  "readiness_polls": [
+    {
+      "node": "a",
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      }
+    }
+  ],
+  "check": {
+    "linearizable": true,
+    "explored_states": 15,
+    "operations": 15,
+    "witness": [
+      {
+        "id": "op-0",
+        "effect": "applied"
+      },
+      {
+        "id": "op-1",
+        "effect": "applied"
+      },
+      {
+        "id": "op-3",
+        "effect": "applied"
+      },
+      {
+        "id": "op-2",
+        "effect": "applied"
+      },
+      {
+        "id": "op-4",
+        "effect": "applied"
+      },
+      {
+        "id": "op-5",
+        "effect": "applied"
+      },
+      {
+        "id": "op-8",
+        "effect": "applied"
+      },
+      {
+        "id": "op-6",
+        "effect": "omitted incomplete"
+      },
+      {
+        "id": "op-7",
+        "effect": "omitted incomplete"
+      },
+      {
+        "id": "op-9",
+        "effect": "applied"
+      },
+      {
+        "id": "op-10",
+        "effect": "applied"
+      },
+      {
+        "id": "op-11",
+        "effect": "applied"
+      },
+      {
+        "id": "op-12",
+        "effect": "applied"
+      },
+      {
+        "id": "op-14",
+        "effect": "applied"
+      },
+      {
+        "id": "op-13",
+        "effect": "applied"
+      }
+    ]
+  }
+}
