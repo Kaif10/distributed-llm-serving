@@ -47,7 +47,7 @@ def main():
             try:
                 value=check()
                 if value:return value
-            except (OSError,ValueError,KeyError):pass
+            except (OSError,ValueError,KeyError) as error:report["last_wait_error"]=repr(error)
             time.sleep(.05)
         raise RuntimeError("timeout: "+label)
     try:
@@ -88,12 +88,13 @@ def main():
                     for s in sockets:s.close()
                     peerports=dict(zip(ids,ports[:3]));clientports=dict(zip(ids,ports[3:]))
                 command(openssl,"req","-x509","-newkey","ec","-pkeyopt","ec_paramgen_curve:P-256","-nodes","-days","1",
+                        "-addext","basicConstraints=critical,CA:TRUE","-addext","keyUsage=critical,keyCertSign,cRLSign",
                         "-subj","/CN=disposable-fleet-test","-keyout",str(root/"ca.key"),"-out",str(root/"ca.pem"))
                 def certificate(name,role,identity,host="127.0.0.1"):
                     command(openssl,"req","-new","-newkey","ec","-pkeyopt","ec_paramgen_curve:P-256","-nodes",
                             "-subj","/CN="+name,"-keyout",str(root/(name+".key")),"-out",str(root/(name+".csr")))
                     extension=root/(name+".cnf")
-                    extension.write_text(f"basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=serverAuth,clientAuth\nsubjectAltName=IP:{host},URI:spiffe://distributed-llm-serving/{role}/{identity}\n")
+                    extension.write_text(f"basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature\nsubjectKeyIdentifier=hash\nauthorityKeyIdentifier=keyid:always\nextendedKeyUsage=serverAuth,clientAuth\nsubjectAltName=IP:{host},URI:spiffe://distributed-llm-serving/{role}/{identity}\n")
                     command(openssl,"x509","-req","-in",str(root/(name+".csr")),"-CA",str(root/"ca.pem"),"-CAkey",str(root/"ca.key"),
                             "-CAcreateserial","-days","1","-extfile",str(extension),"-out",str(root/(name+".pem")))
                 for n in ids:certificate(n,"peer",n,hosts[n])
@@ -103,6 +104,7 @@ def main():
                         "-subj","/CN=untrusted","-keyout",str(root/"rogue.key"),"-out",str(root/"rogue.pem"))
                 def opener(identity):
                     ctx=ssl.create_default_context(cafile=str(root/"ca.pem"))
+                    ctx.verify_flags |= ssl.VERIFY_X509_STRICT
                     if identity:ctx.load_cert_chain(str(root/(identity+".pem")),str(root/(identity+".key")))
                     return urllib.request.build_opener(urllib.request.ProxyHandler({}),urllib.request.HTTPSHandler(context=ctx))
                 clients={n:opener(n) for n in ["operator","gateway","rogue","a"]};clients[None]=opener(None)

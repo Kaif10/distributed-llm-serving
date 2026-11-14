@@ -37,6 +37,7 @@ off the serving hosts after issuance. Replace IP SANs with actual addresses.
 ```sh
 mkdir -m 700 .secrets
 openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 1 \
+  -addext 'basicConstraints=critical,CA:TRUE' -addext 'keyUsage=critical,keyCertSign,cRLSign' \
   -subj /CN=fleet-test-ca -keyout .secrets/ca.key -out .secrets/ca.pem
 openssl req -new -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes \
   -subj /CN=peer-a -keyout .secrets/a.key -out .secrets/a.csr
