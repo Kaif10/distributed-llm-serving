@@ -19,8 +19,8 @@ func (n *Node) RetainLocal(snapshot RetainedSnapshot) error {
 	if n.failed {
 		return ErrStorage
 	}
-	if !n.CanRetainLocal() || n.role != Leader {
-		return fmt.Errorf("local retention requires a retained-storage leader")
+	if !n.CanRetainLocal() {
+		return fmt.Errorf("local retention requires retained storage")
 	}
 	if snapshot.Index <= n.BaseIndex() || snapshot.Index != n.commit || n.applied != n.commit {
 		return fmt.Errorf("local retention requires an advancing fully delivered committed prefix")

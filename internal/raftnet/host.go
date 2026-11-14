@@ -181,7 +181,10 @@ func (h *Host) Run(parent context.Context) error {
 		}
 		pending = kept
 		reads, err = h.finishReads(reads)
-		return err
+		if err != nil {
+			return err
+		}
+		return h.autoRetain()
 	}
 	for {
 		select {
@@ -244,8 +247,10 @@ func (h *Host) Run(parent context.Context) error {
 							return fmt.Errorf("snapshot installed without application")
 						}
 						h.machine, h.applied = installedMachine, h.node.BaseIndex()
+						automatic, attempt := h.retention.AutomaticCaptures, h.retention.LastAutoAttempt
 						h.retention = retentionMetadata(h.node.Snapshot(), h.retention.RecoveredIndex)
 						h.retention.InstalledIndex = h.applied
+						h.retention.AutomaticCaptures, h.retention.LastAutoAttempt = automatic, attempt
 					}
 					emit(messages)
 					e.reply <- result{Code: 204}

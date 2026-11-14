@@ -17,7 +17,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("binary", type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--healthy-retries",type=int,default=2200,help="logged retries with all three peers healthy before fault injection")
     args = parser.parse_args()
+    if args.healthy_retries<0 or args.healthy_retries>10000:
+        parser.error("healthy-retries must be 0..10000")
     binary, output = args.binary.resolve(), args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     pairs = {node: ports() for node in "abc"}
@@ -78,6 +81,16 @@ def main():
                          "workers": [{"id": "worker", "origin": "http://127.0.0.1:20001", "draining": True}]}
                 code, original = call(initial, "PUT", "/config", first)
                 assert code == 200 and original["revision"] == 1
+                for _ in range(args.healthy_retries):
+                    assert call(initial,"PUT","/config",first)==(200,original)
+                if args.healthy_retries>=1024:
+                    for node in "abc":
+                        wait(lambda n=node:call(n)[1]["applied_index"]>=args.healthy_retries+2,"healthy replication crosses log capacity "+node)
+                    result["healthy_retention"]={node:call(node)[1] for node in "abc"}
+                    for state in result["healthy_retention"].values():
+                        assert state["retention"]["automatic_captures"]>0 or state["retention"]["installed_index"]>=1024
+                        assert state["retention"]["base_index"]>=1024
+                        assert len(state["log"])<256
                 lagger = next(node for node in "abc" if node != initial)
                 wait(lambda: call(lagger)[1]["configuration"]["revision"] == 1, "lagger initial state")
                 stop(lagger)

@@ -9,7 +9,7 @@ state after failures. Built in Go with Python experiment tooling; real inference
 llama.cpp and pinned SmolLM2 weights. Raft replicates configuration and successful request
 history. Prompts, generated tokens, and model weights stay on the serving path.
 
-[Architecture](docs/ARCHITECTURE.md) ? [Design decisions](docs/DECISIONS.md) ? [Evidence](docs/EVIDENCE.md) ? [Walkthroughs](docs/learning/README.md)
+[Architecture](docs/ARCHITECTURE.md) | [Design decisions](docs/DECISIONS.md) | [Evidence](docs/EVIDENCE.md) | [Walkthroughs](docs/learning/README.md)
 
 ## Watch the system fail and recover
 
@@ -20,7 +20,7 @@ tokens while controllers lose their leader, lose quorum, and recover from a reta
 
 Actual Windows console capture, continuous and at real-time speed. Commands execute during
 recording; the terminal shows real process IDs, arriving model tokens, HTTP responses, and
-failure/recovery actions. [Full-resolution MP4](docs/demo/demo.mp4) ? [Recording details and raw output](docs/demo/README.md)
+failure/recovery actions. [Full-resolution MP4](docs/demo/demo.mp4) | [Recording details and raw output](docs/demo/README.md)
 
 The recorded scenarios exercise:
 
@@ -141,7 +141,7 @@ I/O. Validation runs on one laptop; independent-host, disk, and power failures r
 unvalidated. The custom consensus implementation adds maintenance and correctness costs;
 [the design decisions](docs/DECISIONS.md) discuss established implementations as alternatives.
 
-Retention is manual. The application checkpoint codec is bounded at 1024 successful request
+Retained-mode replicas automatically snapshot committed/applied prefixes at 128 entries or one MiB of suffix pressure. Manual capture remains available. The application checkpoint codec is bounded at 1024 successful request
 IDs and an eight-MiB payload. New retained-mode commands reject fresh successes that would
 exceed those bounds while preserving original retries; legacy command replay is unchanged.
 [Review follow-up and compatibility](docs/learning/28-review-admission.md).
@@ -158,10 +158,12 @@ workload-driven scheduling and sharding are deferred.
 
 | Area | Entry points |
 | --- | --- |
-| Gateway, routing, cancellation | [Gateway code](internal/gateway) ? [Serving walkthroughs](docs/learning/README.md) |
-| Consensus and persistence | [Raft core](internal/raft) ? [Peer runtime](internal/raftnet) |
-| Ordered configuration and retries | [State machine](internal/control/machine.go) ? [Checkpoint codec](internal/control/checkpoint.go) |
-| Tradeoffs and failure contracts | [Architecture](docs/ARCHITECTURE.md) ? [Decisions](docs/DECISIONS.md) |
-| Experiments and limitations | [Evidence ledger](docs/EVIDENCE.md) ? [Recorded demo](docs/demo/README.md) |
+| Gateway, routing, cancellation | [Gateway code](internal/gateway) | [Serving walkthroughs](docs/learning/README.md) |
+| Consensus and persistence | [Raft core](internal/raft) | [Peer runtime](internal/raftnet) |
+| Ordered configuration and retries | [State machine](internal/control/machine.go) | [Checkpoint codec](internal/control/checkpoint.go) |
+| Tradeoffs and failure contracts | [Architecture](docs/ARCHITECTURE.md) | [Decisions](docs/DECISIONS.md) |
+| Experiments and limitations | [Evidence ledger](docs/EVIDENCE.md) | [Recorded demo](docs/demo/README.md) |
 
 Engine/model provenance and SHA-256 pins are recorded in [config/llama-cpu.json](config/llama-cpu.json).
+
+Developed with AI coding assistance. The [evidence ledger](docs/EVIDENCE.md) records checks, source identities, and observed limitations.

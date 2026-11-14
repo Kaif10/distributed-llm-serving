@@ -36,6 +36,7 @@ const (
 )
 
 type Message struct {
+	CapacityRejected                                     bool              `json:",omitempty"`
 	Snapshot                                             *RetainedSnapshot `json:",omitempty"`
 	Group                                                string            `json:",omitempty"`
 	HintIndex                                            uint64            `json:",omitempty"`

@@ -234,6 +234,13 @@ func (n *Node) appendRequest(m Message) ([]Message, error) {
 	}
 	if changed {
 		if err := n.saveLog(entries); err != nil {
+			if errors.Is(err, ErrLogCapacity) {
+				// The matched existing prefix is safe to commit even when this
+				// batch cannot be appended. Its owner can apply/retain that prefix.
+				n.commit = max(n.commit, min(m.LeaderCommit, m.PrevIndex))
+				reply.CapacityRejected = true
+				return []Message{reply}, nil
+			}
 			return nil, err
 		}
 	}
@@ -259,6 +266,11 @@ func (n *Node) appendResponse(m Message) ([]Message, error) {
 	}
 	delete(n.pending, m.From)
 	if !m.Success {
+		if m.CapacityRejected {
+			// Retry on the next heartbeat, after the recipient has had time to
+			// apply/retain. Do not turn a capacity reply into a tight RPC loop.
+			return nil, nil
+		}
 		term, ok := n.TermAt(m.HintIndex)
 		if m.HintIndex > pending.PrevIndex && ok && term == m.HintTerm {
 			n.next[m.From] = m.HintIndex + 1

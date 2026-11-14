@@ -14,12 +14,15 @@ import (
 )
 
 type RetentionStatus struct {
-	BaseIndex      uint64 `json:"base_index"`
-	BaseTerm       uint64 `json:"base_term"`
-	RecoveredIndex uint64 `json:"recovered_index"`
-	SHA256         string `json:"sha256,omitempty"`
-	Bytes          int    `json:"checkpoint_bytes"`
-	InstalledIndex uint64 `json:"installed_index"`
+	BaseIndex         uint64 `json:"base_index"`
+	BaseTerm          uint64 `json:"base_term"`
+	RecoveredIndex    uint64 `json:"recovered_index"`
+	SHA256            string `json:"sha256,omitempty"`
+	Bytes             int    `json:"checkpoint_bytes"`
+	InstalledIndex    uint64 `json:"installed_index"`
+	AutomaticCaptures uint64 `json:"automatic_captures"`
+	LastAutoAttempt   uint64 `json:"last_auto_attempt"`
+	LastAutoError     string `json:"last_auto_error,omitempty"`
 }
 
 // NewConfigurationWithRetention restores a trusted local retained image before
@@ -68,8 +71,8 @@ func (h *Host) retentionSnapshot() *RetentionStatus {
 	return &copy
 }
 func (h *Host) retainLocal() (result, error) {
-	if h.retention == nil || h.machine == nil || h.node.Status().Role != raft.Leader || h.applied == 0 || h.applied != h.node.CommitIndex() {
-		return result{Err: "retention requires a fully applied retained-storage leader", Code: 503}, nil
+	if h.retention == nil || h.machine == nil || h.applied == 0 || h.applied != h.node.CommitIndex() {
+		return result{Err: "retention requires a fully applied committed prefix", Code: 503}, nil
 	}
 	if h.applied == h.node.BaseIndex() {
 		return result{Retention: h.retentionSnapshot(), Code: 200}, nil
@@ -88,10 +91,37 @@ func (h *Host) retainLocal() (result, error) {
 	if err := h.node.RetainLocal(image); err != nil {
 		return result{}, err // Owner stops on uncertain storage or invariant failure.
 	}
-	installed := h.retention.InstalledIndex
-	h.retention = retentionMetadata(image, h.retention.RecoveredIndex)
-	h.retention.InstalledIndex = installed
+	previous := *h.retention
+	h.retention = retentionMetadata(image, previous.RecoveredIndex)
+	h.retention.InstalledIndex = previous.InstalledIndex
+	h.retention.AutomaticCaptures = previous.AutomaticCaptures
+	h.retention.LastAutoAttempt = previous.LastAutoAttempt
+	h.retention.LastAutoError = previous.LastAutoError
 	return result{Retention: h.retentionSnapshot(), Code: 200}, nil
+}
+
+// Every replica retains its own committed/applied prefix, including healthy
+// followers. Waiting for a leader snapshot cannot reclaim an up-to-date follower.
+func (h *Host) autoRetain() error {
+	if h.retention == nil || h.applied <= h.node.BaseIndex() || h.applied != h.node.CommitIndex() || h.applied == h.retention.LastAutoAttempt {
+		return nil
+	}
+	_, bytes := h.node.RetainedUsage()
+	if h.applied-h.node.BaseIndex() < 128 && bytes < 1<<20 {
+		return nil
+	}
+	h.retention.LastAutoAttempt = h.applied
+	r, err := h.retainLocal()
+	if err != nil {
+		return err
+	}
+	if r.Code != 200 {
+		h.retention.LastAutoError = r.Err
+		return nil
+	}
+	h.retention.LastAutoError = ""
+	h.retention.AutomaticCaptures++
+	return nil
 }
 
 // Validate before any core persistence. Bind the trusted peer's group, position,

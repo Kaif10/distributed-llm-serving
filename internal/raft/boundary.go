@@ -1,9 +1,21 @@
 package raft
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 )
+
+var ErrLogCapacity = errors.New("retained log capacity exhausted")
+
+// RetainedUsage describes local suffix pressure without cloning command bytes.
+func (n *Node) RetainedUsage() (int, int) {
+	bytes := 0
+	for _, e := range n.entries {
+		bytes += len(e.Data)
+	}
+	return len(n.entries), bytes
+}
 
 // RetainedSnapshot is an opaque application image at a durable committed prefix.
 // A storage adapter must recover this and its suffix as one coherent selection.
@@ -35,7 +47,7 @@ func validRetainedLog(snapshot RetainedSnapshot, entries []Entry, term uint64) e
 		return fmt.Errorf("invalid retained snapshot boundary")
 	}
 	if len(entries) > 1024 {
-		return fmt.Errorf("log exceeds 1024 entries")
+		return fmt.Errorf("%w: log exceeds 1024 entries", ErrLogCapacity)
 	}
 	// Keep one representable next-index sentinel; all index arithmetic stays exact.
 	if uint64(len(entries)) > ^uint64(0)-1-snapshot.Index {
@@ -51,7 +63,7 @@ func validRetainedLog(snapshot RetainedSnapshot, entries []Entry, term uint64) e
 		size += len(e.Data)
 	}
 	if size > 4<<20 {
-		return fmt.Errorf("log exceeds four MiB")
+		return fmt.Errorf("%w: log exceeds four MiB", ErrLogCapacity)
 	}
 	return nil
 }

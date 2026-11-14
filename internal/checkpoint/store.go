@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/Kaif10/distributed-llm-serving/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/durability"
 	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
@@ -87,6 +88,10 @@ func open(path string, id Identity, syncOverride func(*os.File) error) (*Store, 
 		s.syncFile = func() error { return syncOverride(file) }
 	}
 	if err := s.recover(); err != nil {
+		file.Close()
+		return nil, err
+	}
+	if err := durability.SyncParents(path); err != nil {
 		file.Close()
 		return nil, err
 	}
