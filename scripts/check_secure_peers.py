@@ -147,7 +147,7 @@ def main():
                     except (OSError,urllib.error.URLError):pass
                     else:raise AssertionError("untrusted/missing client certificate accepted")
                 target="c";before=status(target)["node"]["Term"]
-                forged={"From":"b","To":target,"Term":before+100,"Type":"vote-request"}
+                forged={"From":"b","To":target,"Term":before+100,"Type":"request_vote"}
                 assert rpc(target,"POST","/raft/message",forged,identity="a",peer=True)[0]==403
                 assert status(target)["node"]["Term"]<before+100
                 assert rpc(target,"POST","/raft/message",forged,identity="operator",peer=True)[0]==403
