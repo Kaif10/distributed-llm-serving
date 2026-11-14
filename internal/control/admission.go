@@ -40,7 +40,9 @@ func (m *Machine) checkpointCandidate(update Update) (*Machine, Snapshot, error)
 	if len(m.requests) >= maxCheckpointRequests {
 		return nil, Snapshot{}, ErrCapacity
 	}
-	next := &Machine{state: result(e), requests: make(map[string]entry, len(m.requests)+1)}
+	next := *m
+	next.state = result(e)
+	next.requests = make(map[string]entry, len(m.requests)+1)
 	for id, old := range m.requests {
 		next.requests[id] = old
 	}
@@ -50,5 +52,5 @@ func (m *Machine) checkpointCandidate(update Update) (*Machine, Snapshot, error)
 	if _, err := next.Checkpoint(CheckpointPosition{Index: ^uint64(0), Term: ^uint64(0)}); err != nil {
 		return nil, Snapshot{}, fmt.Errorf("%w: %v", ErrCapacity, err)
 	}
-	return next, result(e), nil
+	return &next, result(e), nil
 }

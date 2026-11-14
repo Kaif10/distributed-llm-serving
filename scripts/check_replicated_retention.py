@@ -18,9 +18,12 @@ def main():
     parser.add_argument("binary", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--healthy-retries",type=int,default=2200,help="logged retries with all three peers healthy before fault injection")
+    parser.add_argument("--session-updates",type=int,default=2200,help="distinct bounded-session updates after fault/restart checks")
     args = parser.parse_args()
     if args.healthy_retries<0 or args.healthy_retries>10000:
         parser.error("healthy-retries must be 0..10000")
+    if args.session_updates<1 or args.session_updates>10000:
+        parser.error("session-updates must be 1..10000")
     binary, output = args.binary.resolve(), args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     pairs = {node: ports() for node in "abc"}
@@ -131,6 +134,37 @@ def main():
                 for node in "abc":
                     wait(lambda n=node: call(n)[1]["configuration"]["revision"] == 6, "restarted application "+node)
                 result["after_full_restart"] = {node: call(node)[1] for node in "abc"}
+                registration={"slot":0,"expected_generation":0,"request_id":"session-client"}
+                code,handle=call(restarted,"POST","/sessions",registration)
+                assert code==200 and handle=={"slot":0,"generation":1}
+                for sequence in range(1,args.session_updates+1):
+                    latest={"slot":0,"generation":1,"sequence":sequence,"expected_revision":sequence+5,"workers":[]}
+                    code,current=call(restarted,"PUT","/sessions/config",latest)
+                    assert code==200 and current=={"revision":sequence+6,"workers":[]},(sequence,code,current)
+                result["session_updates"]={"distinct_successes":args.session_updates,"current":current}
+                for node in "abc":
+                    wait(lambda n=node:call(n)[1]["configuration"]==current,"session state applied "+node)
+                result["after_session_updates"]={node:call(node)[1] for node in "abc"}
+                for node in list(processes):
+                    stop(node)
+                for node in "abc":
+                    start(node)
+                session_leader=wait(leader,"leader after session-history restart")
+                assert call(session_leader,"PUT","/sessions/config",latest)==(200,current)
+                stale=dict(latest,sequence=latest["sequence"]-1)
+                if stale["sequence"]>0:
+                    assert call(session_leader,"PUT","/sessions/config",stale)[0]==410
+                assert call(session_leader,"POST","/sessions",registration)==(200,handle)
+                assert call(session_leader,"POST","/sessions",{"slot":0,"expected_generation":1,"request_id":"replacement-client"})==(200,{"slot":0,"generation":2})
+                assert call(session_leader,"PUT","/sessions/config",latest)[0]==410
+                next_update={"slot":0,"generation":2,"sequence":1,"expected_revision":current["revision"],"workers":[]}
+                code,final=call(session_leader,"PUT","/sessions/config",next_update)
+                assert code==200 and final["revision"]==current["revision"]+1
+                stop(session_leader)
+                replacement=wait(leader,"leader after session generation change")
+                assert call(replacement,"PUT","/sessions/config",next_update)==(200,final)
+                assert call(replacement,"PUT","/config",first)==(200,original)
+                result["session_updates"].update(restarted=True,retired_generation_rejected=True,final=final)
                 result["original_retry_result"] = original
                 result["passed"] = True
                 print("PASS: lagging-peer snapshot/suffix, durable retry history, leader loss, wrong-group rejection, and full-cluster restart", flush=True)

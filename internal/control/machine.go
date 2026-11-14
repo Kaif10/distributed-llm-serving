@@ -34,8 +34,10 @@ type entry struct {
 // a durability or consensus acknowledgement. Store owns the sync barriers and
 // publishes recovered state only after recovery succeeds.
 type Machine struct {
-	state    Snapshot
-	requests map[string]entry
+	state           Snapshot
+	requests        map[string]entry
+	sessionsEnabled bool
+	sessions        [64]sessionRecord
 }
 
 func NewMachine() *Machine {
@@ -106,7 +108,19 @@ func validate(u Update) error {
 			return fmt.Errorf("worker fields must be valid UTF-8")
 		}
 		origin, err := url.Parse(w.Origin)
-		if w.ID == "" || len(w.ID) > 128 || ids[w.ID] || err != nil || origin == nil || (origin.Scheme != "http" && origin.Scheme != "https") || origin.Hostname() == "" || origin.User != nil || origin.Path != "" || origin.RawQuery != "" || origin.ForceQuery || origin.Fragment != "" || origins[w.Origin] {
+		if w.ID == "" ||
+			len(w.ID) > 128 ||
+			ids[w.ID] ||
+			err != nil ||
+			origin == nil ||
+			(origin.Scheme != "http" && origin.Scheme != "https") ||
+			origin.Hostname() == "" ||
+			origin.User != nil ||
+			origin.Path != "" ||
+			origin.RawQuery != "" ||
+			origin.ForceQuery ||
+			origin.Fragment != "" ||
+			origins[w.Origin] {
 			return fmt.Errorf("invalid/duplicate worker ID or origin; use an http(s) origin without path or credentials")
 		}
 		ids[w.ID], origins[w.Origin] = true, true

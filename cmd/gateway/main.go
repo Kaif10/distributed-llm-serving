@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/Kaif10/distributed-llm-serving/internal/gateway"
+	"github.com/Kaif10/distributed-llm-serving/internal/transporttls"
 )
 
 func main() {
@@ -32,6 +33,9 @@ func main() {
 	configPoll := flag.Duration("config-poll", 500*time.Millisecond, "controller polling interval")
 	configTimeout := flag.Duration("config-timeout", time.Second, "total controller poll-cycle timeout, shared across peer attempts")
 	configAge := flag.Duration("config-max-age", 5*time.Second, "maximum age of a confirmed controller view")
+	controllerCert := flag.String("controller-tls-cert", "", "reader certificate for HTTPS controllers")
+	controllerKey := flag.String("controller-tls-key", "", "reader private key")
+	controllerCA := flag.String("controller-tls-ca", "", "dedicated controller cluster CA bundle")
 	healthPath := flag.String("health-path", "/health", "worker readiness probe path")
 	healthInterval := flag.Duration("health-interval", time.Second, "delay between worker probes")
 	healthTimeout := flag.Duration("health-timeout", 500*time.Millisecond, "per-probe timeout")
@@ -58,6 +62,19 @@ func main() {
 	}
 	options := gateway.PoolOptions{Backends: origins, Policy: *policy, MaxInflight: *limit, MaxUploads: *uploads, UploadTimeout: *uploadTimeout}
 	config := gateway.ControllerOptions{Origin: *controller, Interval: *configPoll, Timeout: *configTimeout, MaxAge: *configAge}
+	credentials := transporttls.Files{Cert: *controllerCert, Key: *controllerKey, CA: *controllerCA}
+	if credentials.Enabled() {
+		if *controller == "" && *controllers == "" {
+			slog.Error("controller TLS credentials require controller origins")
+			os.Exit(1)
+		}
+		var err error
+		config.TLSConfig, err = credentials.Load()
+		if err != nil {
+			slog.Error("controller TLS configuration", "error", err)
+			os.Exit(1)
+		}
+	}
 	if *controllers != "" {
 		for _, origin := range strings.Split(*controllers, ",") {
 			config.Origins = append(config.Origins, strings.TrimSpace(origin))
@@ -114,7 +131,11 @@ func run(ctx context.Context, address, admin string, options gateway.PoolOptions
 			listener.Close()
 			return fmt.Errorf("admin listen: %w", err)
 		}
-		servers = append(servers, &http.Server{Handler: handler.AdminHandler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10})
+		servers = append(servers, &http.Server{
+			Handler: handler.AdminHandler(), ReadHeaderTimeout: 5 * time.Second,
+			ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second,
+			IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16 << 10,
+		})
 		listeners = append(listeners, adminListener)
 		slog.Info("gateway admin listening", "address", adminListener.Addr().String())
 	}

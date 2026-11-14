@@ -12,3 +12,6 @@ coverage.out
 __pycache__/
 
 *.wal
+.secrets/
+*.key
+*.pem

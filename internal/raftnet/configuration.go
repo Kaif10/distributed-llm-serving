@@ -18,9 +18,11 @@ import (
 // Legacy read-barrier commands remain replayable. New HTTP reads use fresh
 // current-term quorum confirmations and wait for the captured prefix to apply.
 type configurationCommand struct {
-	Version int             `json:"version"`
-	Kind    string          `json:"kind"`
-	Update  *control.Update `json:"update,omitempty"`
+	Version       int                    `json:"version"`
+	Kind          string                 `json:"kind"`
+	Update        *control.Update        `json:"update,omitempty"`
+	SessionOpen   *control.SessionOpen   `json:"session_open,omitempty"`
+	SessionUpdate *control.SessionUpdate `json:"session_update,omitempty"`
 }
 
 type readWaiter struct {
@@ -67,6 +69,28 @@ func decodeConfiguration(data []byte) (configurationCommand, error) {
 	}
 	if err := decoder.Decode(new(any)); err != io.EOF {
 		return command, fmt.Errorf("expected one command")
+	}
+	if command.Version == 3 {
+		if command.Update != nil {
+			return command, fmt.Errorf("session command contains legacy update")
+		}
+		switch command.Kind {
+		case "session-open":
+			if command.SessionOpen == nil || command.SessionUpdate != nil {
+				return command, fmt.Errorf("invalid session open command")
+			}
+			return command, control.ValidateSessionOpen(*command.SessionOpen)
+		case "session-update":
+			if command.SessionUpdate == nil || command.SessionOpen != nil {
+				return command, fmt.Errorf("invalid session update command")
+			}
+			return command, control.ValidateSessionUpdate(*command.SessionUpdate)
+		default:
+			return command, fmt.Errorf("unknown session command")
+		}
+	}
+	if command.SessionOpen != nil || command.SessionUpdate != nil {
+		return command, fmt.Errorf("legacy command contains session fields")
 	}
 	if command.Version != 1 && command.Version != 2 {
 		return command, fmt.Errorf("unsupported configuration command version")
@@ -166,6 +190,16 @@ func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, err
 		return result{}, fmt.Errorf("committed configuration index %d: %w", entry.Index, err)
 	}
 	state := machine.Snapshot()
+	if command.Kind == "session-open" {
+		handle, err := machine.OpenSession(*command.SessionOpen)
+		if err == nil {
+			return result{Session: &handle, Code: 200}, nil
+		}
+		return configurationFailure(err), nil
+	}
+	if command.Kind == "session-update" {
+		state, err = machine.ApplySession(*command.SessionUpdate)
+	}
 	if command.Kind == "update" {
 		if command.Version == 2 {
 			state, err = machine.ApplyCheckpointable(*command.Update)
@@ -175,17 +209,23 @@ func applyConfiguration(machine *control.Machine, entry raft.Entry) (result, err
 	}
 	r := result{Configuration: &state, Code: 200}
 	if err != nil {
-		r.Configuration = nil
-		r.Err = err.Error()
-		r.Code = 400
-		if errors.Is(err, control.ErrConflict) {
-			r.Code = 409
-		}
-		if errors.Is(err, control.ErrCapacity) {
-			r.Code = 503
-		}
+		r = configurationFailure(err)
 	}
 	return r, nil
+}
+
+func configurationFailure(err error) result {
+	r := result{Err: err.Error(), Code: 400}
+	if errors.Is(err, control.ErrConflict) {
+		r.Code = 409
+	}
+	if errors.Is(err, control.ErrExpired) {
+		r.Code = 410
+	}
+	if errors.Is(err, control.ErrCapacity) {
+		r.Code = 503
+	}
+	return r
 }
 
 func (h *Host) configurationRoutes(mux *http.ServeMux) {
@@ -204,7 +244,7 @@ func (h *Host) configurationRoutes(mux *http.ServeMux) {
 		})
 	}
 	submit := func(w http.ResponseWriter, r *http.Request, command configurationCommand) {
-		if h.retention != nil {
+		if h.retention != nil && command.Version != 3 {
 			command.Version = 2
 		}
 		data, err := json.Marshal(command)
@@ -215,6 +255,32 @@ func (h *Host) configurationRoutes(mux *http.ServeMux) {
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		write(w, h.call(ctx, event{data: data}))
+	}
+	if h.retention != nil {
+		mux.HandleFunc("POST /sessions", func(w http.ResponseWriter, r *http.Request) {
+			var u control.SessionOpen
+			if err := decodeSessionBody(w, r, &u); err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			if err := control.ValidateSessionOpen(u); err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			submit(w, r, configurationCommand{Version: 3, Kind: "session-open", SessionOpen: &u})
+		})
+		mux.HandleFunc("PUT /sessions/config", func(w http.ResponseWriter, r *http.Request) {
+			var u control.SessionUpdate
+			if err := decodeSessionBody(w, r, &u); err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			if err := control.ValidateSessionUpdate(u); err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			submit(w, r, configurationCommand{Version: 3, Kind: "session-update", SessionUpdate: &u})
+		})
 	}
 	mux.HandleFunc("GET /config", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
@@ -240,4 +306,17 @@ func (h *Host) configurationRoutes(mux *http.ServeMux) {
 		}
 		submit(w, r, configurationCommand{Version: 1, Kind: "update", Update: &update})
 	})
+}
+
+func decodeSessionBody(w http.ResponseWriter, r *http.Request, value any) error {
+	r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
+	d := json.NewDecoder(r.Body)
+	d.DisallowUnknownFields()
+	if err := d.Decode(value); err != nil {
+		return err
+	}
+	if err := d.Decode(new(any)); err != io.EOF {
+		return fmt.Errorf("expected one session command")
+	}
+	return nil
 }
