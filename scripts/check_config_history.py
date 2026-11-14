@@ -74,6 +74,16 @@ def main():
         raise RuntimeError("timeout: "+label)
     def status(node):
         code,state=rpc(node,"GET","/status");assert code==200;return state
+    def wait_readable(node,revision):
+        def probe():
+            code,state=rpc(node,"GET","/config")
+            report.setdefault("readiness_polls",[]).append({"node":node,"status":code,"response":state})
+            if code==200:
+                assert state["revision"]==revision,("stale successful readiness read",code,state,revision)
+                return state
+            assert code in (503,504),("unexpected readiness response",code,state)
+            return None
+        return wait(probe,"leader commits current-term entry before checked read")
     def leader(eligible=None):
         found=[n for n in (eligible or list(processes)) if processes[n].poll() is None and status(n)["node"]["Role"]=="leader"]
         return found[0] if len(found)==1 else None
@@ -129,6 +139,7 @@ def main():
                 for node in list(processes):stop(node)
                 for node in ids:start(node)
                 active=wait(leader,"leader after full restart")
+                wait_readable(active,3)
                 code,current=tracked(active);assert code==200 and current["revision"]==3
                 final={"request_id":"final","expected_revision":3,"workers":[]}
                 with ThreadPoolExecutor(max_workers=3) as pool:

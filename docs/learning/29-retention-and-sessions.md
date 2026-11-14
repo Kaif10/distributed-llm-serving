@@ -80,7 +80,8 @@ leader failure. Legacy original retry results must still be preserved.
 Session routes require retained configuration mode. Their version-3 commands and
 version-2 application images require **all members to run the upgraded binary**
 before use. Existing version-1 images and version-1/2 commands remain readable.
-There is no mixed-version or downgrade guarantee after session commands are used.
+Deploy the upgraded release consistently to all members; mixed-version cluster
+operation is unsupported. There is no downgrade guarantee after session commands.
 Existing legacy request history is not evicted or automatically migrated.
 
 Persistence still publishes bounded whole images synchronously in the Raft owner.

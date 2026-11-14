@@ -129,6 +129,14 @@ def main():
                 for node in "abc":
                     start(node)
                 restarted = wait(leader, "leader after full restart")
+                def confirmed_restart_read():
+                    code,state=call(restarted,path="/config")
+                    if code==200:
+                        assert state=={"revision":6,"workers":[]},("wrong successful restart read",state)
+                        return True
+                    assert code in (503,504),(code,state)
+                    return False
+                wait(confirmed_restart_read,"restarted leader commits current-term entry")
                 assert call(restarted, path="/config") == (200, {"revision": 6, "workers": []})
                 assert call(restarted, "PUT", "/config", first) == (200, original)
                 for node in "abc":
