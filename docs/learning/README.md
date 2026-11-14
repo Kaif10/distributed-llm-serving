@@ -36,5 +36,9 @@ Start with the [project overview](../../README.md), or follow the walkthroughs i
 - [Retained storage](25-retained-storage.md): two bounded file slots recover a checkpoint and suffix together, with native publication checks.
 - [Controller local retention](26-controller-local-retention.md): opt-in single-member service recovery, manual retention, and restart/retry checks.
 - [Peer snapshot recovery](27-peer-snapshot-recovery.md): three-controller retention, lagging-peer installation, and real-model quorum recovery.
+- [Review admission](28-review-admission.md): separate body uploads from worker capacity and preserve checkpointable legacy history.
+- [Retention and sessions](29-retention-and-sessions.md): healthy follower compaction, bounded retry contracts, and finite API fault histories.
+- [Authenticated networking](30-authenticated-network.md): mutual TLS, peer identity, reader/admin access, and isolated network tests.
+- [Existing HTTP router comparison](31-existing-router.md): real CPU inference with NGINX and the same constructed workload.
 - [Recorded demo](../demo/README.md): real-model routing/cancellation, controller snapshots, failure/recovery, and the complete capture evidence.
 - [Evidence](../EVIDENCE.md): implemented behavior and validation records.

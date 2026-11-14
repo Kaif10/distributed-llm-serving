@@ -1,0 +1,204 @@
+{
+  "source_commit": "385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10",
+  "working_tree": "",
+  "scope": "two frontend gateways, one shared worker-side gate, one real CPU model; one host",
+  "assets": {
+    "engine": "llama.cpp",
+    "release": "b12110",
+    "archive_url": "https://github.com/ggml-org/llama.cpp/releases/download/b12110/llama-b12110-bin-win-cpu-x64.zip",
+    "archive_sha256": "98901e327c252875accaf2d1bf364e10e868843b0b63468baad1aa945cdc5da2",
+    "model_repository": "lmstudio-community/SmolLM2-135M-Instruct-GGUF",
+    "model_revision": "04f7f8a05a8e4bc208e88d11e8c9122be36c2f9b",
+    "model_file": "SmolLM2-135M-Instruct-Q4_K_M.gguf",
+    "model_sha256": "bda484992f9655d22504b14e57985257fa6a86937c61f957cf99c10a3bcae169"
+  },
+  "commands": [
+    [
+      "D:\\inference-fleet\\.tools\\llama-b12110\\llama-server.exe",
+      "-m",
+      "D:\\inference-fleet\\.tools\\models\\SmolLM2-135M-Instruct-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "50331",
+      "--alias",
+      "smollm2-135m",
+      "-c",
+      "2048",
+      "-np",
+      "1",
+      "-t",
+      "2",
+      "-ngl",
+      "0",
+      "--no-ui",
+      "--slots"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:50332",
+      "-admin-listen",
+      "127.0.0.1:50333",
+      "-backend",
+      "http://127.0.0.1:50331",
+      "-max-inflight",
+      "1",
+      "-request-timeout",
+      "60s"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:50334",
+      "-admin-listen",
+      "127.0.0.1:50335",
+      "-backend",
+      "http://127.0.0.1:50332",
+      "-health-path",
+      "/readyz",
+      "-max-inflight",
+      "1",
+      "-request-timeout",
+      "60s"
+    ],
+    [
+      "D:\\inference-fleet\\bin\\gateway.exe",
+      "-listen",
+      "127.0.0.1:50336",
+      "-admin-listen",
+      "127.0.0.1:50337",
+      "-backend",
+      "http://127.0.0.1:50332",
+      "-health-path",
+      "/readyz",
+      "-max-inflight",
+      "1",
+      "-request-timeout",
+      "60s"
+    ]
+  ],
+  "passed": true,
+  "before_contention": {
+    "frontend_a": [
+      {
+        "id": 0,
+        "origin": "http://127.0.0.1:50332",
+        "healthy": true,
+        "checked_at": "2026-11-14T19:26:20.2101107Z",
+        "draining": false,
+        "inflight": 1,
+        "drained": false
+      }
+    ],
+    "frontend_b": [
+      {
+        "id": 0,
+        "origin": "http://127.0.0.1:50332",
+        "healthy": true,
+        "checked_at": "2026-11-14T19:26:19.7341807Z",
+        "draining": false,
+        "inflight": 0,
+        "drained": false
+      }
+    ],
+    "worker_gate": [
+      {
+        "id": 0,
+        "origin": "http://127.0.0.1:50331",
+        "healthy": true,
+        "checked_at": "2026-11-14T19:26:19.6744776Z",
+        "draining": false,
+        "inflight": 1,
+        "drained": false
+      }
+    ],
+    "engine_slots": [
+      {
+        "id": 0,
+        "n_ctx": 2048,
+        "speculative": false,
+        "is_processing": true,
+        "id_task": 0,
+        "n_prompt_tokens": 44,
+        "n_prompt_tokens_processed": 41,
+        "n_prompt_tokens_cache": 0,
+        "params": {
+          "seed": 7,
+          "temperature": 0.0,
+          "dynatemp_range": 0.0,
+          "dynatemp_exponent": 1.0,
+          "top_k": 40,
+          "top_p": 0.949999988079071,
+          "min_p": 0.05000000074505806,
+          "top_n_sigma": -1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612,
+          "typical_p": 1.0,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "presence_penalty": 0.0,
+          "frequency_penalty": 0.0,
+          "dry_multiplier": 0.0,
+          "dry_base": 1.75,
+          "dry_allowed_length": 2,
+          "dry_penalty_last_n": 64,
+          "mirostat": 0,
+          "mirostat_tau": 5.0,
+          "mirostat_eta": 0.10000000149011612,
+          "adaptive_target": -1.0,
+          "adaptive_decay": 0.8999999761581421,
+          "max_tokens": 1024,
+          "n_predict": 1024,
+          "n_keep": 0,
+          "n_discard": 0,
+          "ignore_eos": true,
+          "stream": true,
+          "n_probs": 0,
+          "min_keep": 0,
+          "chat_format": "peg-native",
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "generation_prompt": "<|im_start|>assistant\n",
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "speculative.types": "none",
+          "timings_per_token": false,
+          "post_sampling_probs": false,
+          "backend_sampling": false,
+          "lora": []
+        },
+        "next_token": [
+          {
+            "has_next_token": true,
+            "has_new_line": false,
+            "n_remain": 1021,
+            "n_decoded": 3
+          }
+        ]
+      }
+    ]
+  },
+  "second_gateway_rejected": {
+    "status": 503,
+    "retry_after": "1",
+    "body": "no healthy undrained worker with capacity\n"
+  },
+  "generation_through_second_gateway": {
+    "ttft_ms": 9.331,
+    "completion_ms": 120.579,
+    "text": "A computer server is a type of computer hardware that provides a centralized computing environment for",
+    "usage": null,
+    "finish_reason": "length",
+    "done": true
+  }
+}

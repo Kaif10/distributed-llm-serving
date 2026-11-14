@@ -13,6 +13,7 @@ import (
 	"sync"
 	"unicode/utf8"
 
+	"github.com/Kaif10/distributed-llm-serving/internal/durability"
 	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
@@ -244,6 +245,9 @@ func openRetainedStorage(dir string, id RetainedIdentity, syncOverride func(int)
 		}
 	}
 	if err := lock.Sync(); err != nil {
+		return nil, err
+	}
+	if err := durability.SyncParents(ownerPath); err != nil {
 		return nil, err
 	}
 	ok = true

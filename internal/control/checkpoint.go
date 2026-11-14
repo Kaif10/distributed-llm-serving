@@ -28,6 +28,7 @@ type checkpointPayload struct {
 	Position CheckpointPosition `json:"position"`
 	State    Snapshot           `json:"state"`
 	Requests []entry            `json:"requests"`
+	Sessions []sessionRecord    `json:"sessions,omitempty"`
 }
 
 // ValidateSuccessor prevents a later checkpoint from discarding or changing an
@@ -36,6 +37,26 @@ type checkpointPayload struct {
 func (m *Machine) ValidateSuccessor(previous *Machine) error {
 	if previous == nil || m.state.Revision < previous.state.Revision {
 		return fmt.Errorf("checkpoint configuration regressed")
+	}
+	if m.state.Revision == previous.state.Revision && !reflect.DeepEqual(m.Snapshot(), previous.Snapshot()) {
+		return fmt.Errorf("configuration changed without a revision")
+	}
+	if previous.sessionsEnabled && !m.sessionsEnabled {
+		return fmt.Errorf("session metadata discarded")
+	}
+	for slot, old := range previous.sessions {
+		next := m.sessions[slot]
+		if next.Generation < old.Generation {
+			return fmt.Errorf("session generation regressed")
+		}
+		if old.Generation > 0 && next.Generation == old.Generation {
+			if next.OpenRequestID != old.OpenRequestID || next.OpenExpected != old.OpenExpected || next.Sequence < old.Sequence {
+				return fmt.Errorf("session fence regressed")
+			}
+			if next.Sequence == old.Sequence && !reflect.DeepEqual(next.Latest, old.Latest) {
+				return fmt.Errorf("retained latest session result changed")
+			}
+		}
 	}
 	for id, old := range previous.requests {
 		next, ok := m.requests[id]
@@ -54,6 +75,9 @@ func validCheckpointPosition(position CheckpointPosition, revision uint64) bool 
 // every successful request's original update/result. It does not persist, publish,
 // install, compact, or certify the supplied committed/applied position.
 func (m *Machine) Checkpoint(position CheckpointPosition) ([]byte, error) {
+	if m.sessionsEnabled {
+		return m.sessionCheckpoint(position)
+	}
 	if !validCheckpointPosition(position, m.state.Revision) || len(m.requests) > maxCheckpointRequests || uint64(len(m.requests)) != m.state.Revision {
 		return nil, fmt.Errorf("invalid checkpoint position or successful-request count")
 	}
@@ -104,7 +128,11 @@ func (m *Machine) Checkpoint(position CheckpointPosition) ([]byte, error) {
 	if !reflect.DeepEqual(want, m.Snapshot()) {
 		return nil, fmt.Errorf("checkpoint state disagrees with successful history")
 	}
-	payload, err := json.Marshal(checkpointPayload{Kind: "fleet-application-v1", Position: position, State: m.Snapshot(), Requests: requests})
+	return frameCheckpoint(checkpointPayload{Kind: "fleet-application-v1", Position: position, State: m.Snapshot(), Requests: requests})
+}
+
+func frameCheckpoint(record checkpointPayload) ([]byte, error) {
+	payload, err := json.Marshal(record)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +178,21 @@ func RestoreCheckpoint(frame []byte) (*Machine, CheckpointPosition, error) {
 	if err := decoder.Decode(new(any)); err != io.EOF {
 		return fail("expected one payload object")
 	}
-	if recorded.Kind != "fleet-application-v1" || len(recorded.Requests) > maxCheckpointRequests || uint64(len(recorded.Requests)) != recorded.State.Revision || !validCheckpointPosition(recorded.Position, recorded.State.Revision) {
+	if recorded.Kind == "fleet-application-v2" {
+		machine, err := restoreSessionPayload(recorded)
+		if err != nil {
+			return fail(err.Error())
+		}
+		canonical, err := machine.Checkpoint(recorded.Position)
+		if err != nil || !bytes.Equal(canonical, frame) {
+			return fail("noncanonical session encoding")
+		}
+		return machine, recorded.Position, nil
+	}
+	if recorded.Kind != "fleet-application-v1" ||
+		len(recorded.Requests) > maxCheckpointRequests ||
+		uint64(len(recorded.Requests)) != recorded.State.Revision ||
+		!validCheckpointPosition(recorded.Position, recorded.State.Revision) {
 		return fail("version, position, or successful-request count")
 	}
 	machine := NewMachine()

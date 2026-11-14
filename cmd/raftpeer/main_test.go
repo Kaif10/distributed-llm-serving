@@ -24,6 +24,17 @@ func TestMembershipBoundary(t *testing.T) {
 	}
 }
 
+func TestSecureMembershipRequiresHTTPS(t *testing.T) {
+	if _, err := membersWithTLS("a", "a=https://10.0.0.1:19201,b=https://controller-b:19201", true); err != nil {
+		t.Fatal(err)
+	}
+	for _, spec := range []string{"a=http://10.0.0.1:19201", "a=https://10.0.0.1:0", "a=https://10.0.0.1:19201?", "a=https://10.0.0.1:19201,b=https://10.0.0.1:19201"} {
+		if _, err := membersWithTLS("a", spec, true); err == nil {
+			t.Fatal("accepted", spec)
+		}
+	}
+}
+
 func TestRetainedStorageModeRejectsUnsafeCombinations(t *testing.T) {
 	for _, mode := range []string{"raw", "no-group", "group-only", "both-storage", "no-storage", "checkpoint"} {
 		t.Run(mode, func(t *testing.T) {

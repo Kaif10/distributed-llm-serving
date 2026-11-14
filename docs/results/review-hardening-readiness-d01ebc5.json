@@ -1,0 +1,254 @@
+{
+  "source_commit": "a3a00311bfbf3cc4adf173e7b15e76fdbf1de84b",
+  "working_tree": "",
+  "scope": "finite config API histories; three native peers and real HTTP relays on one host; no inference",
+  "history": [
+    {
+      "id": "op-0",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "original",
+        "expected_revision": 0,
+        "workers": []
+      },
+      "call_ns": 303076684263,
+      "status": 200,
+      "response": {
+        "revision": 1,
+        "workers": []
+      },
+      "return_ns": 303084695135
+    },
+    {
+      "id": "op-2",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "cas-b",
+        "expected_revision": 1,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:20000",
+            "draining": true
+          }
+        ]
+      },
+      "call_ns": 315265829112,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:20000",
+            "draining": true
+          }
+        ]
+      },
+      "return_ns": 315278493464
+    },
+    {
+      "id": "op-3",
+      "node": "c",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 315266537971,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:20000",
+            "draining": true
+          }
+        ]
+      },
+      "return_ns": 315281782395
+    },
+    {
+      "id": "op-1",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "cas-a",
+        "expected_revision": 1,
+        "workers": []
+      },
+      "call_ns": 315265336432,
+      "status": 409,
+      "response": "revision or request ID conflict\n",
+      "return_ns": 315287101030
+    },
+    {
+      "id": "op-4",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "original",
+        "expected_revision": 0,
+        "workers": []
+      },
+      "call_ns": 315289990864,
+      "status": 200,
+      "response": {
+        "revision": 1,
+        "workers": []
+      },
+      "return_ns": 315297874689
+    },
+    {
+      "id": "op-5",
+      "node": "c",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 315297883931,
+      "status": 200,
+      "response": {
+        "revision": 2,
+        "workers": [
+          {
+            "id": "worker",
+            "origin": "http://127.0.0.1:20000",
+            "draining": true
+          }
+        ]
+      },
+      "return_ns": 315304339312
+    },
+    {
+      "id": "op-8",
+      "node": "a",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "majority-write",
+        "expected_revision": 2,
+        "workers": []
+      },
+      "call_ns": 315843843086,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 315850491783
+    },
+    {
+      "id": "op-6",
+      "node": "c",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 315843261918,
+      "status": 504,
+      "response": "deadline; outcome unknown\n",
+      "return_ns": 320844779923
+    },
+    {
+      "id": "op-7",
+      "node": "c",
+      "method": "PUT",
+      "path": "/config",
+      "request": {
+        "request_id": "isolated-write",
+        "expected_revision": 2,
+        "workers": []
+      },
+      "call_ns": 315843540795,
+      "status": 504,
+      "response": "deadline; outcome unknown\n",
+      "return_ns": 320845758258
+    },
+    {
+      "id": "op-9",
+      "node": "a",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 320880364861,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 320883621256
+    },
+    {
+      "id": "op-10",
+      "node": "b",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 321549898442,
+      "status": 200,
+      "response": {
+        "revision": 3,
+        "workers": []
+      },
+      "return_ns": 321552453535
+    },
+    {
+      "id": "op-11",
+      "node": "b",
+      "method": "GET",
+      "path": "/config",
+      "request": null,
+      "call_ns": 322137340520,
+      "status": 503,
+      "response": "current-term entry not yet committed\n",
+      "return_ns": 322139126376
+    }
+  ],
+  "events": [
+    {
+      "healthy_retries": 1100,
+      "statuses": {
+        "a": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 896,
+          "automatic_captures": 5,
+          "last_auto_attempt": 1024
+        },
+        "b": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 1024,
+          "automatic_captures": 3,
+          "last_auto_attempt": 896
+        },
+        "c": {
+          "base_index": 1024,
+          "base_term": 1,
+          "recovered_index": 0,
+          "sha256": "fba1b636c9ac40945d5e5a3f6a38221185c66a8cd06311b01fd6c7b289563769",
+          "checkpoint_bytes": 212,
+          "installed_index": 0,
+          "automatic_captures": 8,
+          "last_auto_attempt": 1024
+        }
+      }
+    },
+    {
+      "isolated_old_leader": "c",
+      "majority_leader": "a"
+    }
+  ],
+  "passed": false,
+  "error": "AssertionError()"
+}

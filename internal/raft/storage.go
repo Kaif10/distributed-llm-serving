@@ -11,6 +11,7 @@ import (
 	"sync"
 	"unicode/utf8"
 
+	"github.com/Kaif10/distributed-llm-serving/internal/durability"
 	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
@@ -32,7 +33,9 @@ type stateRecord struct {
 }
 
 func validTransition(previous, next HardState) bool {
-	return utf8.ValidString(next.VotedFor) && len(next.VotedFor) <= 64 && next.Term > 0 && next.Term >= previous.Term && (next.Term != previous.Term || previous.VotedFor == "" || next.VotedFor == previous.VotedFor)
+	return utf8.ValidString(next.VotedFor) && len(next.VotedFor) <= 64 &&
+		next.Term > 0 && next.Term >= previous.Term &&
+		(next.Term != previous.Term || previous.VotedFor == "" || next.VotedFor == previous.VotedFor)
 }
 func OpenStorage(path string) (*FileStorage, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
@@ -48,6 +51,10 @@ func OpenStorage(path string) (*FileStorage, error) {
 	}
 	s := &FileStorage{file: f, syncFile: f.Sync}
 	if err := s.recover(); err != nil {
+		f.Close()
+		return nil, err
+	}
+	if err := durability.SyncParents(path); err != nil {
 		f.Close()
 		return nil, err
 	}
@@ -95,7 +102,10 @@ func (s *FileStorage) recover() error {
 		if err := json.Unmarshal(data, &record); err != nil {
 			return err
 		}
-		if (record.Kind != "raft-election-v1" && record.Kind != "raft-state-v2") || (record.Kind == "raft-election-v1" && (s.replicationFormat || len(record.Log) > 0)) || !validTransition(s.state, record.State) {
+		if (record.Kind != "raft-election-v1" && record.Kind != "raft-state-v2") ||
+			(record.Kind == "raft-election-v1" && (s.replicationFormat ||
+				len(record.Log) > 0)) ||
+			!validTransition(s.state, record.State) {
 			return fmt.Errorf("invalid election state transition")
 		}
 		if err := validLog(record.Log, record.State.Term); err != nil {

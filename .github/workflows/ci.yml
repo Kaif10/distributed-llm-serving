@@ -21,6 +21,7 @@ jobs:
       - run: go vet ./...
       - run: go test -race ./...
       - run: go build ./...
+      - run: python3 -m unittest discover -s scripts -p test_config_history.py -v
       - run: go run ./cmd/checkpointdemo -output artifacts/checkpoint/ci.json
       - run: go build -o bin/gateway ./cmd/gateway
       - run: python3 scripts/smoke.py bin/gateway
@@ -31,3 +32,12 @@ jobs:
       - run: python3 scripts/check_controller_capacity.py bin/raftpeer --profile quick --output artifacts/controller-capacity/ci.json
       - run: python3 scripts/check_retained_controller.py bin/raftpeer --retries 64 --output artifacts/retained-controller/ci.json
       - run: python3 scripts/check_replicated_retention.py bin/raftpeer --output artifacts/replicated-retention/ci.json
+      - run: python3 scripts/check_config_history.py bin/raftpeer --output artifacts/config-history/ci.json
+      - run: python3 scripts/check_secure_peers.py bin/raftpeer --gateway bin/gateway --output artifacts/secure-peers/ci.json
+      - name: Isolated network stacks with delay and partition
+        run: sudo python3 scripts/check_secure_peers.py bin/raftpeer --gateway bin/gateway --network-namespaces --output artifacts/secure-peers/namespaces-ci.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-check-reports
+          path: artifacts/

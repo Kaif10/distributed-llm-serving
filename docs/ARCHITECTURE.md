@@ -9,8 +9,8 @@ serves fresh quorum-confirmed reads after local application. Gateways can fail o
 across a configured list of controller peers while bounding view age. Configuration peers
 can opt into owner-serialized checkpoint capture and confirmed-prefix recovery. Full retained
 prefix replay verifies selected images in the original journal mode. Alternative two-slot
-storage binds the committed application image and suffix together, supports manual leader
-retention, and installs snapshots on lagging fixed-membership peers. The owner validates
+storage binds the committed application image and suffix together, automatically retains
+fully applied prefixes on every replica, and installs snapshots on lagging peers. The owner validates
 successful history before installation and syncs before acknowledging. The drain discussion
 describes the fleet-wide target; independent-host and multi-gateway validation remain separate.
 
@@ -52,6 +52,11 @@ Administrative updates have request IDs for safe retries. That does not imply ex
 model execution. If a connection fails after dispatch, the gateway may not know whether
 inference started. The initial policy is no automatic generation retries.
 
+Retained-mode clients can instead use 64 durable session slots. A generation fences slot
+reuse and a sequence fences updates. Only the latest successful result per slot is retained;
+older requests return 410 and never execute again. Legacy IDs are preserved separately.
+[Session contract and upgrade boundary](learning/29-retention-and-sessions.md).
+
 During loss of controller quorum, configuration writes stop. Gateways may use their last
 accepted view only within its configured age, subject to worker health checks. When that
 age expires, reject new work; existing streams may finish. The age bound is an availability
@@ -74,6 +79,9 @@ A gateway failure interrupts its streams. Another gateway can serve new requests
 of configuration does not make an active stream fault tolerant. A worker crash loses local
 cache and active inference. Same-host replicas do not protect against loss of the host or disk.
 
-The foundation binds to loopback. Authenticated administrative access, client authentication,
-TLS, and a deployment threat model are required before external exposure; they are future
-deployment work, not implemented properties of the foundation.
+The default is trusted loopback HTTP. With explicit mutual-TLS credentials, both controller
+listeners can bind non-loopback addresses and fixed peer URLs must use HTTPS. A dedicated
+cluster CA signs exact URI identities; peer identities bind claimed senders and destinations,
+readers can poll configuration, and only admins can mutate it. The serving HTTP endpoint
+still requires a separate authenticated ingress before external application exposure.
+[Trust model and deployment commands](learning/30-authenticated-network.md).

@@ -24,7 +24,7 @@ def request_for(workload, document, position, cache):
         "seed": 7, "cache_prompt": cache, "stream_options": {"include_usage": True}}
 
 
-def run_condition(condition, trial, config, workload, output):
+def run_condition(condition, trial, config, workload, output, nginx=None):
     cache = condition != "direct-no-cache"
     count = 1 if condition.startswith("direct") else 2
     origins = [f"http://127.0.0.1:{18081+i}" for i in range(count)]
@@ -42,10 +42,14 @@ def run_condition(condition, trial, config, workload, output):
         destination = origins[0]
         if count == 2:
             destination = "http://127.0.0.1:18080"
-            command = [str(ROOT/"bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends", ",".join(origins),
-                       "-policy", condition, "-max-inflight", "1", "-request-timeout", "60s"]
-            result["commands"].append(command)
-            stack.enter_context(service(command, destination+"/readyz", output/f"{trial}-{condition}-gateway.log"))
+            if condition.startswith("nginx-"):
+                from nginx_baseline import nginx_router
+                result["baseline"]=stack.enter_context(nginx_router(nginx,condition,origins,output,f"{trial}-{condition}",result["commands"]))
+            else:
+                command = [str(ROOT/"bin/gateway.exe"), "-listen", "127.0.0.1:18080", "-backends", ",".join(origins),
+                           "-policy", condition, "-max-inflight", "1", "-request-timeout", "60s"]
+                result["commands"].append(command)
+                stack.enter_context(service(command, destination+"/readyz", output/f"{trial}-{condition}-gateway.log"))
         # Warm model execution with an unrelated prompt. Target document prefixes
         # are still cold, although common chat-template tokens can remain cached.
         warmup = {"model": "smollm2-135m", "messages": [{"role": "user", "content": "Say hello."}],
@@ -55,7 +59,7 @@ def run_condition(condition, trial, config, workload, output):
         result["warmup_per_engine"] = warmup
         for position, document in enumerate(workload["sequence"]):
             before = [get_json(origin, "/slots")[0].get("id_task") for origin in origins]
-            payload = request_for(workload, document, position, cache)
+            payload = request_for(workload, document, position%16, cache)
             started = time.monotonic()
             try:
                 sample = measure(destination, payload, {"X-Prefix-Key": "smollm2-v1-document-"+document})
@@ -104,11 +108,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trials", type=int, default=3)
     parser.add_argument("--output-dir", type=Path, default=ROOT/"artifacts/cache-baseline")
-    parser.add_argument("--conditions", nargs="+", choices=["direct-cache", "direct-no-cache", "round-robin", "least-inflight", "prefix-affinity"],
+    parser.add_argument("--repeat",type=int,default=1,help="repeat the declared document sequence; questions cycle within the 16 document records")
+    parser.add_argument("--nginx",type=Path,help="NGINX executable for the optional established HTTP baselines")
+    parser.add_argument("--conditions", nargs="+", choices=["direct-cache", "direct-no-cache", "round-robin", "least-inflight", "prefix-affinity","nginx-round-robin","nginx-hash"],
                         default=["direct-cache", "direct-no-cache", "round-robin", "least-inflight"])
     args = parser.parse_args()
-    if args.trials < 1:
-        parser.error("trials must be positive")
+    if args.trials < 1 or not 1<=args.repeat<=32 or (any(c.startswith("nginx-") for c in args.conditions) and not args.nginx):
+        parser.error("positive trials, repeat 1..32, and --nginx for NGINX conditions required")
     for port in (18080, 18081, 18082):
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", port))
@@ -117,18 +123,19 @@ def main():
     config = json.loads((ROOT/"config/llama-cpu.json").read_text())
     workload_path = ROOT/"examples/cache-workload.json"
     workload = json.loads(workload_path.read_text())
+    workload["sequence"] *= args.repeat
     result = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "working_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True)),
               "platform": platform.platform(), "assets": config, "workload": workload,
               "workload_sha256": hashlib.sha256(workload_path.read_bytes()).hexdigest(),
-              "order_seed": 7, "trials": args.trials, "runs": []}
+              "order_seed": 7, "trials": args.trials,"repeat":args.repeat, "runs": []}
     rng = random.Random(7)
     try:
         for trial in range(args.trials):
             conditions = list(args.conditions)
             rng.shuffle(conditions)
             for condition in conditions:
-                result["runs"].append(run_condition(condition, trial, config, workload, output))
+                result["runs"].append(run_condition(condition, trial, config, workload, output,args.nginx))
         result["passed"] = True
     except Exception as err:
         result["passed"] = False

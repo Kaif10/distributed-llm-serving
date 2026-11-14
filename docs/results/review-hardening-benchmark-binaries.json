@@ -1,0 +1,14 @@
+{
+  "scope": "gateway and peer binaries used in the routing comparison",
+  "binaries": {
+    "gateway": {
+      "sha256": "8256a526617ef3a8cc13524d5ed62e3f3964058ea79342d7850c93ef904e8f62",
+      "build_info": "D:\\inference-fleet\\bin\\gateway.exe: go1.27.3\n\tpath\tgithub.com/Kaif10/distributed-llm-serving/cmd/gateway\n\tmod\tgithub.com/Kaif10/distributed-llm-serving\tv0.0.0-20261114185328-f7b6dd6a634a\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tDefaultGODEBUG=tracebacklabels=0,x509sslcertoverrideplatform=0\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=f7b6dd6a634ae94f2f994cee6412372cc7e52f84\n\tbuild\tvcs.time=2026-11-14T18:53:28Z\n\tbuild\tvcs.modified=false\n"
+    },
+    "raftpeer": {
+      "sha256": "1fb103453f349acde36b613ed0a9092935002effde0a7f4c329a01e8d579e10b",
+      "build_info": "D:\\inference-fleet\\bin\\raftpeer.exe: go1.27.3\n\tpath\tgithub.com/Kaif10/distributed-llm-serving/cmd/raftpeer\n\tmod\tgithub.com/Kaif10/distributed-llm-serving\tv0.0.0-20261114185328-f7b6dd6a634a\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tDefaultGODEBUG=tracebacklabels=0,x509sslcertoverrideplatform=0\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=f7b6dd6a634ae94f2f994cee6412372cc7e52f84\n\tbuild\tvcs.time=2026-11-14T18:53:28Z\n\tbuild\tvcs.modified=false\n"
+    }
+  },
+  "go_sources_unchanged_since_build": true
+}

@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/Kaif10/distributed-llm-serving/internal/durability"
 	"github.com/Kaif10/distributed-llm-serving/internal/filelock"
 )
 
@@ -41,6 +42,10 @@ func Open(path string) (*Store, error) {
 	}
 	s := &Store{file: f, machine: NewMachine(), syncFile: f.Sync}
 	if err := s.recover(); err != nil {
+		f.Close()
+		return nil, err
+	}
+	if err := durability.SyncParents(path); err != nil {
 		f.Close()
 		return nil, err
 	}

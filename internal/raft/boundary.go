@@ -1,9 +1,21 @@
 package raft
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 )
+
+var ErrLogCapacity = errors.New("retained log capacity exhausted")
+
+// RetainedUsage describes local suffix pressure without cloning command bytes.
+func (n *Node) RetainedUsage() (int, int) {
+	bytes := 0
+	for _, e := range n.entries {
+		bytes += len(e.Data)
+	}
+	return len(n.entries), bytes
+}
 
 // RetainedSnapshot is an opaque application image at a durable committed prefix.
 // A storage adapter must recover this and its suffix as one coherent selection.
@@ -31,11 +43,16 @@ func cloneSnapshot(snapshot RetainedSnapshot) RetainedSnapshot {
 	return snapshot
 }
 func validRetainedLog(snapshot RetainedSnapshot, entries []Entry, term uint64) error {
-	if (snapshot.Index == 0) != (snapshot.Term == 0) || snapshot.Term > term || snapshot.Index == ^uint64(0) || len(snapshot.Data) > (8<<20)+12 || (snapshot.Index == 0 && len(snapshot.Data) != 0) || (snapshot.Index > 0 && len(snapshot.Data) == 0) {
+	if (snapshot.Index == 0) != (snapshot.Term == 0) ||
+		snapshot.Term > term ||
+		snapshot.Index == ^uint64(0) ||
+		len(snapshot.Data) > (8<<20)+12 ||
+		(snapshot.Index == 0 && len(snapshot.Data) != 0) ||
+		(snapshot.Index > 0 && len(snapshot.Data) == 0) {
 		return fmt.Errorf("invalid retained snapshot boundary")
 	}
 	if len(entries) > 1024 {
-		return fmt.Errorf("log exceeds 1024 entries")
+		return fmt.Errorf("%w: log exceeds 1024 entries", ErrLogCapacity)
 	}
 	// Keep one representable next-index sentinel; all index arithmetic stays exact.
 	if uint64(len(entries)) > ^uint64(0)-1-snapshot.Index {
@@ -51,7 +68,7 @@ func validRetainedLog(snapshot RetainedSnapshot, entries []Entry, term uint64) e
 		size += len(e.Data)
 	}
 	if size > 4<<20 {
-		return fmt.Errorf("log exceeds four MiB")
+		return fmt.Errorf("%w: log exceeds four MiB", ErrLogCapacity)
 	}
 	return nil
 }

@@ -1,5 +1,114 @@
 # Evidence ledger
 
+## Review hardening: retention, sessions, networking, and router baselines
+
+Source `385cf0cc72b94c40956abc1a7ad3bc41cf0b1a10` passed both
+[branch CI](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43631568523)
+and [PR CI](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43631572314):
+formatting, vet, the full race suite, builds, native recovery scenarios, the finite
+API-history check, and mutual-TLS processes with isolated Linux network stacks.
+These are source-specific recorded runs, not a claim of complete fault coverage.
+
+The review's healthy-follower liveness defect was independently reproduced before
+the fix: a three-peer cluster stopped at commit 1024 with full follower logs. Every
+retained replica now automatically captures its fully applied committed prefix.
+The [extended native result](results/review-hardening-385cf0c-retention.json) records
+2,200 healthy logged retries: all three peers reach commit 2202, base 2176, and a
+26-entry suffix. It then covers offline snapshot catch-up, leader loss and full
+restart, followed by **2,200 distinct successful session updates**, another full
+restart, explicit generation retirement, and original retry-result preservation.
+The final configuration revision is 2207. This is a correctness exercise, not a
+sustained administrative-throughput measurement.
+
+Bounded sessions retain 64 generation/sequence fences and the latest result per
+slot. Legacy IDs retain their existing guarantee and limit. Versioned images and
+commands preserve old replay; mixed-version operation and downgrading after session
+use are unsupported. [Contract and upgrade instructions](learning/29-retention-and-sessions.md).
+The core race suite includes 25 seeded schedules exercising retained file storage,
+snapshot installation, loss/duplication/reordering, elections, and storage reopen.
+The [HTTP API history](results/review-hardening-385cf0c-history.json) has a legal
+sequential witness across concurrent CAS/read/retry operations, partition, leader
+failure, retention and restart. The checker models a finite config API history;
+it is not a proof of all executions or of the separate session API.
+
+[TLS process checks](results/review-hardening-385cf0c-tls.json) verify peer identity
+binding, rejected missing/untrusted credentials, reader/admin separation, gateway
+polling, retention and recovery. The [network-stack run](results/review-hardening-385cf0c-network.json)
+gives each peer a separate IP/network namespace, adds 15 ms delay at each side of
+its veth pair, drops traffic bidirectionally to one member, confirms majority progress,
+heals the partition, and checks recovery. It shares a host and kernel. It does not
+establish independent-host, power or physical-network resilience. Linux store creation
+now syncs the directory chain; physical power-loss behavior remains untested.
+
+Fresh, clean-source `385cf0c` Windows builds passed the [real two-model pool](results/review-hardening-385cf0c-pool.json)
+under all three policies, [shared worker admission](results/review-hardening-385cf0c-shared-worker.json),
+and [retained-controller real-model recovery](results/review-hardening-385cf0c-failover.json).
+The checks observe generated tokens, busy/idle engine slots, overload rejection,
+cancellation, drain, leader replacement, and an existing stream completing during
+quorum loss while new admission expires. [Binary build information and hashes](results/review-hardening-regression-binaries.json)
+bind these runs to that clean source. These are mechanism/regression checks.
+
+### Existing HTTP router comparison
+
+The [sequential experiment](results/router-cache-f7b6dd6.json) uses 48 requests per
+condition and two randomized trials: 384 requests, zero failed streams, fresh pinned
+CPU engines for each condition. Both existing NGINX hashing and gateway affinity
+preserve locality on the declared three-document workload:
+
+| Router | Median first-token latency in trials 0 / 1 | Reused prompt tokens |
+| --- | --- | --- |
+| Gateway least-inflight | 1,805 / 1,859 ms | 20.60% |
+| Gateway prefix affinity | 208 / 101 ms | 68.67% |
+| NGINX round-robin | 1,777 / 1,770 ms | 20.60% |
+| NGINX consistent hash | 221 / 133 ms | 58.66% |
+
+Different hash mappings also affect collisions among three documents on two workers;
+the cache fractions do not establish a general algorithmic advantage. The first
+experiment's Go binaries were built from clean `f7b6dd6`; the load runner records
+checkout `6893f32`. Intervening changes affected certificate fixtures and documentation,
+with no Go-source changes. [Build/hash provenance and source comparison](results/review-hardening-benchmark-binaries.json).
+
+The [fixed-arrival experiment](results/router-load-6893f32.json) offers 64 requests
+per trial at 1 and 4 requests/s, with two trials per router: 1,024 offered requests.
+The targets are first token within 2 seconds and completion within 3 seconds.
+Counts below include rejected/failed requests in the denominator:
+
+| Router | Both targets met at 1 request/s, per 64 | Both targets met at 4 requests/s, per 64 |
+| --- | --- | --- |
+| Gateway least-inflight | 48 / 61 | 13 / 14 |
+| Gateway prefix affinity | 58 / invalid trial | 20 / 6 |
+| NGINX round-robin | 58 / 58 | 7 / 8 |
+| NGINX consistent hash | 58 / 34 | 20 / 7 |
+
+One prefix-affinity trial at 1 request/s recorded maximum dispatch lag **452,293 ms**
+and two client timeouts. Its arrival schedule was invalid and its raw results remain
+published. The runner now explicitly marks arrival validity against a 100 ms default
+budget; that guard was added after observing this pause. All other original trials
+have lag below 15 ms and no failed streams. The [supplementary repeat](results/router-load-repeat-385cf0c.json)
+has 1.97 ms maximum lag, 60 completions, four rejections, zero failed streams, and
+52/64 requests meeting both targets. It is separate from the randomized original
+trials. [Derived arrival assessment](results/router-load-assessment.json).
+
+These small CPU trials show substantial variation and no stable affinity advantage
+over established hashing under load. They do not validate GPU capacity, an LLM-aware
+vLLM router comparison, or external application demand. [Exact NGINX configuration,
+pin and reproduction](learning/31-existing-router.md). Whole-image persistence still
+blocks the Raft owner on fsync; that remains a documented low-rate configuration
+tradeoff rather than a claimed high-throughput storage design.
+
+### Earlier checks corrected during this follow-up
+
+The [first Linux TLS fixture run](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43629116073)
+failed certificate validation. The disposable CA now explicitly carries CA key usage
+and the client always enables strict X509 checks. A later [startup-check failure](https://github.com/Kaif10/distributed-llm-serving/actions/runs/43631099899)
+received 503 before the elected leader committed a current-term entry. The
+[original history](results/review-hardening-readiness-d01ebc5.json) is preserved;
+its [post-failure assessment](results/review-hardening-readiness-assessment.json)
+has a legal sequential witness. Restart tests now wait for read readiness and fail
+immediately on a successful read at the wrong revision. The successful runs above
+include those corrections. Previously recorded Windows reset/timeout observations
+remain historical; no unrelated root-cause fix is claimed.
+
 ## Review follow-up: request admission and retained history
 
 Clean source `3780f04da0d79a76c3383a735949c03d125e20d9` passed

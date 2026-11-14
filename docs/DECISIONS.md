@@ -122,6 +122,11 @@ vLLM's production stack already combines cache locality with live load. Baseline
 an existing implementation when the hardware supports a fair comparison. There is no novelty
 claim. Improvements, negative results, and focused upstream fixes are all legitimate outcomes.
 
+Review follow-up: an NGINX HTTP baseline is now available on the same pinned CPU
+engines, with round-robin and consistent hashing of the explicit prefix hint. It
+tests the benefit available from an established proxy on this hardware. It is
+not an LLM-aware GPU-router comparison. [Configuration and experiment scope](learning/31-existing-router.md).
+
 Reference: [vLLM load-aware routing](https://docs.vllm.ai/projects/production-stack/en/latest/use_cases/loadaware-routing.html).
 
 ## 005: Accurate evidence and normal history

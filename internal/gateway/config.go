@@ -3,6 +3,7 @@ package gateway
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,9 +14,11 @@ import (
 	"time"
 
 	"github.com/Kaif10/distributed-llm-serving/internal/control"
+	"github.com/Kaif10/distributed-llm-serving/internal/transporttls"
 )
 
 type ControllerOptions struct {
+	TLSConfig                 *tls.Config
 	Origin                    string
 	Origins                   []string
 	Interval, Timeout, MaxAge time.Duration
@@ -97,8 +100,21 @@ func controllerOrigins(options ControllerOptions) ([]string, error) {
 	}
 	seen := map[string]bool{}
 	for _, origin := range origins {
+		if options.TLSConfig != nil && !transporttls.SecureOrigin(origin) {
+			return nil, fmt.Errorf("TLS controller credentials require HTTPS origins")
+		}
 		u, err := url.Parse(origin)
-		if err != nil || u == nil || len(origin) > 2048 || (u.Scheme != "http" && u.Scheme != "https") || u.Hostname() == "" || u.User != nil || u.Path != "" || u.RawQuery != "" || u.ForceQuery || u.Fragment != "" || seen[origin] {
+		if err != nil ||
+			u == nil ||
+			len(origin) > 2048 ||
+			(u.Scheme != "http" && u.Scheme != "https") ||
+			u.Hostname() == "" ||
+			u.User != nil ||
+			u.Path != "" ||
+			u.RawQuery != "" ||
+			u.ForceQuery ||
+			u.Fragment != "" ||
+			seen[origin] {
 			return nil, fmt.Errorf("invalid or duplicate controller origin")
 		}
 		seen[origin] = true
@@ -158,6 +174,9 @@ func (h *Handler) StartController(parent context.Context, options ControllerOpti
 	p.mu.Unlock()
 	ctx, cancel := context.WithCancel(parent)
 	transport := http.DefaultTransport.(*http.Transport).Clone()
+	if options.TLSConfig != nil {
+		transport.TLSClientConfig = transporttls.ControllerClient(options.TLSConfig)
+	}
 	transport.MaxConnsPerHost = 1
 	transport.MaxIdleConns = len(origins)
 	transport.MaxIdleConnsPerHost = 1

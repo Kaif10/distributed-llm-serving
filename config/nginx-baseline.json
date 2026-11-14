@@ -1,0 +1,7 @@
+{
+  "version": "1.28.0",
+  "archive_url": "https://nginx.org/download/nginx-1.28.0.zip",
+  "archive_sha256": "db8c7a529f84c819702bd1c50926b27d961a48b4f72fc7c46b30314fc2bbfd7c",
+  "checksum_provenance": "Computed from the official HTTPS download; no independent signature verification claimed.",
+  "scope": "Single-process Windows HTTP baseline for the pinned CPU model workload; not a GPU or LLM-aware router comparison."
+}

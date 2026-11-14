@@ -4,6 +4,7 @@ package raftnet
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 	"github.com/Kaif10/distributed-llm-serving/internal/checkpoint"
 	"github.com/Kaif10/distributed-llm-serving/internal/control"
 	"github.com/Kaif10/distributed-llm-serving/internal/raft"
+	"github.com/Kaif10/distributed-llm-serving/internal/transporttls"
 )
 
 type Snapshot struct {
@@ -38,6 +40,7 @@ type result struct {
 	Configuration *control.Snapshot
 	Checkpoint    *CheckpointStatus
 	Retention     *RetentionStatus
+	Session       *control.SessionHandle
 }
 type event struct {
 	ctx     context.Context
@@ -55,6 +58,7 @@ type waiter struct {
 	reply       chan result
 }
 type Host struct {
+	tlsConfig        *tls.Config
 	node             *raft.Node
 	id               string
 	peers            map[string]string
@@ -70,6 +74,9 @@ type Host struct {
 	recovery         *checkpointRecovery
 	retention        *RetentionStatus
 }
+
+// UseTLS must be called before handlers are served or Run starts.
+func (h *Host) UseTLS(config *tls.Config) { h.tlsConfig = config.Clone() }
 
 // Node must not be accessed elsewhere after handing it to Run.
 func New(node *raft.Node, peers map[string]string) *Host {
@@ -89,13 +96,19 @@ func (h *Host) Run(parent context.Context) error {
 	}
 	ctx, cancel := context.WithCancel(parent)
 	var workers sync.WaitGroup
-	transport := &http.Transport{MaxConnsPerHost: 1, MaxIdleConns: 9, MaxIdleConnsPerHost: 1, IdleConnTimeout: 15 * time.Second, MaxResponseHeaderBytes: 16 << 10}
-	client := &http.Client{Transport: transport, Timeout: 300 * time.Millisecond, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
 	for id, queue := range h.out {
 		origin := h.peers[id]
+		transport := &http.Transport{MaxConnsPerHost: 1, MaxIdleConns: 1, MaxIdleConnsPerHost: 1,
+			IdleConnTimeout: 15 * time.Second, MaxResponseHeaderBytes: 16 << 10}
+		if h.tlsConfig != nil {
+			transport.TLSClientConfig = transporttls.PeerClient(h.tlsConfig, id)
+		}
+		client := &http.Client{Transport: transport, Timeout: 300 * time.Millisecond,
+			CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
 		workers.Add(1)
 		go func() {
 			defer workers.Done()
+			defer client.CloseIdleConnections()
 			for {
 				select {
 				case <-ctx.Done():
@@ -125,7 +138,7 @@ func (h *Host) Run(parent context.Context) error {
 			}
 		}()
 	}
-	defer func() { cancel(); workers.Wait(); client.CloseIdleConnections() }()
+	defer func() { cancel(); workers.Wait() }()
 	ticker := time.NewTicker(50 * time.Millisecond)
 	defer ticker.Stop()
 	var pending []waiter
@@ -181,7 +194,10 @@ func (h *Host) Run(parent context.Context) error {
 		}
 		pending = kept
 		reads, err = h.finishReads(reads)
-		return err
+		if err != nil {
+			return err
+		}
+		return h.autoRetain()
 	}
 	for {
 		select {
@@ -244,8 +260,10 @@ func (h *Host) Run(parent context.Context) error {
 							return fmt.Errorf("snapshot installed without application")
 						}
 						h.machine, h.applied = installedMachine, h.node.BaseIndex()
+						automatic, attempt := h.retention.AutomaticCaptures, h.retention.LastAutoAttempt
 						h.retention = retentionMetadata(h.node.Snapshot(), h.retention.RecoveredIndex)
 						h.retention.InstalledIndex = h.applied
+						h.retention.AutomaticCaptures, h.retention.LastAutoAttempt = automatic, attempt
 					}
 					emit(messages)
 					e.reply <- result{Code: 204}
@@ -381,6 +399,8 @@ func write(w http.ResponseWriter, response result) {
 		json.NewEncoder(w).Encode(response.Checkpoint)
 	} else if response.Retention != nil {
 		json.NewEncoder(w).Encode(response.Retention)
+	} else if response.Session != nil {
+		json.NewEncoder(w).Encode(response.Session)
 	} else if response.State != nil {
 		json.NewEncoder(w).Encode(response.State)
 	} else {
@@ -406,6 +426,13 @@ func (h *Host) PeerHandler() http.Handler {
 			http.Error(w, "invalid claimed peer IDs", 400)
 			return
 		}
+		if h.tlsConfig != nil {
+			role, id, err := authenticated(r)
+			if err != nil || role != "peer" || id != m.From {
+				http.Error(w, "certificate does not identify claimed sender", 403)
+				return
+			}
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
 		defer cancel()
 		write(w, h.call(ctx, event{message: &m}))
@@ -421,7 +448,7 @@ func (h *Host) ClientHandler() http.Handler {
 	})
 	if h.machine != nil {
 		h.configurationRoutes(mux)
-		return bounded(mux)
+		return h.clientAccess(bounded(mux))
 	}
 	mux.HandleFunc("POST /propose", func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
@@ -434,5 +461,5 @@ func (h *Host) ClientHandler() http.Handler {
 		defer cancel()
 		write(w, h.call(ctx, event{data: data}))
 	})
-	return bounded(mux)
+	return h.clientAccess(bounded(mux))
 }

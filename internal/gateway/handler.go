@@ -48,7 +48,15 @@ func NewPoolHandler(options PoolOptions, timeout time.Duration, logger *slog.Log
 	seen := make(map[string]bool)
 	for _, backend := range options.Backends {
 		target, err := url.Parse(backend)
-		if err != nil || target == nil || (target.Scheme != "http" && target.Scheme != "https") || target.Hostname() == "" || target.User != nil || (target.Path != "" && target.Path != "/") || target.RawQuery != "" || target.ForceQuery || target.Fragment != "" {
+		if err != nil ||
+			target == nil ||
+			(target.Scheme != "http" && target.Scheme != "https") ||
+			target.Hostname() == "" ||
+			target.User != nil ||
+			(target.Path != "" && target.Path != "/") ||
+			target.RawQuery != "" ||
+			target.ForceQuery ||
+			target.Fragment != "" {
 			return nil, fmt.Errorf("backend must be an http(s) origin without credentials, path, query, or fragment")
 		}
 		target.Path = ""

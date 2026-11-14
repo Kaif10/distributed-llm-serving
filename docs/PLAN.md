@@ -1,6 +1,17 @@
 # Milestones
 
 Progress is based on demonstrated behavior and understanding, with no calendar estimates.
+
+Review follow-up: healthy followers now retain their own applied prefixes automatically,
+capacity rejection is explicit, and bounded session clients no longer accumulate a lifetime
+successful-ID table. New fault checks combine retained storage and snapshot transfer, and
+a finite config API checker covers recorded concurrent histories. Optional mutual TLS
+enables authenticated network deployment; isolated network-stack tests and established HTTP
+router comparisons supplement the original local checks. See [retention/sessions](learning/29-retention-and-sessions.md),
+[network mode](learning/30-authenticated-network.md), and the evidence ledger for actual runs.
+Independent-host resilience, GPU capacity, and external application demand remain unvalidated.
+The milestone notes below preserve the scope of the original increments.
+
 The foundation, single-worker streaming path, and milestone 2's local CPU integration are
 implemented. Milestone 3 now has static worker-pool routing and bounded admission, checked
 against two real CPU model servers. Its health-probe and local draining increment is now

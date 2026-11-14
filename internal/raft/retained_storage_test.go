@@ -392,7 +392,7 @@ func TestRetainedStorageFullLocalLogCanRestartAfterOfflineRetention(t *testing.T
 	for i := 0; i < 20 && electionErr == nil; i++ {
 		_, electionErr = n.Tick()
 	}
-	if electionErr == nil || electionErr.Error() != "log exceeds 1024 entries" {
+	if !errors.Is(electionErr, ErrLogCapacity) {
 		t.Fatal("full-log restart did not reproduce blocked leader no-op", electionErr)
 	}
 	image, err := control.NewMachine().Checkpoint(control.CheckpointPosition{Index: 1024, Term: 2})
